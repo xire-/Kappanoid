@@ -3,5 +3,9 @@
  * Authors: Francesco Cagnin, Marco Gasparini
  */
 function helloKappa() {
-    alert('hello kappa!');    
+    alert('hello kappa!');
 }
+
+$(document).ready(function() {
+    helloKappa();
+});
