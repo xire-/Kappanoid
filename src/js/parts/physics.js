@@ -94,7 +94,7 @@ var baseVector2 = Object.defineProperties({}, {
 });
 
 var Vector2 = function(x, y) {
-    if (typeof x !== 'undefined' && typeof y !== 'undefined') {
+    if (x !== undefined && y !== undefined) {
         this.x = x;
         this.y = y;
     }
