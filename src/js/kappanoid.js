@@ -7,8 +7,8 @@
 /*global $*/
 
 // trick to create a namespace
-var kappanoid = (function () {
-    "use strict";
+var kappanoid = (function() {
+    'use strict';
     // private stuff
     var settings, init, initCanvas;
 
@@ -20,14 +20,14 @@ var kappanoid = (function () {
     };
 
 
-    init = function () {
+    init = function() {
         initCanvas($('#gameCanvas')[0]);
 
         var color = $('#optColor');
         console.log(color);
     };
 
-    initCanvas = function (canvas) {
+    initCanvas = function(canvas) {
         console.log(canvas);
         canvas.width = settings.canvasWidth;
         canvas.height = settings.canvasHeight;
@@ -42,7 +42,7 @@ var kappanoid = (function () {
 }());
 
 // function to execute once the document is ready
-$(document).ready(function () {
-    "use strict";
+$(document).ready(function() {
+    'use strict';
     kappanoid.init();
 });
