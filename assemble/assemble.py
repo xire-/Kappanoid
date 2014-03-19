@@ -2,6 +2,7 @@
 from __future__ import with_statement
 import sys
 import re
+from datetime import datetime
 
 def main():
     #legge il path di parts da arg
@@ -13,7 +14,7 @@ def main():
 
     # legge /js/parts/main.js
     with open(js_path + 'parts/main.js') as fmain, open(js_path + output_file, 'w') as fris:
-        fris.write('/* Generated today */\n\n') # TODO mettere data e ora di generazione
+        fris.write('/* Generated: {} */\n\n'. format(datetime.now().strftime('%Y/%m/%d %H:%M:%S')))
         # fris.write(fmain.read())
         for line in fmain:
             m = re.match(r'^(\s*)// __import__ (.*)$', line)
@@ -24,7 +25,10 @@ def main():
                 # legge file indicato e sostituisce il contenuto alla riga di import
                 with open(js_path + 'parts/' + import_path, 'r') as fimp:
                     for l in fimp:
-                        fris.write(indent + l)
+                        if re.match(r'^\s*$', l):
+                            fris.write('\n')
+                        else:
+                            fris.write(indent + l)
             else:
                 # non e' uno statement di import
                 fris.write(line)
