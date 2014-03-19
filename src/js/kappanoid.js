@@ -3,17 +3,17 @@
  * Authors: Francesco Cagnin, Marco Gasparini
  */
 
-//trick to create a namespace
+// trick to create a namespace
 var kappanoid = (function () {
     "use strict";
-    //private stuff
+    // private stuff
     function initCanvas(canvas) {
         console.log(canvas);
         canvas.width = 800;
         canvas.height = 600;
     }
 
-    //public stuff
+    // public stuff
     return {
         version: '0.0',
         init: function () {
