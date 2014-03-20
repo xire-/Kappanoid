@@ -94,9 +94,9 @@ var baseVector2 = Object.defineProperties({}, {
 });
 
 var Vector2 = function(x, y) {
+    this.prototype = baseVector2;
     if (x !== undefined && y !== undefined) {
         this.x = x;
         this.y = y;
     }
 };
-Vector2.prototype = baseVector2;
