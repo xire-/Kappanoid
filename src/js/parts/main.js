@@ -33,7 +33,10 @@ var kappanoid = (function() {
         canvas.height = settings.canvasHeight;
     };
 
+
+    /////////////////////////////////// Physics
     // __import__ physics.js
+
 
     // public stuff
     return {
