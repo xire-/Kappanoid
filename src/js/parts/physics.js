@@ -112,4 +112,3 @@ var Vector2 = function(x, y) {
         this.y = y;
     }
 };
-Vector2.prototype = baseVector2;
