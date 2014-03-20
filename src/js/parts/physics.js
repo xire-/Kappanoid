@@ -10,9 +10,9 @@ var baseVector2 = Object.defineProperties({}, {
     },
 
     set: {
-        value: function(point) {
-            this.x = point.x;
-            this.y = point.y;
+        value: function(vector) {
+            vector.x = vector.x;
+            vector.y = vector.y;
             return this;
         }
     },
@@ -24,17 +24,17 @@ var baseVector2 = Object.defineProperties({}, {
     },
 
     add: {
-        value: function(displacement) {
-            this.x += displacement.x;
-            this.y += displacement.y;
+        value: function(vector) {
+            this.x += vector.x;
+            this.y += vector.y;
             return this;
         }
     },
 
     sub: {
-        value: function(displacement) {
-            this.x -= displacement.x;
-            this.y -= displacement.y;
+        value: function(vector) {
+            this.x -= vector.x;
+            this.y -= vector.y;
             return this;
         }
     },
@@ -48,8 +48,8 @@ var baseVector2 = Object.defineProperties({}, {
     },
 
     dot: {
-        value: function(vec) {
-            return this.x * vec.x + this.y * vec.y;
+        value: function(vector) {
+            return this.x * vector.x + this.y * vector.y;
         }
     },
 
@@ -63,14 +63,14 @@ var baseVector2 = Object.defineProperties({}, {
     },
 
     distance: {
-        value: function(vec) {
-            return Math.sqrt(this.squaredDistance(vec));
+        value: function(vector) {
+            return Math.sqrt(this.squaredDistance(vector));
         }
     },
 
     squaredDistance: {
-        value: function(vec) {
-            return (this.x - vec.x) * (this.x - vec.x) + (this.y - vec.y) * (this.y - vec.y);
+        value: function(vector) {
+            return (this.x - vector.x) * (this.x - vector.x) + (this.y - vector.y) * (this.y - vector.y);
         }
     },
 
