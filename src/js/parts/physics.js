@@ -11,6 +11,8 @@ var baseVector2 = Object.defineProperties({}, {
 
     set: {
         value: function(vector) {
+            console.assert(vector instanceof Vector2);
+
             vector.x = vector.x;
             vector.y = vector.y;
             return this;
@@ -25,6 +27,8 @@ var baseVector2 = Object.defineProperties({}, {
 
     add: {
         value: function(vector) {
+            console.assert(vector instanceof Vector2);
+
             this.x += vector.x;
             this.y += vector.y;
             return this;
@@ -33,6 +37,8 @@ var baseVector2 = Object.defineProperties({}, {
 
     sub: {
         value: function(vector) {
+            console.assert(vector instanceof Vector2);
+
             this.x -= vector.x;
             this.y -= vector.y;
             return this;
@@ -49,6 +55,8 @@ var baseVector2 = Object.defineProperties({}, {
 
     dot: {
         value: function(vector) {
+            console.assert(vector instanceof Vector2);
+
             return this.x * vector.x + this.y * vector.y;
         }
     },
@@ -64,12 +72,16 @@ var baseVector2 = Object.defineProperties({}, {
 
     distance: {
         value: function(vector) {
+            console.assert(vector instanceof Vector2);
+
             return Math.sqrt(this.squaredDistance(vector));
         }
     },
 
     squaredDistance: {
         value: function(vector) {
+            console.assert(vector instanceof Vector2);
+
             return (this.x - vector.x) * (this.x - vector.x) + (this.y - vector.y) * (this.y - vector.y);
         }
     },
@@ -94,7 +106,7 @@ var baseVector2 = Object.defineProperties({}, {
 });
 
 var Vector2 = function(x, y) {
-    if (x !== undefined && y !== undefined) {
+    if (jQuery.type(x) !== "undefined" && jQuery.type(y) !== "undefined") {
         this.x = x;
         this.y = y;
     }
