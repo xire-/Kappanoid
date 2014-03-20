@@ -4,6 +4,13 @@ import sys
 import re
 from datetime import datetime
 
+def is_assert_line(line):
+    m = re.match(r'^\s*console\.assert\(.*\);\s*$', line)
+    return m is not None
+
+def is_empty_line(line):
+    return re.match(r'^\s*$', line) is not None
+
 def main():
     # read options from argv
     if len(sys.argv) < 3:
@@ -31,17 +38,21 @@ def main():
                 # put the content of the indicated file in the final file
                 with open(js_path + 'parts/' + import_path, 'r') as fimp:
                     for l in fimp:
-                        if re.match(r'^\s*$', l):
+                        if not debug_flag and is_assert_line(l):
+                            # skip this assert if not in debug
+                            continue
+                        
+                        if is_empty_line(l):
                             fris.write('\n')
                         else:
                             fris.write(indent + l)
                 continue
 
-            m = re.match(r'^(\s*)console\.log\(.*\);$', line)
-            if m is not None and not debug_flag:
+            if not debug_flag and is_assert_line(line):
+                # skip this assert if not in debug
                 continue
 
-            # it's not a special statement, don't modify
+            # if it's not a special statement, don't modify
             fris.write(line)
 
 

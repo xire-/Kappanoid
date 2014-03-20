@@ -37,6 +37,8 @@ var kappanoid = (function() {
     /////////////////////////////////// Physics
     // __import__ physics.js
 
+
+    /////////////////////////////////// Game Objects
     // __import__ game_objects.js
 
 
