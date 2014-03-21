@@ -11,37 +11,38 @@ var baseBrick = Object.defineProperties({}, {
 
     life: {
         value: 1,
-        writeable: true
+        writable: true
     },
 
     color: {
-        value: '#f00'
+        value: '#f00',
+        writable: true
     },
 
     set: {
-        value: function(point) {
-            this.x = point.x;
-            this.y = point.y;
+        value: function(vector) {
+            console.assert(vector instanceof Vector2);
+
+            this.x = vector.x;
+            this.y = vector.y;
             return this;
         }
     },
 
     clone: {
         value: function() {
-            return new Brick(this.x, this.y);
+            return new Brick(this.x, this.y, this.life, this.color);
         }
     },
 
     toString: {
         value: function() {
-            return 'Brick(x: ' + this.x + ' y: ' + this.y + ')';
+            return 'Brick(x: ' + this.x + ' y: ' + this.y + ' life: ' + this.life + ' color: ' + this.color + ')';
         }
     }
 });
 
 var Brick = function(x, y, life, color) {
-    this.prototype = baseBrick;
-
     if (x !== undefined && y !== undefined) {
         this.x = x;
         this.y = y;
@@ -55,3 +56,21 @@ var Brick = function(x, y, life, color) {
         this.color = color;
     }
 };
+Brick.prototype = baseBrick;
+
+function testBrick() {
+    var brick1 = new Brick();
+    console.assert(brick1.x === 0 && brick1.y === 0 && brick1.life === 1 && brick1.color === '#f00');
+
+    brick1 = new Brick(3);
+    console.assert(brick1.x === 0 && brick1.y === 0 && brick1.life === 1 && brick1.color === '#f00');
+
+    brick1 = new Brick(3, 4);
+    console.assert(brick1.x === 3 && brick1.y === 4 && brick1.life === 1 && brick1.color === '#f00');
+
+    brick1 = new Brick(3, 4, 2);
+    console.assert(brick1.x === 3 && brick1.y === 4 && brick1.life === 2 && brick1.color === '#f00');
+
+    brick1 = new Brick(3, 4, 2, '#fff');
+    console.assert(brick1.x === 3 && brick1.y === 4 && brick1.life === 2 && brick1.color === '#fff');
+}
