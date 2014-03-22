@@ -299,3 +299,11 @@ function testWorld() {
     var world1 = new World(size1);
     console.assert(JSON.stringify(world1.balls) === JSON.stringify([]) && JSON.stringify(world1.bricks) === JSON.stringify([]) && JSON.stringify(world1.paddle) === JSON.stringify(new Paddle()) && JSON.stringify(world1.size) === JSON.stringify(size1));
 }
+
+
+function testGameObjects() {
+    testBall();
+    testBrick();
+    testPaddle();
+    testWorld();
+}
