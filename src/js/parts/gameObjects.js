@@ -247,3 +247,55 @@ function testPaddle() {
     var paddle2 = paddle1.clone();
     console.assert(JSON.stringify(paddle1) === JSON.stringify(paddle2));
 }
+
+
+var baseWorld = Object.defineProperties({}, {
+    balls: {
+        value: [],
+        writable: true
+    },
+
+    bricks: {
+        value: [],
+        writable: true
+    },
+
+    paddle: {
+        value: new Paddle(),
+        writable: true
+    },
+
+    _size: {
+        value: new Vector2(800, 600),
+        writable: true
+    },
+    get size() {
+        return this._size;
+    },
+    set size(vector) {
+        console.assert(vector instanceof Vector2);
+        this._size = vector;
+    },
+
+    toString: {
+        value: function() {
+            return 'World(balls: ' + this.balls + ', balls: ' + this.balls + ', paddle: ' + this.paddle + ', size: ' + this.size + ')';
+        }
+    }
+});
+
+var World = function(size) {
+    if (size !== undefined && size instanceof Vector2) {
+        this.size = size;
+    }
+};
+World.prototype = baseWorld;
+
+function testWorld() {
+    var world1 = new World();
+    console.assert(JSON.stringify(world1.balls) === JSON.stringify([]) && JSON.stringify(world1.bricks) === JSON.stringify([]) && JSON.stringify(world1.paddle) === JSON.stringify(new Paddle()) && JSON.stringify(world1.size) === JSON.stringify(new Vector2(800, 600)));
+
+    var size1 = new Vector2(400, 200);
+    var world1 = new World(size1);
+    console.assert(JSON.stringify(world1.balls) === JSON.stringify([]) && JSON.stringify(world1.bricks) === JSON.stringify([]) && JSON.stringify(world1.paddle) === JSON.stringify(new Paddle()) && JSON.stringify(world1.size) === JSON.stringify(size1));
+}
