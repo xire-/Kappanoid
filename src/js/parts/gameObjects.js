@@ -249,6 +249,43 @@ function testPaddle() {
 }
 
 
+var baseContainerBox = Object.defineProperties({}, {
+    _size: {
+        value: new Vector2(800, 600),
+        writable: true
+    },
+    get size() {
+        return this._size;
+    },
+    set size(vector) {
+        console.assert(vector instanceof Vector2);
+        this._size = vector;
+    },
+
+    toString: {
+        value: function() {
+            return 'ContainerBox(size: ' + this.size + ')';
+        }
+    }
+});
+
+var ContainerBox = function(size) {
+    if (size !== undefined && size instanceof Vector2) {
+        this.size = size;
+    }
+};
+ContainerBox.prototype = baseContainerBox;
+
+function testContainerBox() {
+    var containerBox1 = new ContainerBox();
+    console.assert(JSON.stringify(containerBox1.size) === JSON.stringify(new Vector2(800, 600)));
+
+    var size1 = new Vector2(400, 200);
+    containerBox1 = new ContainerBox(size1);
+    console.assert(JSON.stringify(containerBox1.size) === JSON.stringify(size1));
+}
+
+
 var baseWorld = Object.defineProperties({}, {
     balls: {
         value: [],
@@ -265,39 +302,32 @@ var baseWorld = Object.defineProperties({}, {
         writable: true
     },
 
-    _size: {
-        value: new Vector2(800, 600),
+    containerBox: {
+        value: new ContainerBox(),
         writable: true
-    },
-    get size() {
-        return this._size;
-    },
-    set size(vector) {
-        console.assert(vector instanceof Vector2);
-        this._size = vector;
     },
 
     toString: {
         value: function() {
-            return 'World(balls: ' + this.balls + ', balls: ' + this.balls + ', paddle: ' + this.paddle + ', size: ' + this.size + ')';
+            return 'World(balls: ' + this.balls + ', balls: ' + this.balls + ', paddle: ' + this.paddle + ', containerBox: ' + this.containerBox + ')';
         }
     }
 });
 
-var World = function(size) {
-    if (size !== undefined && size instanceof Vector2) {
-        this.size = size;
+var World = function(containerBox) {
+    if (containerBox !== undefined && containerBox instanceof ContainerBox) {
+        this.containerBox = containerBox;
     }
 };
 World.prototype = baseWorld;
 
 function testWorld() {
     var world1 = new World();
-    console.assert(JSON.stringify(world1.balls) === JSON.stringify([]) && JSON.stringify(world1.bricks) === JSON.stringify([]) && JSON.stringify(world1.paddle) === JSON.stringify(new Paddle()) && JSON.stringify(world1.size) === JSON.stringify(new Vector2(800, 600)));
+    console.assert(JSON.stringify(world1.balls) === JSON.stringify([]) && JSON.stringify(world1.bricks) === JSON.stringify([]) && JSON.stringify(world1.paddle) === JSON.stringify(new Paddle()) && JSON.stringify(world1.containerBox) === JSON.stringify(new ContainerBox()));
 
-    var size1 = new Vector2(400, 200);
-    var world1 = new World(size1);
-    console.assert(JSON.stringify(world1.balls) === JSON.stringify([]) && JSON.stringify(world1.bricks) === JSON.stringify([]) && JSON.stringify(world1.paddle) === JSON.stringify(new Paddle()) && JSON.stringify(world1.size) === JSON.stringify(size1));
+    var containerBox1 = new ContainerBox(new Vector2(400, 300));
+    world1 = new World(containerBox1);
+    console.assert(JSON.stringify(world1.balls) === JSON.stringify([]) && JSON.stringify(world1.bricks) === JSON.stringify([]) && JSON.stringify(world1.paddle) === JSON.stringify(new Paddle()) && JSON.stringify(world1.containerBox) === JSON.stringify(containerBox1));
 }
 
 
@@ -305,5 +335,6 @@ function testGameObjects() {
     testBall();
     testBrick();
     testPaddle();
+    testContainerBox();
     testWorld();
 }
