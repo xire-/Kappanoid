@@ -14,6 +14,9 @@ var kappanoid = (function() {
     // keep count of the current mean frame per second
     var currentFPS = 0;
 
+    // graphic context, used by the rendering process
+    var g;
+
     // store all the configurable settings
     var settings = {
         canvasWidth: 800,
@@ -32,6 +35,7 @@ var kappanoid = (function() {
 
     var initCanvas = function() {
         var canvas = $('#gameCanvas')[0];
+        g = canvas.getContext('2d');
 
         canvas.width = settings.canvasWidth;
         canvas.height = settings.canvasHeight;
@@ -75,11 +79,23 @@ var kappanoid = (function() {
     };
 
     var renderGame = function(delta) {
-        //TODO render
+        var w = settings.canvasWidth;
+        var h = settings.canvasHeight;
+
+        g.clearRect(0, 0, w, h);
+
+        g.strokeStyle = '#ff0000';
+        g.strokeRect(0.5, 0.5, w - 1, h - 1);
+
+        g.strokeStyle = '#ff0000';
+        g.textAlign = 'left';
+        g.textBaseline = 'top';
+        g.strokeText('FPS:' + currentFPS + ' DELTA:' + delta, 5, 5);
     };
 
     var updateGame = function(delta) {
         // TODO update physics
+
     };
 
     /////////////////////////////////// Physics
