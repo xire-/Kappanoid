@@ -39,7 +39,7 @@ var kappanoid = (function() {
 
 
     /////////////////////////////////// Game Objects
-    // __import__ game_objects.js
+    // __import__ gameObjects.js
 
 
     // public stuff

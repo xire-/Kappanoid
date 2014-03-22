@@ -11,7 +11,7 @@ var baseVector2 = Object.defineProperties({}, {
 
     set: {
         value: function(vector) {
-            console.assert(vector instanceof Vector2);
+            console.assert(vector instanceof Vector2, vector);
 
             this.x = vector.x;
             this.y = vector.y;
@@ -27,7 +27,7 @@ var baseVector2 = Object.defineProperties({}, {
 
     add: {
         value: function(vector) {
-            console.assert(vector instanceof Vector2);
+            console.assert(vector instanceof Vector2, vector);
 
             this.x += vector.x;
             this.y += vector.y;
@@ -37,7 +37,7 @@ var baseVector2 = Object.defineProperties({}, {
 
     sub: {
         value: function(vector) {
-            console.assert(vector instanceof Vector2);
+            console.assert(vector instanceof Vector2, vector);
 
             this.x -= vector.x;
             this.y -= vector.y;
@@ -55,7 +55,7 @@ var baseVector2 = Object.defineProperties({}, {
 
     dot: {
         value: function(vector) {
-            console.assert(vector instanceof Vector2);
+            console.assert(vector instanceof Vector2, vector);
 
             return this.x * vector.x + this.y * vector.y;
         }
@@ -67,14 +67,14 @@ var baseVector2 = Object.defineProperties({}, {
             this.x /= scale;
             this.y /= scale;
 
-            console.assert(this.length() === 1);
+            console.assert(this.length() === 1, this.length());
             return this;
         }
     },
 
     distance: {
         value: function(vector) {
-            console.assert(vector instanceof Vector2);
+            console.assert(vector instanceof Vector2, vector);
 
             return Math.sqrt(this.squaredDistance(vector));
         }
@@ -82,7 +82,7 @@ var baseVector2 = Object.defineProperties({}, {
 
     squaredDistance: {
         value: function(vector) {
-            console.assert(vector instanceof Vector2);
+            console.assert(vector instanceof Vector2, vector);
 
             return (this.x - vector.x) * (this.x - vector.x) + (this.y - vector.y) * (this.y - vector.y);
         }
@@ -116,19 +116,20 @@ var Vector2 = function(x, y) {
 Vector2.prototype = baseVector2;
 
 function testVector2() {
-    var vec1 = new Vector2();
-    console.assert(vec1.x === 0 && vec1.y === 0);
+    var vec1, vec2, tmp;
+    vec1 = new Vector2();
+    console.assert(vec1.x === 0 && vec1.y === 0, vec1.x, vec1.y);
 
     vec1 = new Vector2(3);
-    console.assert(vec1.x === 0 && vec1.y === 0);
+    console.assert(vec1.x === 0 && vec1.y === 0, vec1.x, vec1.y);
 
     vec1 = new Vector2(3, 4);
-    console.assert(vec1.x === 3 && vec1.y === 4);
-    console.assert(vec1.length() === 5);
-    console.assert(vec1.squaredLength() === 25);
-    console.assert(vec1.clone().normalize().length() === 1);
+    console.assert(vec1.x === 3 && vec1.y === 4, vec1.x, vec1.y);
+    console.assert(vec1.length() === 5, vec1.length());
+    console.assert(vec1.squaredLength() === 25, vec1.squaredLength());
+    console.assert((tmp = vec1.clone().normalize()).length() === 1, tmp.length());
 
-    var vec2 = new Vector2(3, 4);
-    console.assert(vec1.distance(vec2) === 0);
-    console.assert(vec1.squaredDistance(vec2) === 0);
+    vec2 = new Vector2(3, 4);
+    console.assert(vec1.distance(vec2) === 0, vec1.x, vec1.y);
+    console.assert(vec1.squaredDistance(vec2) === 0, vec1.squaredDistance(vec2));
 }

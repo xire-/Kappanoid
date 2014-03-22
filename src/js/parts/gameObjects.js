@@ -60,17 +60,17 @@ Brick.prototype = baseBrick;
 
 function testBrick() {
     var brick1 = new Brick();
-    console.assert(brick1.x === 0 && brick1.y === 0 && brick1.life === 1 && brick1.color === '#f00');
+    console.assert(brick1.x === 0 && brick1.y === 0 && brick1.life === 1 && brick1.color === '#f00', brick1.x, brick1.y, brick1.life, brick1.color);
 
     brick1 = new Brick(3);
-    console.assert(brick1.x === 0 && brick1.y === 0 && brick1.life === 1 && brick1.color === '#f00');
+    console.assert(brick1.x === 0 && brick1.y === 0 && brick1.life === 1 && brick1.color === '#f00', brick1.x, brick1.y, brick1.life, brick1.color);
 
     brick1 = new Brick(3, 4);
-    console.assert(brick1.x === 3 && brick1.y === 4 && brick1.life === 1 && brick1.color === '#f00');
+    console.assert(brick1.x === 3 && brick1.y === 4 && brick1.life === 1 && brick1.color === '#f00', brick1.x, brick1.y, brick1.life, brick1.color);
 
     brick1 = new Brick(3, 4, 2);
-    console.assert(brick1.x === 3 && brick1.y === 4 && brick1.life === 2 && brick1.color === '#f00');
+    console.assert(brick1.x === 3 && brick1.y === 4 && brick1.life === 2 && brick1.color === '#f00', brick1.x, brick1.y, brick1.life, brick1.color);
 
     brick1 = new Brick(3, 4, 2, '#fff');
-    console.assert(brick1.x === 3 && brick1.y === 4 && brick1.life === 2 && brick1.color === '#fff');
+    console.assert(brick1.x === 3 && brick1.y === 4 && brick1.life === 2 && brick1.color === '#fff', brick1.x, brick1.y, brick1.life, brick1.color);
 }
