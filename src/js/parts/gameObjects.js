@@ -37,7 +37,7 @@ var baseBrick = Object.defineProperties({}, {
 
     toString: {
         value: function() {
-            return 'Brick(x: ' + this.x + ' y: ' + this.y + ' life: ' + this.life + ' color: ' + this.color + ')';
+            return 'Brick(x: ' + this.x + ', y: ' + this.y + ', life: ' + this.life + ', color: ' + this.color + ')';
         }
     }
 });
@@ -60,17 +60,17 @@ Brick.prototype = baseBrick;
 
 function testBrick() {
     var brick1 = new Brick();
-    console.assert(brick1.x === 0 && brick1.y === 0 && brick1.life === 1 && brick1.color === '#f00', brick1.x, brick1.y, brick1.life, brick1.color);
+    console.assert(brick1.x === 0 && brick1.y === 0 && brick1.life === 1 && brick1.color === '#f00', brick1.toString());
 
     brick1 = new Brick(3);
-    console.assert(brick1.x === 0 && brick1.y === 0 && brick1.life === 1 && brick1.color === '#f00', brick1.x, brick1.y, brick1.life, brick1.color);
+    console.assert(brick1.x === 0 && brick1.y === 0 && brick1.life === 1 && brick1.color === '#f00', brick1.toString());
 
     brick1 = new Brick(3, 4);
-    console.assert(brick1.x === 3 && brick1.y === 4 && brick1.life === 1 && brick1.color === '#f00', brick1.x, brick1.y, brick1.life, brick1.color);
+    console.assert(brick1.x === 3 && brick1.y === 4 && brick1.life === 1 && brick1.color === '#f00', brick1.toString());
 
     brick1 = new Brick(3, 4, 2);
-    console.assert(brick1.x === 3 && brick1.y === 4 && brick1.life === 2 && brick1.color === '#f00', brick1.x, brick1.y, brick1.life, brick1.color);
+    console.assert(brick1.x === 3 && brick1.y === 4 && brick1.life === 2 && brick1.color === '#f00', brick1.toString());
 
     brick1 = new Brick(3, 4, 2, '#fff');
-    console.assert(brick1.x === 3 && brick1.y === 4 && brick1.life === 2 && brick1.color === '#fff', brick1.x, brick1.y, brick1.life, brick1.color);
+    console.assert(brick1.x === 3 && brick1.y === 4 && brick1.life === 2 && brick1.color === '#fff', brick1.toString());
 }
