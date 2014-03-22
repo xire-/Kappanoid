@@ -8,8 +8,7 @@ var baseBrick = Object.defineProperties({}, {
     },
     set center(vector) {
         console.assert(vector instanceof Vector2);
-
-        this._center = center;
+        this._center = vector;
     },
 
     _halfSize: {
@@ -21,7 +20,6 @@ var baseBrick = Object.defineProperties({}, {
     },
     set halfSize(vector) {
         console.assert(vector instanceof Vector2);
-
         this._halfSize = vector;
     },
 
