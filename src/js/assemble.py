@@ -4,23 +4,54 @@ import sys
 import re
 from datetime import datetime
 
+# global set of all imported files
+importedFiles = set()
+
 # remove all assertions and test functions from the output file
 # return the processed text
 def remove_debug_code(text):
-    pass
+    # remove test functions
+    ris = re.sub(re.compile(r'\n*( *)function test\S*\(\) \{\n.*?\n\1\}', re.DOTALL),'', text)
+    
+    # remove reamining asserts
+    ris = re.sub(r'\n *console\.assert\(.*\);','', ris)
+    return ris
 
 # find import statement and replace them with the content of the indicated file
 # if a file has already been imported it will be ignored
 # return the processed text
-def process_import(text):
-    pass
+def process_import(text, js_path, debug_flag):
+    # search for import statement and replace content
+    def import_callback(m):
+        global importedFiles
+        indentation = m.group(1)
+        file_name = m.group(2)
 
-def is_assert_line(line):
-    m = re.match(r'^\s*console\.assert\(.*\);\s*$', line)
-    return m is not None
+        if file_name in importedFiles:
+            print '{} is already imported'.format(file_name)
+            return ''
+        importedFiles.add(file_name)
 
-def is_empty_line(line):
-    return re.match(r'^\s*$', line) is not None
+        with open(js_path + 'parts/' + file_name, 'r') as f:
+            file_content = f.read()
+
+        ris = process_import(file_content, js_path, debug_flag)
+
+        # add correct indentation
+        ris = re.sub(r'(.*?\n)', indentation + r'\1', ris)
+        # if last line doesn't have final \n
+        ris = re.sub(r'\n(.*?)$', r'\n' + indentation + r'\1', ris)
+
+        return '\n' + ris
+
+
+    if not debug_flag:
+        text = remove_debug_code(text)
+
+    return re.sub(r'\n( *)// __import__ (.*)', import_callback, text) 
+
+def strip_empty_line_spaces(text):
+    return re.sub(r' *\n', '\n', text)
 
 def main():
     # read options from argv
@@ -36,36 +67,12 @@ def main():
     output_file = sys.argv[2]
     debug_flag = (sys.argv[3] == '-d' or sys.argv[3] == '--debug') if len(sys.argv) > 3 else False
 
-    # read /js/parts/main.js
     with open(js_path + 'parts/main.js') as fmain, open(js_path + output_file, 'w') as fris:
         # print timestamp on top
         fris.write('/* Generated: {} */\n\n'. format(datetime.now().strftime('%Y/%m/%d %H:%M:%S')))
-        for line in fmain:
-            m = re.match(r'^(\s*)// __import__ (.*)$', line)
-            if m is not None:
-                # if it's an import directive
-                indent = m.group(1)
-                import_path = m.group(2)
-                # put the content of the indicated file in the final file
-                with open(js_path + 'parts/' + import_path, 'r') as fimp:
-                    for l in fimp:
-                        if not debug_flag and is_assert_line(l):
-                            # skip this assert if not in debug
-                            continue
-                        
-                        if is_empty_line(l):
-                            fris.write('\n')
-                        else:
-                            fris.write(indent + l)
-                continue
-
-            if not debug_flag and is_assert_line(line):
-                # skip this assert if not in debug
-                continue
-
-            # if it's not a special statement, don't modify
-            fris.write(line)
-
+        ris = process_import(fmain.read(), js_path, debug_flag)
+        fris.write(strip_empty_line_spaces(ris))
 
 if __name__ == '__main__':
     main()
+    
