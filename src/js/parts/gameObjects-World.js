@@ -40,9 +40,18 @@ var baseWorld = Object.defineProperties({}, {
 
     render: {
         value: function(g) {
+            var w = this.containerSize.x;
+            var h = this.containerSize.y;
             g.save();
             g.translate(this.containerOffset.x, this.containerOffset.y);
+
+            //clip the region
+            g.beginPath();
+            g.rect(0,0,w,h);
+            g.clip();
+
             // render background
+            g.clearRect(0,0, 1234, 5433);
 
             // render balls, bricks and paddle
             this.balls.forEach(function(ball) {
