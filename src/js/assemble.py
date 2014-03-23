@@ -4,6 +4,17 @@ import sys
 import re
 from datetime import datetime
 
+# remove all assertions and test functions from the output file
+# return the processed text
+def remove_debug_code(text):
+    pass
+
+# find import statement and replace them with the content of the indicated file
+# if a file has already been imported it will be ignored
+# return the processed text
+def process_import(text):
+    pass
+
 def is_assert_line(line):
     m = re.match(r'^\s*console\.assert\(.*\);\s*$', line)
     return m is not None
