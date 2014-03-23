@@ -26,6 +26,9 @@ var kappanoid = (function() {
     // mouse position relative to upper left corner of canvas(scaled to relative coordinate)
     var mousePos;
 
+    // main loop handle
+    var mainLoopHandle;
+
     // store all the configurable settings
     var settings = {
         canvasWidth: 800,
@@ -34,19 +37,24 @@ var kappanoid = (function() {
     };
 
 
-    var init = function() {
+    var init = function(width, height) {
         // TODO bind keys to actions
         // TODO generate settings interface
-        initCanvas();
+        initCanvas(width, height);
 
         world = new World(new Vector2(40, 30), new Vector2(720, 540));
 
         startMainLoop();
     };
 
-    var initCanvas = function() {
+    var initCanvas = function(width, height) {
+        if (width === undefined || height === undefined) {
+            width = 800;
+            height = 600;
+        };
+
         var canvas = $('#gameCanvas')[0];
-        var scaleFactor = Math.min(settings.canvasWidth / 800, settings.canvasHeight / 600);
+        var scaleFactor = Math.min(width / 800, height / 600);
 
         settings.canvasWidth = 800 * scaleFactor;
         settings.canvasHeight = 600 * scaleFactor;
@@ -86,7 +94,11 @@ var kappanoid = (function() {
         // sum of all FPS since last update
         var totalFps = 0;
 
-        setInterval(
+        //remove previous main loop if any
+        if (mainLoopHandle !== undefined) {
+            clearInterval(mainLoopHandle);
+        };
+        mainLoopHandle = setInterval(
             function() {
                 var currentTime = Date.now();
                 var elapsed = currentTime - lastTime;
