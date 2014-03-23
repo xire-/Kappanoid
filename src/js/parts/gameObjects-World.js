@@ -47,11 +47,11 @@ var baseWorld = Object.defineProperties({}, {
 
             //clip the region
             g.beginPath();
-            g.rect(0,0,w,h);
+            g.rect(0, 0, w, h);
             g.clip();
 
             // render background
-            g.clearRect(0,0, 1234, 5433);
+            g.clearRect(0, 0, 1337, 1337);
 
             // render balls, bricks and paddle
             this.balls.forEach(function(ball) {

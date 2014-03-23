@@ -19,7 +19,7 @@ var kappanoid = (function() {
 
     // graphic context, used by the rendering process
     var g;
-    
+
     // world game ogject
     var world;
 
@@ -35,9 +35,9 @@ var kappanoid = (function() {
         // TODO bind keys to actions
         // TODO generate settings interface
         initCanvas();
-        
+
         world = new World(new Vector2(40, 30), new Vector2(720, 540));
-        
+
         startMainLoop();
     };
 
@@ -99,13 +99,13 @@ var kappanoid = (function() {
 
         //clear the previous frame
         g.fillStyle = settings.canvasBackgroundColor;
-        g.fillRect(0, 0, 800, 600);   
+        g.fillRect(0, 0, 800, 600);
 
         //render the game world
         world.render(g);
 
         //TODO render the GUI
-        
+
         g.fillStyle = '#f00';
         g.textAlign = 'left';
         g.textBaseline = 'top';

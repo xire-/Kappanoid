@@ -1,4 +1,4 @@
-/* Generated: 2014/03/23 17:59:40 */
+/* Generated: 2014/03/23 19:43:51 */
 
 /*
  * Kappanoid game
@@ -29,7 +29,7 @@ var kappanoid = (function() {
     var settings = {
         canvasWidth: 800,
         canvasHeight: 600,
-        canvasBackgroundColor: '#babbe0'
+        canvasBackgroundColor: '#000'
     };
 
 
@@ -45,10 +45,16 @@ var kappanoid = (function() {
 
     var initCanvas = function() {
         var canvas = $('#gameCanvas')[0];
-        g = canvas.getContext('2d');
+        var scaleFactor = Math.min(settings.canvasWidth / 800, settings.canvasHeight / 600);
+
+        settings.canvasWidth = 800 * scaleFactor;
+        settings.canvasHeight = 600 * scaleFactor;
 
         canvas.width = settings.canvasWidth;
         canvas.height = settings.canvasHeight;
+
+        g = canvas.getContext('2d');
+        g.scale(scaleFactor, scaleFactor);
     };
 
     var startMainLoop = function() {
@@ -91,30 +97,34 @@ var kappanoid = (function() {
     };
 
     var renderGame = function(delta) {
-        var w = settings.canvasWidth;
-        var h = settings.canvasHeight;
-
-        g.clearRect(0, 0, w, h);
-
         g.save();
-        g.fillStyle = settings.canvasBackgroundColor;
-        g.fillRect(0, 0, w, h);
-        g.strokeStyle = '#ff0000';
-        g.strokeRect(0.5, 0.5, w - 1, h - 1);
-        g.restore();
 
+        //clear the previous frame
+        g.fillStyle = settings.canvasBackgroundColor;
+        g.fillRect(0, 0, 800, 600);
+
+        //render the game world
         world.render(g);
 
+        //TODO render the GUI
+
+        g.fillStyle = '#f00';
         g.textAlign = 'left';
         g.textBaseline = 'top';
-        g.strokeText('FPS: ' + currentFPS, 5, 5);
-        g.strokeText('DELTA: ' + delta, 5, 15);
-        g.strokeText('LOOP: ' + loopTime, 5, 25);
+        g.fillText('FPS: ' + currentFPS, 5, 5);
+        g.fillText('DELTA: ' + delta, 5, 15);
+        g.fillText('LOOP: ' + loopTime, 5, 25);
+
+        g.restore();
     };
 
     var updateGame = function(delta) {
         // TODO update physics
 
+    };
+
+    var toString = function() {
+        return JSON.stringify(settings);
     };
 
     /////////////////////////////////// Physics
@@ -592,9 +602,18 @@ var kappanoid = (function() {
 
         render: {
             value: function(g) {
+                var w = this.containerSize.x;
+                var h = this.containerSize.y;
                 g.save();
                 g.translate(this.containerOffset.x, this.containerOffset.y);
+
+                //clip the region
+                g.beginPath();
+                g.rect(0, 0, w, h);
+                g.clip();
+
                 // render background
+                g.clearRect(0, 0, 1337, 1337);
 
                 // render balls, bricks and paddle
                 this.balls.forEach(function(ball) {
@@ -654,7 +673,8 @@ var kappanoid = (function() {
     // public stuff
     return {
         version: '0.0',
-        init: init
+        init: init,
+        toString: toString
     };
 }());
 
