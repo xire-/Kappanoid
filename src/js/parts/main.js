@@ -51,7 +51,7 @@ var kappanoid = (function() {
         if (width === undefined || height === undefined) {
             width = 800;
             height = 600;
-        };
+        }
 
         var canvas = $('#gameCanvas')[0];
         var scaleFactor = Math.min(width / 800, height / 600);
@@ -97,7 +97,7 @@ var kappanoid = (function() {
         //remove previous main loop if any
         if (mainLoopHandle !== undefined) {
             clearInterval(mainLoopHandle);
-        };
+        }
         mainLoopHandle = setInterval(
             function() {
                 var currentTime = Date.now();
