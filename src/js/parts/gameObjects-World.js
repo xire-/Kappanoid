@@ -38,11 +38,6 @@ var baseWorld = Object.defineProperties({}, {
         writable: true
     },
 
-    containerBox: {
-        value: new ContainerBox(),
-        writable: true
-    },
-
     render: {
         value: function(g) {
             g.save();
@@ -65,7 +60,7 @@ var baseWorld = Object.defineProperties({}, {
 
     toString: {
         value: function() {
-            return 'World(balls: ' + this.balls + ', bricks: ' + this.bricks + ', paddle: ' + this.paddle + ', containerBox: ' + this.containerBox + ')';
+            return 'World(balls: ' + this.balls + ', bricks: ' + this.bricks + ', paddle: ' + this.paddle + ')';
         }
     }
 });
@@ -92,9 +87,5 @@ World.prototype = baseWorld;
 
 function testWorld() {
     var world1 = new World();
-    console.assert(JSON.stringify(world1.balls) === JSON.stringify([]) && JSON.stringify(world1.bricks) === JSON.stringify([]) && JSON.stringify(world1.paddle) === JSON.stringify(new Paddle()) && JSON.stringify(world1.containerBox) === JSON.stringify(new ContainerBox()));
-
-    var containerBox1 = new ContainerBox(new Vector2(400, 300));
-    world1 = new World(containerBox1);
-    console.assert(JSON.stringify(world1.balls) === JSON.stringify([]) && JSON.stringify(world1.bricks) === JSON.stringify([]) && JSON.stringify(world1.paddle) === JSON.stringify(new Paddle()) && JSON.stringify(world1.containerBox) === JSON.stringify(containerBox1));
+    console.assert(JSON.stringify(world1.balls) === JSON.stringify([]) && JSON.stringify(world1.bricks) === JSON.stringify([]) && JSON.stringify(world1.paddle) === JSON.stringify(new Paddle()));
 }

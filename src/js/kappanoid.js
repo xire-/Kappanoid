@@ -1,4 +1,4 @@
-/* Generated: 2014/03/23 17:33:26 */
+/* Generated: 2014/03/23 17:59:40 */
 
 /*
  * Kappanoid game
@@ -118,6 +118,7 @@ var kappanoid = (function() {
     };
 
     /////////////////////////////////// Physics
+    ///////////////// Vector2
     var baseVector2 = Object.defineProperties({}, {
         x: {
             value: 0,
@@ -255,7 +256,13 @@ var kappanoid = (function() {
     }
 
 
+    function testPhysics() {
+        testVector2();
+    }
+
+
     /////////////////////////////////// Game Objects
+    ///////////////// Ball
     var baseBall = Object.defineProperties({}, {
         _center: {
             value: new Vector2(),
@@ -338,6 +345,7 @@ var kappanoid = (function() {
     }
 
 
+    ///////////////// Brick
     var baseBrick = Object.defineProperties({}, {
         _center: {
             value: new Vector2(),
@@ -439,6 +447,7 @@ var kappanoid = (function() {
     }
 
 
+    ///////////////// Paddle
     var basePaddle = Object.defineProperties({}, {
         _center: {
             value: new Vector2(),
@@ -540,43 +549,7 @@ var kappanoid = (function() {
     }
 
 
-    var baseContainerBox = Object.defineProperties({}, {
-        _size: {
-            value: new Vector2(800, 600),
-            writable: true
-        },
-        get size() {
-            return this._size;
-        },
-        set size(vector) {
-            console.assert(vector instanceof Vector2);
-            this._size = vector;
-        },
-
-        toString: {
-            value: function() {
-                return 'ContainerBox(size: ' + this.size + ')';
-            }
-        }
-    });
-
-    var ContainerBox = function(size) {
-        if (size !== undefined && size instanceof Vector2) {
-            this.size = size;
-        }
-    };
-    ContainerBox.prototype = baseContainerBox;
-
-    function testContainerBox() {
-        var containerBox1 = new ContainerBox();
-        console.assert(JSON.stringify(containerBox1.size) === JSON.stringify(new Vector2(800, 600)));
-
-        var size1 = new Vector2(400, 200);
-        containerBox1 = new ContainerBox(size1);
-        console.assert(JSON.stringify(containerBox1.size) === JSON.stringify(size1));
-    }
-
-
+    ///////////////// World
     var baseWorld = Object.defineProperties({}, {
         _containerOffset: {
             value: new Vector2(),
@@ -617,11 +590,6 @@ var kappanoid = (function() {
             writable: true
         },
 
-        containerBox: {
-            value: new ContainerBox(),
-            writable: true
-        },
-
         render: {
             value: function(g) {
                 g.save();
@@ -644,7 +612,7 @@ var kappanoid = (function() {
 
         toString: {
             value: function() {
-                return 'World(balls: ' + this.balls + ', bricks: ' + this.bricks + ', paddle: ' + this.paddle + ', containerBox: ' + this.containerBox + ')';
+                return 'World(balls: ' + this.balls + ', bricks: ' + this.bricks + ', paddle: ' + this.paddle + ')';
             }
         }
     });
@@ -671,11 +639,7 @@ var kappanoid = (function() {
 
     function testWorld() {
         var world1 = new World();
-        console.assert(JSON.stringify(world1.balls) === JSON.stringify([]) && JSON.stringify(world1.bricks) === JSON.stringify([]) && JSON.stringify(world1.paddle) === JSON.stringify(new Paddle()) && JSON.stringify(world1.containerBox) === JSON.stringify(new ContainerBox()));
-
-        var containerBox1 = new ContainerBox(new Vector2(400, 300));
-        world1 = new World(containerBox1);
-        console.assert(JSON.stringify(world1.balls) === JSON.stringify([]) && JSON.stringify(world1.bricks) === JSON.stringify([]) && JSON.stringify(world1.paddle) === JSON.stringify(new Paddle()) && JSON.stringify(world1.containerBox) === JSON.stringify(containerBox1));
+        console.assert(JSON.stringify(world1.balls) === JSON.stringify([]) && JSON.stringify(world1.bricks) === JSON.stringify([]) && JSON.stringify(world1.paddle) === JSON.stringify(new Paddle()));
     }
 
 
@@ -683,7 +647,6 @@ var kappanoid = (function() {
         testBall();
         testBrick();
         testPaddle();
-        testContainerBox();
         testWorld();
     }
 
