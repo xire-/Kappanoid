@@ -1,4 +1,4 @@
-/* Generated: 2014/03/23 19:43:51 */
+/* Generated: 2014/03/23 23:22:42 */
 
 /*
  * Kappanoid game
@@ -24,6 +24,9 @@ var kappanoid = (function() {
 
     // world game ogject
     var world;
+
+    // mouse position relative to upper left corner of canvas(scaled to relative coordinate)
+    var mousePos;
 
     // store all the configurable settings
     var settings = {
@@ -55,6 +58,26 @@ var kappanoid = (function() {
 
         g = canvas.getContext('2d');
         g.scale(scaleFactor, scaleFactor);
+
+        mousePos = new Vector2();
+        // receive mouse movement update
+        window.onmousemove = function(e) {
+            var x;
+            var y;
+            if (e.pageX !== undefined && e.pageY !== undefined) {
+                x = e.pageX;
+                y = e.pageY;
+            } else {
+                x = e.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+                y = e.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+            }
+
+            x -= canvas.offsetLeft;
+            y -= canvas.offsetTop;
+
+            mousePos.x = x / scaleFactor;
+            mousePos.y = y / scaleFactor;
+        };
     };
 
     var startMainLoop = function() {
@@ -107,6 +130,9 @@ var kappanoid = (function() {
         world.render(g);
 
         //TODO render the GUI
+
+        g.fillStyle = '#0ff';
+        g.fillRect(mousePos.x - 3, mousePos.y - 3, 6, 6);
 
         g.fillStyle = '#f00';
         g.textAlign = 'left';
