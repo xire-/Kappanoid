@@ -1,4 +1,4 @@
-/* Generated: 2014/03/23 02:10:07 */
+/* Generated: 2014/03/23 17:33:26 */
 
 /*
  * Kappanoid game
@@ -22,6 +22,9 @@ var kappanoid = (function() {
     // graphic context, used by the rendering process
     var g;
 
+    // world game ogject
+    var world;
+
     // store all the configurable settings
     var settings = {
         canvasWidth: 800,
@@ -34,6 +37,8 @@ var kappanoid = (function() {
         // TODO bind keys to actions
         // TODO generate settings interface
         initCanvas();
+
+        world = new World(new Vector2(40, 30), new Vector2(720, 540));
 
         startMainLoop();
     };
@@ -97,6 +102,8 @@ var kappanoid = (function() {
         g.strokeStyle = '#ff0000';
         g.strokeRect(0.5, 0.5, w - 1, h - 1);
         g.restore();
+
+        world.render(g);
 
         g.textAlign = 'left';
         g.textBaseline = 'top';
@@ -247,6 +254,7 @@ var kappanoid = (function() {
         console.assert(vec1.squaredDistance(vec2) === 0, vec1.squaredDistance(vec2));
     }
 
+
     /////////////////////////////////// Game Objects
     var baseBall = Object.defineProperties({}, {
         _center: {
@@ -269,6 +277,17 @@ var kappanoid = (function() {
         color: {
             value: '#f00',
             writable: true
+        },
+
+        render: {
+            value: function(g) {
+                g.save();
+                g.fillStyle = this.color;
+                g.beginPath();
+                g.arc(this.center.x, this.center.y, this.radius, 0, 2 * Math.PI);
+                g.fill();
+                g.restore();
+            }
         },
 
         clone: {
@@ -352,6 +371,17 @@ var kappanoid = (function() {
         color: {
             value: '#f00',
             writable: true
+        },
+
+        render: {
+            value: function(g) {
+                g.save();
+                g.fillStyle = this.color;
+                g.beginPath();
+                g.rect(this.center.x - this.halfSize.x, this.center.y - this.halfSize.y, this.halfSize.x * 2, this.halfSize.y * 2);
+                g.fill();
+                g.restore();
+            }
         },
 
         clone: {
@@ -442,6 +472,17 @@ var kappanoid = (function() {
         color: {
             value: '#f00',
             writable: true
+        },
+
+        render: {
+            value: function(g) {
+                g.save();
+                g.fillStyle = this.color;
+                g.beginPath();
+                g.rect(this.center.x - this.halfSize.x, this.center.y - this.halfSize.y, this.halfSize.x * 2, this.halfSize.y * 2);
+                g.fill();
+                g.restore();
+            }
         },
 
         clone: {
@@ -537,6 +578,30 @@ var kappanoid = (function() {
 
 
     var baseWorld = Object.defineProperties({}, {
+        _containerOffset: {
+            value: new Vector2(),
+            writable: true
+        },
+        get containerOffset() {
+            return this._containerOffset;
+        },
+        set containerOffset(vector) {
+            console.assert(vector instanceof Vector2);
+            this._containerOffset = vector;
+        },
+
+        _containerSize: {
+            value: new Vector2(720, 540),
+            writable: true
+        },
+        get containerSize() {
+            return this._containerSize;
+        },
+        set containerSize(vector) {
+            console.assert(vector instanceof Vector2);
+            this._containerSize = vector;
+        },
+
         balls: {
             value: [],
             writable: true
@@ -557,17 +622,50 @@ var kappanoid = (function() {
             writable: true
         },
 
+        render: {
+            value: function(g) {
+                g.save();
+                g.translate(this.containerOffset.x, this.containerOffset.y);
+                // render background
+
+                // render balls, bricks and paddle
+                this.balls.forEach(function(ball) {
+                    ball.render(g);
+                });
+
+                this.bricks.forEach(function(brick) {
+                    brick.render(g);
+                });
+
+                this.paddle.render(g);
+                g.restore();
+            }
+        },
+
         toString: {
             value: function() {
-                return 'World(balls: ' + this.balls + ', balls: ' + this.balls + ', paddle: ' + this.paddle + ', containerBox: ' + this.containerBox + ')';
+                return 'World(balls: ' + this.balls + ', bricks: ' + this.bricks + ', paddle: ' + this.paddle + ', containerBox: ' + this.containerBox + ')';
             }
         }
     });
 
-    var World = function(containerBox) {
-        if (containerBox !== undefined && containerBox instanceof ContainerBox) {
-            this.containerBox = containerBox;
+    var World = function(containerOffset, containerSize, levelConf) {
+        if (containerOffset !== undefined && containerOffset instanceof Vector2) {
+            this.containerOffset = containerOffset;
         }
+
+        if (containerSize !== undefined && containerSize instanceof Vector2) {
+            this.containerSize = containerSize;
+        }
+
+        if (levelConf !== undefined) {
+            console.assert(false, 'todo');
+        }
+
+        // initialize all game objects
+        this.balls.push(new Ball(new Vector2(400, 300), 5, '#00f'));
+        this.bricks.push(new Brick(new Vector2(200, 200), new Vector2(10, 3), 1, '#ff0'));
+        this.paddle = new Paddle(new Vector2(400, 500), new Vector2(50, 5), 1, '#0f0');
     };
     World.prototype = baseWorld;
 
@@ -588,6 +686,7 @@ var kappanoid = (function() {
         testContainerBox();
         testWorld();
     }
+
 
     // public stuff
     return {

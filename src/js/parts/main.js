@@ -19,6 +19,9 @@ var kappanoid = (function() {
 
     // graphic context, used by the rendering process
     var g;
+    
+    // world game ogject
+    var world;
 
     // store all the configurable settings
     var settings = {
@@ -32,7 +35,9 @@ var kappanoid = (function() {
         // TODO bind keys to actions
         // TODO generate settings interface
         initCanvas();
-
+        
+        world = new World(new Vector2(40, 30), new Vector2(720, 540));
+        
         startMainLoop();
     };
 
@@ -95,7 +100,9 @@ var kappanoid = (function() {
         g.strokeStyle = '#ff0000';
         g.strokeRect(0.5, 0.5, w - 1, h - 1);
         g.restore();
-
+        
+        world.render(g);
+        
         g.textAlign = 'left';
         g.textBaseline = 'top';
         g.strokeText('FPS: ' + currentFPS, 5, 5);
