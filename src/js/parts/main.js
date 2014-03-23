@@ -90,10 +90,11 @@ var kappanoid = (function() {
         g.clearRect(0, 0, w, h);
 
         g.save();
+        g.fillStyle = settings.canvasBackgroundColor;
+        g.fillRect(0, 0, w, h);
         g.strokeStyle = '#ff0000';
         g.strokeRect(0.5, 0.5, w - 1, h - 1);
-        g.restore()
-
+        g.restore();
 
         g.textAlign = 'left';
         g.textBaseline = 'top';
