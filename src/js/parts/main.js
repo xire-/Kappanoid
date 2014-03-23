@@ -14,6 +14,9 @@ var kappanoid = (function() {
     // keep count of the current mean frame per second
     var currentFPS = 0;
 
+    // millisecond spent in one iteration of the main loop
+    var loopTime = 0;
+
     // graphic context, used by the rendering process
     var g;
 
@@ -73,6 +76,8 @@ var kappanoid = (function() {
                 }
 
                 renderGame(elapsed);
+
+                loopTime = Date.now() - lastTime;
             },
             16
         );
@@ -84,13 +89,17 @@ var kappanoid = (function() {
 
         g.clearRect(0, 0, w, h);
 
+        g.save();
         g.strokeStyle = '#ff0000';
         g.strokeRect(0.5, 0.5, w - 1, h - 1);
+        g.restore()
 
-        g.strokeStyle = '#ff0000';
+
         g.textAlign = 'left';
         g.textBaseline = 'top';
-        g.strokeText('FPS:' + currentFPS + ' DELTA:' + delta, 5, 5);
+        g.strokeText('FPS: ' + currentFPS, 5, 5);
+        g.strokeText('DELTA: ' + delta, 5, 15);
+        g.strokeText('LOOP: ' + loopTime, 5, 25);
     };
 
     var updateGame = function(delta) {
