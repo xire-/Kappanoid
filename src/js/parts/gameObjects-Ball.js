@@ -1,64 +1,67 @@
-var baseBall = Object.defineProperties({}, {
-    _center: {
-        value: new Vector2(),
-        writable: true
-    },
-    get center() {
-        return this._center;
-    },
-    set center(vector) {
-        console.assert(vector instanceof Vector2);
-        this._center = vector;
-    },
+var Ball = (function() {
+    var baseBall = Object.defineProperties({}, {
+        _center: {
+            value: new Vector2(),
+            writable: true
+        },
+        get center() {
+            return this._center;
+        },
+        set center(vector) {
+            console.assert(vector instanceof Vector2);
+            this._center = vector;
+        },
 
-    radius: {
-        value: 5,
-        writable: true
-    },
+        radius: {
+            value: 5,
+            writable: true
+        },
 
-    color: {
-        value: '#f00',
-        writable: true
-    },
+        color: {
+            value: '#f00',
+            writable: true
+        },
 
-    render: {
-        value: function(g) {
-            g.save();
-            g.fillStyle = this.color;
-            g.beginPath();
-            g.arc(this.center.x, this.center.y, this.radius, 0, 2 * Math.PI);
-            g.fill();
-            g.restore();
+        render: {
+            value: function(g) {
+                g.save();
+                g.fillStyle = this.color;
+                g.beginPath();
+                g.arc(this.center.x, this.center.y, this.radius, 0, 2 * Math.PI);
+                g.fill();
+                g.restore();
+            }
+        },
+
+        clone: {
+            value: function() {
+                return new Ball(this.center, this.radius, this.color);
+            }
+        },
+
+        toString: {
+            value: function() {
+                return 'Ball(center: ' + this.center + ', radius: ' + this.radius + ', color: ' + this.color + ')';
+            }
         }
-    },
+    });
 
-    clone: {
-        value: function() {
-            return new Ball(this.center, this.radius, this.color);
+    var Ball = function(center, radius, color) {
+        if (center !== undefined && center instanceof Vector2) {
+            this.center = center;
         }
-    },
 
-    toString: {
-        value: function() {
-            return 'Ball(center: ' + this.center + ', radius: ' + this.radius + ', color: ' + this.color + ')';
+        if (radius !== undefined && typeof radius == 'number') {
+            this.radius = radius;
         }
-    }
-});
 
-var Ball = function(center, radius, color) {
-    if (center !== undefined && center instanceof Vector2) {
-        this.center = center;
-    }
-
-    if (radius !== undefined && typeof radius == 'number') {
-        this.radius = radius;
-    }
-
-    if (color !== undefined && typeof color == 'string') {
-        this.color = color;
-    }
-};
-Ball.prototype = baseBall;
+        if (color !== undefined && typeof color == 'string') {
+            this.color = color;
+        }
+    };
+    Ball.prototype = baseBall;
+    return Ball;
+}());
 
 function testBall() {
     var ball1 = new Ball();
