@@ -11,6 +11,10 @@ var kappanoid = (function() {
     'use strict';
     // private stuff
 
+    // default relative dimensions
+    var defaultWidth = 880;
+    var defaultHeight = 660;
+
     // keep count of the current mean frame per second
     var currentFPS = 0;
 
@@ -31,8 +35,6 @@ var kappanoid = (function() {
 
     // store all the configurable settings
     var settings = {
-        canvasWidth: 800,
-        canvasHeight: 600,
         canvasBackgroundColor: '#000'
     };
 
@@ -42,25 +44,22 @@ var kappanoid = (function() {
         // TODO generate settings interface
         initCanvas(width, height);
 
-        world = new World(new Vector2(40, 30), new Vector2(720, 540));
+        world = new World(new Vector2(40, 50), new Vector2(800, 600));
 
         startMainLoop();
     };
 
     var initCanvas = function(width, height) {
         if (width === undefined || height === undefined) {
-            width = 800;
-            height = 600;
+            width = defaultWidth;
+            height = defaultHeight;
         }
 
         var canvas = $('#gameCanvas')[0];
-        var scaleFactor = Math.min(width / 800, height / 600);
+        var scaleFactor = Math.min(width / defaultWidth, height / defaultHeight);
 
-        settings.canvasWidth = 800 * scaleFactor;
-        settings.canvasHeight = 600 * scaleFactor;
-
-        canvas.width = settings.canvasWidth;
-        canvas.height = settings.canvasHeight;
+        canvas.width = defaultWidth * scaleFactor;
+        canvas.height = defaultHeight * scaleFactor;
 
         g = canvas.getContext('2d');
         g.scale(scaleFactor, scaleFactor);
@@ -134,7 +133,7 @@ var kappanoid = (function() {
 
         //clear the previous frame
         g.fillStyle = settings.canvasBackgroundColor;
-        g.fillRect(0, 0, 800, 600);
+        g.fillRect(0, 0, defaultWidth, defaultHeight);
 
         //render the game world
         world.render(g);

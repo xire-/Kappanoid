@@ -1,4 +1,4 @@
-/* Generated: 2014/03/23 23:22:42 */
+/* Generated: 2014/03/24 17:32:52 */
 
 /*
  * Kappanoid game
@@ -12,6 +12,10 @@
 var kappanoid = (function() {
     'use strict';
     // private stuff
+
+    // default relative dimensions
+    var defaultWidth = 880;
+    var defaultHeight = 660;
 
     // keep count of the current mean frame per second
     var currentFPS = 0;
@@ -28,33 +32,36 @@ var kappanoid = (function() {
     // mouse position relative to upper left corner of canvas(scaled to relative coordinate)
     var mousePos;
 
+    // main loop handle
+    var mainLoopHandle;
+
     // store all the configurable settings
     var settings = {
-        canvasWidth: 800,
-        canvasHeight: 600,
         canvasBackgroundColor: '#000'
     };
 
 
-    var init = function() {
+    var init = function(width, height) {
         // TODO bind keys to actions
         // TODO generate settings interface
-        initCanvas();
+        initCanvas(width, height);
 
-        world = new World(new Vector2(40, 30), new Vector2(720, 540));
+        world = new World(new Vector2(40, 50), new Vector2(800, 600));
 
         startMainLoop();
     };
 
-    var initCanvas = function() {
+    var initCanvas = function(width, height) {
+        if (width === undefined || height === undefined) {
+            width = defaultWidth;
+            height = defaultHeight;
+        }
+
         var canvas = $('#gameCanvas')[0];
-        var scaleFactor = Math.min(settings.canvasWidth / 800, settings.canvasHeight / 600);
+        var scaleFactor = Math.min(width / defaultWidth, height / defaultHeight);
 
-        settings.canvasWidth = 800 * scaleFactor;
-        settings.canvasHeight = 600 * scaleFactor;
-
-        canvas.width = settings.canvasWidth;
-        canvas.height = settings.canvasHeight;
+        canvas.width = defaultWidth * scaleFactor;
+        canvas.height = defaultHeight * scaleFactor;
 
         g = canvas.getContext('2d');
         g.scale(scaleFactor, scaleFactor);
@@ -88,7 +95,11 @@ var kappanoid = (function() {
         // sum of all FPS since last update
         var totalFps = 0;
 
-        setInterval(
+        //remove previous main loop if any
+        if (mainLoopHandle !== undefined) {
+            clearInterval(mainLoopHandle);
+        }
+        mainLoopHandle = setInterval(
             function() {
                 var currentTime = Date.now();
                 var elapsed = currentTime - lastTime;
@@ -124,7 +135,7 @@ var kappanoid = (function() {
 
         //clear the previous frame
         g.fillStyle = settings.canvasBackgroundColor;
-        g.fillRect(0, 0, 800, 600);
+        g.fillRect(0, 0, defaultWidth, defaultHeight);
 
         //render the game world
         world.render(g);
