@@ -127,6 +127,7 @@ var kappanoid = (function() {
         );
     };
 
+    var tmp = 0; //DELETE delete this shit
     var renderGame = function(delta) {
         g.save();
 
@@ -139,8 +140,15 @@ var kappanoid = (function() {
 
         //TODO render the GUI
 
+        // DELETE draw a box on current mouse position
         g.fillStyle = '#0ff';
         g.fillRect(mousePos.x - 3, mousePos.y - 3, 6, 6);
+
+        // DELETE draw some animated boxes
+        g.fillStyle = '#f0f';
+        tmp += 1;
+        g.fillRect(easing.easeOutBounce(tmp % 121, 140, -100, 120), 100, 6, 6);
+        g.fillRect(easing.easeOutElastic(tmp % 121, 140, -100, 120), 110, 6, 6);
 
         g.fillStyle = '#f00';
         g.textAlign = 'left';
