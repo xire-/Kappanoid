@@ -1,4 +1,4 @@
-/* Generated: 2014/03/24 17:32:52 */
+/* Generated: 2014/03/24 23:23:53 */
 
 /*
  * Kappanoid game
@@ -8,7 +8,6 @@
 /*jslint browser: true, devel: true */
 /*global $*/
 
-// trick to create a namespace
 var kappanoid = (function() {
     'use strict';
     // private stuff
@@ -166,122 +165,125 @@ var kappanoid = (function() {
 
     /////////////////////////////////// Physics
     ///////////////// Vector2
-    var baseVector2 = Object.defineProperties({}, {
-        x: {
-            value: 0,
-            writable: true
-        },
+    var Vector2 = (function() {
+        var baseVector2 = Object.defineProperties({}, {
+            x: {
+                value: 0,
+                writable: true
+            },
 
-        y: {
-            value: 0,
-            writable: true
-        },
+            y: {
+                value: 0,
+                writable: true
+            },
 
-        set: {
-            value: function(vector) {
-                console.assert(vector instanceof Vector2, vector);
+            set: {
+                value: function(vector) {
+                    console.assert(vector instanceof Vector2, vector);
 
-                this.x = vector.x;
-                this.y = vector.y;
-                return this;
+                    this.x = vector.x;
+                    this.y = vector.y;
+                    return this;
+                }
+            },
+
+            clone: {
+                value: function() {
+                    return new Vector2(this.x, this.y);
+                }
+            },
+
+            add: {
+                value: function(vector) {
+                    console.assert(vector instanceof Vector2, vector);
+
+                    this.x += vector.x;
+                    this.y += vector.y;
+                    return this;
+                }
+            },
+
+            sub: {
+                value: function(vector) {
+                    console.assert(vector instanceof Vector2, vector);
+
+                    this.x -= vector.x;
+                    this.y -= vector.y;
+                    return this;
+                }
+            },
+
+            mul: {
+                value: function(scale) {
+                    this.x *= scale;
+                    this.y *= scale;
+                    return this;
+                }
+            },
+
+            dot: {
+                value: function(vector) {
+                    console.assert(vector instanceof Vector2, vector);
+
+                    return this.x * vector.x + this.y * vector.y;
+                }
+            },
+
+            normalize: {
+                value: function() {
+                    var scale = this.length();
+                    this.x /= scale;
+                    this.y /= scale;
+
+                    console.assert(this.length() === 1, this.length());
+                    return this;
+                }
+            },
+
+            distance: {
+                value: function(vector) {
+                    console.assert(vector instanceof Vector2, vector);
+
+                    return Math.sqrt(this.squaredDistance(vector));
+                }
+            },
+
+            squaredDistance: {
+                value: function(vector) {
+                    console.assert(vector instanceof Vector2, vector);
+
+                    return (this.x - vector.x) * (this.x - vector.x) + (this.y - vector.y) * (this.y - vector.y);
+                }
+            },
+
+            length: {
+                value: function() {
+                    return Math.sqrt(this.squaredLength());
+                }
+            },
+
+            squaredLength: {
+                value: function() {
+                    return this.x * this.x + this.y * this.y;
+                }
+            },
+
+            toString: {
+                value: function() {
+                    return 'Vector2(x: ' + this.x + ' y: ' + this.y + ')';
+                }
             }
-        },
+        });
 
-        clone: {
-            value: function() {
-                return new Vector2(this.x, this.y);
+        var Vector2 = function(x, y) {
+            if (x !== undefined && y !== undefined) {
+                this.x = x;
+                this.y = y;
             }
-        },
-
-        add: {
-            value: function(vector) {
-                console.assert(vector instanceof Vector2, vector);
-
-                this.x += vector.x;
-                this.y += vector.y;
-                return this;
-            }
-        },
-
-        sub: {
-            value: function(vector) {
-                console.assert(vector instanceof Vector2, vector);
-
-                this.x -= vector.x;
-                this.y -= vector.y;
-                return this;
-            }
-        },
-
-        mul: {
-            value: function(scale) {
-                this.x *= scale;
-                this.y *= scale;
-                return this;
-            }
-        },
-
-        dot: {
-            value: function(vector) {
-                console.assert(vector instanceof Vector2, vector);
-
-                return this.x * vector.x + this.y * vector.y;
-            }
-        },
-
-        normalize: {
-            value: function() {
-                var scale = this.length();
-                this.x /= scale;
-                this.y /= scale;
-
-                console.assert(this.length() === 1, this.length());
-                return this;
-            }
-        },
-
-        distance: {
-            value: function(vector) {
-                console.assert(vector instanceof Vector2, vector);
-
-                return Math.sqrt(this.squaredDistance(vector));
-            }
-        },
-
-        squaredDistance: {
-            value: function(vector) {
-                console.assert(vector instanceof Vector2, vector);
-
-                return (this.x - vector.x) * (this.x - vector.x) + (this.y - vector.y) * (this.y - vector.y);
-            }
-        },
-
-        length: {
-            value: function() {
-                return Math.sqrt(this.squaredLength());
-            }
-        },
-
-        squaredLength: {
-            value: function() {
-                return this.x * this.x + this.y * this.y;
-            }
-        },
-
-        toString: {
-            value: function() {
-                return 'Vector2(x: ' + this.x + ' y: ' + this.y + ')';
-            }
-        }
-    });
-
-    var Vector2 = function(x, y) {
-        if (x !== undefined && y !== undefined) {
-            this.x = x;
-            this.y = y;
-        }
-    };
-    Vector2.prototype = baseVector2;
+        };
+        Vector2.prototype = baseVector2;
+        return Vector2;
+    }());
 
     function testVector2() {
         var vec1, vec2, tmp;
@@ -303,74 +305,157 @@ var kappanoid = (function() {
     }
 
 
+    ///////////////// CollisionDetection
+    var collisionDetection = {
+        // Returns 2 times the signed triangle area. The result is positive if
+        // abc is ccw, negative if abc is cw, zero if abc is degenerate.
+        signed2DTriArea: function(a, b, c) {
+            return (a.x - c.x) * (b.y - c.y) - (a.y - c.y) * (b.x - c.x);
+        },
+
+        // Test if segments ab and cd overlap. If they do, compute and return
+        // intersection t value along ab and intersection position p
+        test2DSegmentSegment: function(a, b, c, d) {
+            // Sign of areas correspond to which side of ab points c and d are
+            var a1 = this.signed2DTriArea(a, b, d); // Compute winding of abd (+ or -)
+            var a2 = this.signed2DTriArea(a, b, c); // To intersect, must have sign opposite of a1
+            // If c and d are on different sides of ab, areas have different signs
+            if (a1 * a2 < 0) {
+                // Compute signs for a and b with respect to segment cd
+                var a3 = this.signed2DTriArea(c, d, a); // Compute winding of cda (+ or -)
+                // Since area is constant a1 - a2 = a3 - a4, or a4 = a3 + a2 - a1
+                // float a4 = Signed2DTriArea(c, d, b); // Must have opposite sign of a3
+                var a4 = a3 + a2 - a1;
+                // Points a and b on different sides of cd if areas have different signs
+                if (a3 * a4 < 0) {
+                    // Segments intersect. Find intersection point along L(t) = a + t * (b - a).
+                    // Given height h1 of an over cd and height h2 of b over cd,
+                    // t = h1 / (h1 - h2) = (b*h1/2) / (b*h1/2 - b*h2/2) = a3 / (a3 - a4),
+                    // where b (the base of the triangles cda and cdb, i.e., the length
+                    // of cd) cancels out.
+                    var t = a3 / (a3 - a4);
+                    var p = new Vector2(a.x + t * (b.x - a.x), a.y + t * (b.y - a.y)); // a + t * (b - a)
+                    return {
+                        t: t,
+                        p: p
+                    };
+                }
+            }
+            // Segments not intersecting (or collinear)
+            return null;
+        },
+    };
+
+    function testCollisionDetection() {
+        var a = new Vector2(2, 2);
+        var b = new Vector2(4, 2);
+        var c = new Vector2(3, 1);
+        var d = new Vector2(3, 3);
+        var r = collisionDetection.test2DSegmentSegment(a, b, c, d);
+        console.assert(r.t === 0.5 && JSON.stringify(r.p) === JSON.stringify(new Vector2(3, 2)));
+
+        a = new Vector2(2, 2);
+        b = new Vector2(4, 2);
+        c = new Vector2(3, 3);
+        d = new Vector2(3, 3);
+        r = collisionDetection.test2DSegmentSegment(a, b, c, d);
+        console.assert(r === null);
+
+        a = new Vector2(0, 0);
+        b = new Vector2(0, 1);
+        c = new Vector2(0, 1);
+        d = new Vector2(1, 1);
+        r = collisionDetection.test2DSegmentSegment(a, b, c, d);
+        console.assert(r === null);
+
+        a = new Vector2(0, 0);
+        b = new Vector2(0, 1);
+        c = new Vector2(0, 1);
+        d = new Vector2(0, 0.75);
+        r = collisionDetection.test2DSegmentSegment(a, b, c, d);
+        console.assert(r === null);
+
+        a = new Vector2(0, 0);
+        b = new Vector2(0, 1);
+        c = new Vector2(-1, 0.75);
+        d = new Vector2(1, 0.75);
+        r = collisionDetection.test2DSegmentSegment(a, b, c, d);
+        console.assert(r.t === 0.75 && JSON.stringify(r.p) === JSON.stringify(new Vector2(0, 0.75)));
+    }
+
+
     function testPhysics() {
         testVector2();
+        testCollisionDetection();
     }
 
 
     /////////////////////////////////// Game Objects
     ///////////////// Ball
-    var baseBall = Object.defineProperties({}, {
-        _center: {
-            value: new Vector2(),
-            writable: true
-        },
-        get center() {
-            return this._center;
-        },
-        set center(vector) {
-            console.assert(vector instanceof Vector2);
-            this._center = vector;
-        },
+    var Ball = (function() {
+        var baseBall = Object.defineProperties({}, {
+            _center: {
+                value: new Vector2(),
+                writable: true
+            },
+            get center() {
+                return this._center;
+            },
+            set center(vector) {
+                console.assert(vector instanceof Vector2);
+                this._center = vector;
+            },
 
-        radius: {
-            value: 5,
-            writable: true
-        },
+            radius: {
+                value: 5,
+                writable: true
+            },
 
-        color: {
-            value: '#f00',
-            writable: true
-        },
+            color: {
+                value: '#f00',
+                writable: true
+            },
 
-        render: {
-            value: function(g) {
-                g.save();
-                g.fillStyle = this.color;
-                g.beginPath();
-                g.arc(this.center.x, this.center.y, this.radius, 0, 2 * Math.PI);
-                g.fill();
-                g.restore();
+            render: {
+                value: function(g) {
+                    g.save();
+                    g.fillStyle = this.color;
+                    g.beginPath();
+                    g.arc(this.center.x, this.center.y, this.radius, 0, 2 * Math.PI);
+                    g.fill();
+                    g.restore();
+                }
+            },
+
+            clone: {
+                value: function() {
+                    return new Ball(this.center, this.radius, this.color);
+                }
+            },
+
+            toString: {
+                value: function() {
+                    return 'Ball(center: ' + this.center + ', radius: ' + this.radius + ', color: ' + this.color + ')';
+                }
             }
-        },
+        });
 
-        clone: {
-            value: function() {
-                return new Ball(this.center, this.radius, this.color);
+        var Ball = function(center, radius, color) {
+            if (center !== undefined && center instanceof Vector2) {
+                this.center = center;
             }
-        },
 
-        toString: {
-            value: function() {
-                return 'Ball(center: ' + this.center + ', radius: ' + this.radius + ', color: ' + this.color + ')';
+            if (radius !== undefined && typeof radius == 'number') {
+                this.radius = radius;
             }
-        }
-    });
 
-    var Ball = function(center, radius, color) {
-        if (center !== undefined && center instanceof Vector2) {
-            this.center = center;
-        }
-
-        if (radius !== undefined && typeof radius == 'number') {
-            this.radius = radius;
-        }
-
-        if (color !== undefined && typeof color == 'string') {
-            this.color = color;
-        }
-    };
-    Ball.prototype = baseBall;
+            if (color !== undefined && typeof color == 'string') {
+                this.color = color;
+            }
+        };
+        Ball.prototype = baseBall;
+        return Ball;
+    }());
 
     function testBall() {
         var ball1 = new Ball();
@@ -393,83 +478,86 @@ var kappanoid = (function() {
 
 
     ///////////////// Brick
-    var baseBrick = Object.defineProperties({}, {
-        _center: {
-            value: new Vector2(),
-            writable: true
-        },
-        get center() {
-            return this._center;
-        },
-        set center(vector) {
-            console.assert(vector instanceof Vector2);
-            this._center = vector;
-        },
+    var Brick = (function() {
+        var baseBrick = Object.defineProperties({}, {
+            _center: {
+                value: new Vector2(),
+                writable: true
+            },
+            get center() {
+                return this._center;
+            },
+            set center(vector) {
+                console.assert(vector instanceof Vector2);
+                this._center = vector;
+            },
 
-        _halfSize: {
-            value: new Vector2(10, 20),
-            writable: true
-        },
-        get halfSize() {
-            return this._halfSize;
-        },
-        set halfSize(vector) {
-            console.assert(vector instanceof Vector2);
-            this._halfSize = vector;
-        },
+            _halfSize: {
+                value: new Vector2(10, 20),
+                writable: true
+            },
+            get halfSize() {
+                return this._halfSize;
+            },
+            set halfSize(vector) {
+                console.assert(vector instanceof Vector2);
+                this._halfSize = vector;
+            },
 
-        life: {
-            value: 1,
-            writable: true
-        },
+            life: {
+                value: 1,
+                writable: true
+            },
 
-        color: {
-            value: '#f00',
-            writable: true
-        },
+            color: {
+                value: '#f00',
+                writable: true
+            },
 
-        render: {
-            value: function(g) {
-                g.save();
-                g.fillStyle = this.color;
-                g.beginPath();
-                g.rect(this.center.x - this.halfSize.x, this.center.y - this.halfSize.y, this.halfSize.x * 2, this.halfSize.y * 2);
-                g.fill();
-                g.restore();
+            render: {
+                value: function(g) {
+                    g.save();
+                    g.fillStyle = this.color;
+                    g.beginPath();
+                    g.rect(this.center.x - this.halfSize.x, this.center.y - this.halfSize.y, this.halfSize.x * 2, this.halfSize.y * 2);
+                    g.fill();
+                    g.restore();
+                }
+            },
+
+            clone: {
+                value: function() {
+                    return new Brick(this.center, this.halfSize, this.life, this.color);
+                }
+            },
+
+            toString: {
+                value: function() {
+                    return 'Brick(center: ' + this.center + ', halfSize: ' + this.halfSize + ', life: ' + this.life + ', color: ' + this.color + ')';
+                }
             }
-        },
+        });
 
-        clone: {
-            value: function() {
-                return new Brick(this.center, this.halfSize, this.life, this.color);
+        var Brick = function(center, halfSize, life, color) {
+            if (center !== undefined && center instanceof Vector2) {
+                this.center = center;
             }
-        },
 
-        toString: {
-            value: function() {
-                return 'Brick(center: ' + this.center + ', halfSize: ' + this.halfSize + ', life: ' + this.life + ', color: ' + this.color + ')';
+            if (halfSize !== undefined && halfSize instanceof Vector2) {
+                this.halfSize = halfSize;
             }
-        }
-    });
 
-    var Brick = function(center, halfSize, life, color) {
-        if (center !== undefined && center instanceof Vector2) {
-            this.center = center;
-        }
+            if (life !== undefined && typeof life == 'number') {
+                this.life = life;
+            }
 
-        if (halfSize !== undefined && halfSize instanceof Vector2) {
-            this.halfSize = halfSize;
-        }
-
-        if (life !== undefined && typeof life == 'number') {
-            this.life = life;
-        }
-
-        if (color !== undefined && typeof color == 'string') {
-            this.color = color;
-        }
-    };
-    Brick.prototype = baseBrick;
+            if (color !== undefined && typeof color == 'string') {
+                this.color = color;
+            }
+        };
+        Brick.prototype = baseBrick;
+        return Brick;
+    }());
 
     function testBrick() {
         var brick1 = new Brick();
@@ -495,83 +583,86 @@ var kappanoid = (function() {
 
 
     ///////////////// Paddle
-    var basePaddle = Object.defineProperties({}, {
-        _center: {
-            value: new Vector2(),
-            writable: true
-        },
-        get center() {
-            return this._center;
-        },
-        set center(vector) {
-            console.assert(vector instanceof Vector2);
-            this._center = vector;
-        },
+    var Paddle = (function() {
+        var basePaddle = Object.defineProperties({}, {
+            _center: {
+                value: new Vector2(),
+                writable: true
+            },
+            get center() {
+                return this._center;
+            },
+            set center(vector) {
+                console.assert(vector instanceof Vector2);
+                this._center = vector;
+            },
 
-        _halfSize: {
-            value: new Vector2(10, 20),
-            writable: true
-        },
-        get halfSize() {
-            return this._halfSize;
-        },
-        set halfSize(vector) {
-            console.assert(vector instanceof Vector2);
-            this._halfSize = vector;
-        },
+            _halfSize: {
+                value: new Vector2(10, 20),
+                writable: true
+            },
+            get halfSize() {
+                return this._halfSize;
+            },
+            set halfSize(vector) {
+                console.assert(vector instanceof Vector2);
+                this._halfSize = vector;
+            },
 
-        life: {
-            value: 1,
-            writable: true
-        },
+            life: {
+                value: 1,
+                writable: true
+            },
 
-        color: {
-            value: '#f00',
-            writable: true
-        },
+            color: {
+                value: '#f00',
+                writable: true
+            },
 
-        render: {
-            value: function(g) {
-                g.save();
-                g.fillStyle = this.color;
-                g.beginPath();
-                g.rect(this.center.x - this.halfSize.x, this.center.y - this.halfSize.y, this.halfSize.x * 2, this.halfSize.y * 2);
-                g.fill();
-                g.restore();
+            render: {
+                value: function(g) {
+                    g.save();
+                    g.fillStyle = this.color;
+                    g.beginPath();
+                    g.rect(this.center.x - this.halfSize.x, this.center.y - this.halfSize.y, this.halfSize.x * 2, this.halfSize.y * 2);
+                    g.fill();
+                    g.restore();
+                }
+            },
+
+            clone: {
+                value: function() {
+                    return new Paddle(this.center, this.halfSize, this.life, this.color);
+                }
+            },
+
+            toString: {
+                value: function() {
+                    return 'Paddle(center: ' + this.center + ', halfSize: ' + this.halfSize + ', life: ' + this.life + ', color: ' + this.color + ')';
+                }
             }
-        },
+        });
 
-        clone: {
-            value: function() {
-                return new Paddle(this.center, this.halfSize, this.life, this.color);
+        var Paddle = function(center, halfSize, life, color) {
+            if (center !== undefined && center instanceof Vector2) {
+                this.center = center;
             }
-        },
 
-        toString: {
-            value: function() {
-                return 'Paddle(center: ' + this.center + ', halfSize: ' + this.halfSize + ', life: ' + this.life + ', color: ' + this.color + ')';
+            if (halfSize !== undefined && halfSize instanceof Vector2) {
+                this.halfSize = halfSize;
             }
-        }
-    });
 
-    var Paddle = function(center, halfSize, life, color) {
-        if (center !== undefined && center instanceof Vector2) {
-            this.center = center;
-        }
+            if (life !== undefined && typeof life == 'number') {
+                this.life = life;
+            }
 
-        if (halfSize !== undefined && halfSize instanceof Vector2) {
-            this.halfSize = halfSize;
-        }
-
-        if (life !== undefined && typeof life == 'number') {
-            this.life = life;
-        }
-
-        if (color !== undefined && typeof color == 'string') {
-            this.color = color;
-        }
-    };
-    Paddle.prototype = basePaddle;
+            if (color !== undefined && typeof color == 'string') {
+                this.color = color;
+            }
+        };
+        Paddle.prototype = basePaddle;
+        return Paddle;
+    }());
 
     function testPaddle() {
         var paddle1 = new Paddle();
@@ -597,101 +688,104 @@ var kappanoid = (function() {
 
 
     ///////////////// World
-    var baseWorld = Object.defineProperties({}, {
-        _containerOffset: {
-            value: new Vector2(),
-            writable: true
-        },
-        get containerOffset() {
-            return this._containerOffset;
-        },
-        set containerOffset(vector) {
-            console.assert(vector instanceof Vector2);
-            this._containerOffset = vector;
-        },
+    var World = (function() {
+        var baseWorld = Object.defineProperties({}, {
+            _containerOffset: {
+                value: new Vector2(),
+                writable: true
+            },
+            get containerOffset() {
+                return this._containerOffset;
+            },
+            set containerOffset(vector) {
+                console.assert(vector instanceof Vector2);
+                this._containerOffset = vector;
+            },
 
-        _containerSize: {
-            value: new Vector2(720, 540),
-            writable: true
-        },
-        get containerSize() {
-            return this._containerSize;
-        },
-        set containerSize(vector) {
-            console.assert(vector instanceof Vector2);
-            this._containerSize = vector;
-        },
+            _containerSize: {
+                value: new Vector2(720, 540),
+                writable: true
+            },
+            get containerSize() {
+                return this._containerSize;
+            },
+            set containerSize(vector) {
+                console.assert(vector instanceof Vector2);
+                this._containerSize = vector;
+            },
 
-        balls: {
-            value: [],
-            writable: true
-        },
+            balls: {
+                value: [],
+                writable: true
+            },
 
-        bricks: {
-            value: [],
-            writable: true
-        },
+            bricks: {
+                value: [],
+                writable: true
+            },
 
-        paddle: {
-            value: new Paddle(),
-            writable: true
-        },
+            paddle: {
+                value: new Paddle(),
+                writable: true
+            },
 
-        render: {
-            value: function(g) {
-                var w = this.containerSize.x;
-                var h = this.containerSize.y;
-                g.save();
-                g.translate(this.containerOffset.x, this.containerOffset.y);
+            render: {
+                value: function(g) {
+                    var w = this.containerSize.x;
+                    var h = this.containerSize.y;
+                    g.save();
+                    g.translate(this.containerOffset.x, this.containerOffset.y);
 
-                //clip the region
-                g.beginPath();
-                g.rect(0, 0, w, h);
-                g.clip();
+                    //clip the region
+                    g.beginPath();
+                    g.rect(0, 0, w, h);
+                    g.clip();
 
-                // render background
-                g.clearRect(0, 0, 1337, 1337);
+                    // render background
+                    g.clearRect(0, 0, 1337, 1337);
 
-                // render balls, bricks and paddle
-                this.balls.forEach(function(ball) {
-                    ball.render(g);
-                });
+                    // render balls, bricks and paddle
+                    this.balls.forEach(function(ball) {
+                        ball.render(g);
+                    });
 
-                this.bricks.forEach(function(brick) {
-                    brick.render(g);
-                });
+                    this.bricks.forEach(function(brick) {
+                        brick.render(g);
+                    });
 
-                this.paddle.render(g);
-                g.restore();
+                    this.paddle.render(g);
+                    g.restore();
+                }
+            },
+
+            toString: {
+                value: function() {
+                    return 'World(balls: ' + this.balls + ', bricks: ' + this.bricks + ', paddle: ' + this.paddle + ')';
+                }
             }
-        },
+        });
 
-        toString: {
-            value: function() {
-                return 'World(balls: ' + this.balls + ', bricks: ' + this.bricks + ', paddle: ' + this.paddle + ')';
+        var World = function(containerOffset, containerSize, levelConf) {
+            if (containerOffset !== undefined && containerOffset instanceof Vector2) {
+                this.containerOffset = containerOffset;
             }
-        }
-    });
 
-    var World = function(containerOffset, containerSize, levelConf) {
-        if (containerOffset !== undefined && containerOffset instanceof Vector2) {
-            this.containerOffset = containerOffset;
-        }
+            if (containerSize !== undefined && containerSize instanceof Vector2) {
+                this.containerSize = containerSize;
+            }
 
-        if (containerSize !== undefined && containerSize instanceof Vector2) {
-            this.containerSize = containerSize;
-        }
+            if (levelConf !== undefined) {
+                console.assert(false, 'todo');
+            }
 
-        if (levelConf !== undefined) {
-            console.assert(false, 'todo');
-        }
-
-        // initialize all game objects
-        this.balls.push(new Ball(new Vector2(400, 300), 5, '#00f'));
-        this.bricks.push(new Brick(new Vector2(200, 200), new Vector2(10, 3), 1, '#ff0'));
-        this.paddle = new Paddle(new Vector2(400, 500), new Vector2(50, 5), 1, '#0f0');
-    };
-    World.prototype = baseWorld;
+            // initialize all game objects
+            this.balls.push(new Ball(new Vector2(400, 300), 5, '#00f'));
+            this.bricks.push(new Brick(new Vector2(200, 200), new Vector2(10, 3), 1, '#ff0'));
+            this.paddle = new Paddle(new Vector2(400, 500), new Vector2(50, 5), 1, '#0f0');
+        };
+        World.prototype = baseWorld;
+        return World;
+    }());
 
     function testWorld() {
         var world1 = new World();
