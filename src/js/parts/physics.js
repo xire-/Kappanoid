@@ -5,6 +5,11 @@
 // __import__ physics-Easing.js
 
 
+///////////////// CollisionDetection
+// __import__ physics-CollisionDetection.js
+
+
 function testPhysics() {
     testVector2();
+    testCollisionDetection();
 }
