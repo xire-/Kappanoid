@@ -1,9 +1,9 @@
 all: debug
 
 debug:
-	./assemble.py ./ kappanoid.js --debug
+	./assemble.py ./ -o kappanoid.js --debug
 	@echo Done
 
 production:
-	./assemble.py ./ kappanoid.js 
+	./assemble.py ./ -o kappanoid.js 
 	@echo Done

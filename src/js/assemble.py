@@ -1,6 +1,7 @@
 #!/usr/bin/python
 from __future__ import with_statement
 import sys
+import argparse
 import re
 from datetime import datetime
 
@@ -54,20 +55,36 @@ def strip_empty_line_spaces(text):
     return re.sub(r' *\n', '\n', text)
 
 def main():
-    # read options from argv
-    if len(sys.argv) < 3:
-        print (
-            'usage: {0} js_path output_file [-d | --debug]\n'
-            'example: {0} src/js/ assembled.js -d\n'
-            'optional debug flag leave assertions in the assembled file.'
-            ).format(sys.argv[0])
-        exit(1)
+    parser = argparse.ArgumentParser(description='Assemble parts of javascript into a single file.')
 
-    js_path = sys.argv[1]
-    output_file = sys.argv[2]
-    debug_flag = (sys.argv[3] == '-d' or sys.argv[3] == '--debug') if len(sys.argv) > 3 else False
+    parser.add_argument(
+        '-d', '--debug',
+        action="store_true",
+        default=False,
+        help='leave debug functions and asserts in the output file',
+        )
 
-    with open(js_path + 'parts/main.js') as fmain, open(js_path + output_file, 'w') as fris:
+    parser.add_argument(
+        'js_path',
+        action="store",
+        help='path to the js folder, must contain a parts sub folder',
+        )
+
+    parser.add_argument(
+        '-o', '--outputFile',
+        action="store",
+        dest="outputFile",
+        type=argparse.FileType('w'),
+        default=sys.stdout,
+        help='output file. Default: stdout',
+        )
+    args = parser.parse_args()
+
+    js_path = args.js_path
+    fris = args.outputFile
+    debug_flag = args.debug
+
+    with open(js_path + 'parts/main.js', 'r') as fmain:
         # print timestamp on top
         fris.write('/* Generated: {} */\n\n'. format(datetime.now().strftime('%Y/%m/%d %H:%M:%S')))
         ris = process_import(fmain.read(), js_path, debug_flag)
