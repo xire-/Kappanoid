@@ -6,7 +6,6 @@
 /*jslint browser: true, devel: true */
 /*global $*/
 
-// trick to create a namespace
 var kappanoid = (function() {
     'use strict';
     // private stuff
