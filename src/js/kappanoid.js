@@ -1,4 +1,4 @@
-/* Generated: 2014/03/24 23:56:29 */
+/* Generated: 2014/03/25 17:54:30 */
 
 /*
  * Kappanoid game
@@ -13,8 +13,8 @@ var kappanoid = (function() {
     // private stuff
 
     // default relative dimensions
-    var defaultWidth = 880;
-    var defaultHeight = 660;
+    var defaultWidth = 1100;
+    var defaultHeight = 600;
 
     // keep count of the current mean frame per second
     var currentFPS = 0;
@@ -28,6 +28,9 @@ var kappanoid = (function() {
     // world game ogject
     var world;
 
+    // object used to display game info
+    var gameInfo;
+
     // mouse position relative to upper left corner of canvas(scaled to relative coordinate)
     var mousePos;
 
@@ -36,7 +39,11 @@ var kappanoid = (function() {
 
     // store all the configurable settings
     var settings = {
-        canvasBackgroundColor: '#000'
+        worldBackgroundColor: '#000',
+        worldBorderBackgroundColor: '#f0f',
+        worldBorderThickness: 20,
+
+        gameInfoBackgroundColor: '#f00'
     };
 
 
@@ -45,7 +52,9 @@ var kappanoid = (function() {
         // TODO generate settings interface
         initCanvas(width, height);
 
-        world = new World(new Vector2(40, 50), new Vector2(800, 600));
+        world = new World(new Vector2(0, 0), new Vector2(800, 600));
+
+        gameInfo = new GameInfo(new Vector2(800, 0), new Vector2(300, 600));
 
         startMainLoop();
     };
@@ -65,7 +74,7 @@ var kappanoid = (function() {
         g = canvas.getContext('2d');
         g.scale(scaleFactor, scaleFactor);
 
-        mousePos = new Vector2();
+        mousePos = new Vector2(0, 0);
         // receive mouse movement update
         window.onmousemove = function(e) {
             var x;
@@ -133,14 +142,15 @@ var kappanoid = (function() {
     var renderGame = function(delta) {
         g.save();
 
-        //clear the previous frame
-        g.fillStyle = settings.canvasBackgroundColor;
+        // clear the previous frame
+        g.fillStyle = '#00f';
         g.fillRect(0, 0, defaultWidth, defaultHeight);
 
-        //render the game world
-        world.render(g);
+        // render the game world
+        world.render(delta);
 
-        //TODO render the GUI
+        // render game info
+        gameInfo.render(delta);
 
         // DELETE draw a box on current mouse position
         g.fillStyle = '#0ff';
@@ -152,19 +162,13 @@ var kappanoid = (function() {
         g.fillRect(easing.easeOutBounce(tmp % 121, 140, -100, 120), 100, 6, 6);
         g.fillRect(easing.easeOutElastic(tmp % 121, 140, -100, 120), 110, 6, 6);
 
-        g.fillStyle = '#f00';
-        g.textAlign = 'left';
-        g.textBaseline = 'top';
-        g.fillText('FPS: ' + currentFPS, 5, 5);
-        g.fillText('DELTA: ' + delta, 5, 15);
-        g.fillText('LOOP: ' + loopTime, 5, 25);
-
         g.restore();
     };
 
     var updateGame = function(delta) {
         // TODO update physics
 
+        world.update(delta);
     };
 
     var toString = function() {
@@ -176,12 +180,10 @@ var kappanoid = (function() {
     var Vector2 = (function() {
         var baseVector2 = Object.defineProperties({}, {
             x: {
-                value: 0,
                 writable: true
             },
 
             y: {
-                value: 0,
                 writable: true
             },
 
@@ -192,12 +194,6 @@ var kappanoid = (function() {
                     this.x = vector.x;
                     this.y = vector.y;
                     return this;
-                }
-            },
-
-            clone: {
-                value: function() {
-                    return new Vector2(this.x, this.y);
                 }
             },
 
@@ -276,6 +272,12 @@ var kappanoid = (function() {
                 }
             },
 
+            clone: {
+                value: function() {
+                    return new Vector2(this.x, this.y);
+                }
+            },
+
             toString: {
                 value: function() {
                     return 'Vector2(x: ' + this.x + ' y: ' + this.y + ')';
@@ -284,30 +286,28 @@ var kappanoid = (function() {
         });
 
         var Vector2 = function(x, y) {
-            if (x !== undefined && y !== undefined) {
-                this.x = x;
-                this.y = y;
-            }
+            console.assert(x !== undefined && typeof x == 'number', x.toString());
+            this.x = x;
+
+            console.assert(y !== undefined && typeof y == 'number', y.toString());
+            this.y = y;
         };
         Vector2.prototype = baseVector2;
         return Vector2;
     }());
 
     function testVector2() {
-        var vec1, vec2, tmp;
-        vec1 = new Vector2();
-        console.assert(vec1.x === 0 && vec1.y === 0, vec1.x, vec1.y);
-
-        vec1 = new Vector2(3);
+        var vec1 = new Vector2(0, 0);
         console.assert(vec1.x === 0 && vec1.y === 0, vec1.x, vec1.y);
 
         vec1 = new Vector2(3, 4);
         console.assert(vec1.x === 3 && vec1.y === 4, vec1.x, vec1.y);
         console.assert(vec1.length() === 5, vec1.length());
         console.assert(vec1.squaredLength() === 25, vec1.squaredLength());
-        console.assert((tmp = vec1.clone().normalize()).length() === 1, tmp.length());
+        console.assert(vec1.normalize().length() === 1, vec1.length());
 
-        vec2 = new Vector2(3, 4);
+        var vec2 = new Vector2(3, 4);
+        vec1 = new Vector2(3, 4);
         console.assert(vec1.distance(vec2) === 0, vec1.x, vec1.y);
         console.assert(vec1.squaredDistance(vec2) === 0, vec1.squaredDistance(vec2));
     }
@@ -704,7 +704,6 @@ var kappanoid = (function() {
     var Ball = (function() {
         var baseBall = Object.defineProperties({}, {
             _center: {
-                value: new Vector2(),
                 writable: true
             },
             get center() {
@@ -716,12 +715,10 @@ var kappanoid = (function() {
             },
 
             radius: {
-                value: 5,
                 writable: true
             },
 
             color: {
-                value: '#f00',
                 writable: true
             },
 
@@ -750,35 +747,23 @@ var kappanoid = (function() {
         });
 
         var Ball = function(center, radius, color) {
-            if (center !== undefined && center instanceof Vector2) {
-                this.center = center;
-            }
+            console.assert(center !== undefined && center instanceof Vector2, center.toString());
+            this.center = center;
 
-            if (radius !== undefined && typeof radius == 'number') {
-                this.radius = radius;
-            }
+            console.assert(radius !== undefined && typeof radius == 'number', radius.toString());
+            this.radius = radius;
 
-            if (color !== undefined && typeof color == 'string') {
-                this.color = color;
-            }
+            console.assert(color !== undefined && typeof color == 'string', color.toString());
+            this.color = color;
         };
         Ball.prototype = baseBall;
         return Ball;
     }());
 
     function testBall() {
-        var ball1 = new Ball();
-        console.assert(JSON.stringify(ball1.center) === JSON.stringify(new Vector2()) && ball1.radius === 5 && ball1.color === '#f00', ball1.toString());
-
         var center1 = new Vector2(3, 4);
-        ball1 = new Ball(center1);
-        console.assert(JSON.stringify(ball1.center) === JSON.stringify(center1) && ball1.radius === 5 && ball1.color === '#f00', ball1.toString());
-
         var radius1 = 10;
-        ball1 = new Ball(center1, radius1);
-        console.assert(JSON.stringify(ball1.center) === JSON.stringify(center1) && ball1.radius === radius1 && ball1.color === '#f00', ball1.toString());
-
-        ball1 = new Ball(center1, radius1, '#fff');
+        var ball1 = new Ball(center1, radius1, '#fff');
         console.assert(JSON.stringify(ball1.center) === JSON.stringify(center1) && ball1.radius === radius1 && ball1.color === '#fff', ball1.toString());
 
         var ball2 = ball1.clone();
@@ -790,7 +775,6 @@ var kappanoid = (function() {
     var Brick = (function() {
         var baseBrick = Object.defineProperties({}, {
             _center: {
-                value: new Vector2(),
                 writable: true
             },
             get center() {
@@ -802,7 +786,6 @@ var kappanoid = (function() {
             },
 
             _halfSize: {
-                value: new Vector2(10, 20),
                 writable: true
             },
             get halfSize() {
@@ -814,12 +797,10 @@ var kappanoid = (function() {
             },
 
             life: {
-                value: 1,
                 writable: true
             },
 
             color: {
-                value: '#f00',
                 writable: true
             },
 
@@ -848,42 +829,26 @@ var kappanoid = (function() {
         });
 
         var Brick = function(center, halfSize, life, color) {
-            if (center !== undefined && center instanceof Vector2) {
-                this.center = center;
-            }
+            console.assert(center !== undefined && center instanceof Vector2, center.toString());
+            this.center = center;
 
-            if (halfSize !== undefined && halfSize instanceof Vector2) {
-                this.halfSize = halfSize;
-            }
+            console.assert(halfSize !== undefined && halfSize instanceof Vector2, halfSize.toString());
+            this.halfSize = halfSize;
 
-            if (life !== undefined && typeof life == 'number') {
-                this.life = life;
-            }
+            console.assert(life !== undefined && typeof life == 'number', life.toString());
+            this.life = life;
 
-            if (color !== undefined && typeof color == 'string') {
-                this.color = color;
-            }
+            console.assert(color !== undefined && typeof color == 'string', color.toString());
+            this.color = color;
         };
         Brick.prototype = baseBrick;
         return Brick;
     }());
 
     function testBrick() {
-        var brick1 = new Brick();
-        console.assert(JSON.stringify(brick1.center) === JSON.stringify(new Vector2()) && JSON.stringify(brick1.halfSize) === JSON.stringify(new Vector2(10, 20)) && brick1.life === 1 && brick1.color === '#f00', brick1.toString());
-
         var center1 = new Vector2(3, 4);
-        brick1 = new Brick(center1);
-        console.assert(JSON.stringify(brick1.center) === JSON.stringify(center1) && JSON.stringify(brick1.halfSize) === JSON.stringify(new Vector2(10, 20)) && brick1.life === 1 && brick1.color === '#f00', brick1.toString());
-
         var halfSize1 = new Vector2(100, 300);
-        brick1 = new Brick(center1, halfSize1);
-        console.assert(JSON.stringify(brick1.center) === JSON.stringify(center1) && JSON.stringify(brick1.halfSize) === JSON.stringify(halfSize1) && brick1.life === 1 && brick1.color === '#f00', brick1.toString());
-
-        brick1 = new Brick(center1, halfSize1, 4);
-        console.assert(JSON.stringify(brick1.center) === JSON.stringify(center1) && JSON.stringify(brick1.halfSize) === JSON.stringify(halfSize1) && brick1.life === 4 && brick1.color === '#f00', brick1.toString());
-
-        brick1 = new Brick(center1, halfSize1, 4, '#fff');
+        var brick1 = new Brick(center1, halfSize1, 4, '#fff');
         console.assert(JSON.stringify(brick1.center) === JSON.stringify(center1) && JSON.stringify(brick1.halfSize) === JSON.stringify(halfSize1) && brick1.life === 4 && brick1.color === '#fff', brick1.toString());
 
         var brick2 = brick1.clone();
@@ -895,7 +860,6 @@ var kappanoid = (function() {
     var Paddle = (function() {
         var basePaddle = Object.defineProperties({}, {
             _center: {
-                value: new Vector2(),
                 writable: true
             },
             get center() {
@@ -907,7 +871,6 @@ var kappanoid = (function() {
             },
 
             _halfSize: {
-                value: new Vector2(10, 20),
                 writable: true
             },
             get halfSize() {
@@ -919,12 +882,10 @@ var kappanoid = (function() {
             },
 
             life: {
-                value: 1,
                 writable: true
             },
 
             color: {
-                value: '#f00',
                 writable: true
             },
 
@@ -953,42 +914,26 @@ var kappanoid = (function() {
         });
 
         var Paddle = function(center, halfSize, life, color) {
-            if (center !== undefined && center instanceof Vector2) {
-                this.center = center;
-            }
+            console.assert(center !== undefined && center instanceof Vector2, center.toString());
+            this.center = center;
 
-            if (halfSize !== undefined && halfSize instanceof Vector2) {
-                this.halfSize = halfSize;
-            }
+            console.assert(halfSize !== undefined && halfSize instanceof Vector2, halfSize.toString());
+            this.halfSize = halfSize;
 
-            if (life !== undefined && typeof life == 'number') {
-                this.life = life;
-            }
+            console.assert(life !== undefined && typeof life == 'number', life.toString());
+            this.life = life;
 
-            if (color !== undefined && typeof color == 'string') {
-                this.color = color;
-            }
+            console.assert(color !== undefined && typeof color == 'string', color.toString());
+            this.color = color;
         };
         Paddle.prototype = basePaddle;
         return Paddle;
     }());
 
     function testPaddle() {
-        var paddle1 = new Paddle();
-        console.assert(JSON.stringify(paddle1.center) === JSON.stringify(new Vector2()) && JSON.stringify(paddle1.halfSize) === JSON.stringify(new Vector2(10, 20)) && paddle1.life === 1 && paddle1.color === '#f00', paddle1.toString());
-
         var center1 = new Vector2(3, 4);
-        paddle1 = new Brick(center1);
-        console.assert(JSON.stringify(paddle1.center) === JSON.stringify(center1) && JSON.stringify(paddle1.halfSize) === JSON.stringify(new Vector2(10, 20)) && paddle1.life === 1 && paddle1.color === '#f00', paddle1.toString());
-
         var halfSize1 = new Vector2(100, 300);
-        paddle1 = new Brick(center1, halfSize1);
-        console.assert(JSON.stringify(paddle1.center) === JSON.stringify(center1) && JSON.stringify(paddle1.halfSize) === JSON.stringify(halfSize1) && paddle1.life === 1 && paddle1.color === '#f00', paddle1.toString());
-
-        paddle1 = new Brick(center1, halfSize1, 4);
-        console.assert(JSON.stringify(paddle1.center) === JSON.stringify(center1) && JSON.stringify(paddle1.halfSize) === JSON.stringify(halfSize1) && paddle1.life === 4 && paddle1.color === '#f00', paddle1.toString());
-
-        paddle1 = new Brick(center1, halfSize1, 4, '#fff');
+        var paddle1 = new Brick(center1, halfSize1, 4, '#fff');
         console.assert(JSON.stringify(paddle1.center) === JSON.stringify(center1) && JSON.stringify(paddle1.halfSize) === JSON.stringify(halfSize1) && paddle1.life === 4 && paddle1.color === '#fff', paddle1.toString());
 
         var paddle2 = paddle1.clone();
@@ -1000,7 +945,6 @@ var kappanoid = (function() {
     var World = (function() {
         var baseWorld = Object.defineProperties({}, {
             _containerOffset: {
-                value: new Vector2(),
                 writable: true
             },
             get containerOffset() {
@@ -1012,7 +956,6 @@ var kappanoid = (function() {
             },
 
             _containerSize: {
-                value: new Vector2(720, 540),
                 writable: true
             },
             get containerSize() {
@@ -1023,35 +966,41 @@ var kappanoid = (function() {
                 this._containerSize = vector;
             },
 
+            borderThickness: {
+                value: 5
+            },
+
             balls: {
-                value: [],
                 writable: true
             },
 
             bricks: {
-                value: [],
                 writable: true
             },
 
             paddle: {
-                value: new Paddle(),
                 writable: true
             },
 
             render: {
-                value: function(g) {
-                    var w = this.containerSize.x;
-                    var h = this.containerSize.y;
+                value: function(delta) {
                     g.save();
                     g.translate(this.containerOffset.x, this.containerOffset.y);
 
-                    //clip the region
+                    // clip the region
                     g.beginPath();
-                    g.rect(0, 0, w, h);
+                    g.rect(0, 0, this.containerSize.x, this.containerSize.y);
                     g.clip();
 
                     // render background
-                    g.clearRect(0, 0, 1337, 1337);
+                    g.fillStyle = settings.worldBackgroundColor;
+                    g.fillRect(0, 0, this.containerSize.x, this.containerSize.y);
+
+                    // render borders
+                    g.fillStyle = settings.worldBorderBackgroundColor;
+                    g.fillRect(0, 0, this.containerSize.x, settings.worldBorderThickness);
+                    g.fillRect(0, settings.worldBorderThickness, settings.worldBorderThickness, this.containerSize.y);
+                    g.fillRect(this.containerSize.x - settings.worldBorderThickness, settings.worldBorderThickness, this.containerSize.x, this.containerSize.y);
 
                     // render balls, bricks and paddle
                     this.balls.forEach(function(ball) {
@@ -1067,6 +1016,13 @@ var kappanoid = (function() {
                 }
             },
 
+            update: {
+                value: function(delta) {
+                    // update paddle position (clamped)
+                    this.paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, settings.worldBorderThickness + this.paddle.halfSize.x), 800 - settings.worldBorderThickness - this.paddle.halfSize.x);
+                }
+            },
+
             toString: {
                 value: function() {
                     return 'World(balls: ' + this.balls + ', bricks: ' + this.bricks + ', paddle: ' + this.paddle + ')';
@@ -1075,46 +1031,118 @@ var kappanoid = (function() {
         });
 
         var World = function(containerOffset, containerSize, levelConf) {
-            if (containerOffset !== undefined && containerOffset instanceof Vector2) {
-                this.containerOffset = containerOffset;
-            }
+            console.assert(containerOffset !== undefined && containerOffset instanceof Vector2, containerOffset.toString());
+            this.containerOffset = containerOffset;
 
-            if (containerSize !== undefined && containerSize instanceof Vector2) {
-                this.containerSize = containerSize;
-            }
+            console.assert(containerSize !== undefined && containerSize instanceof Vector2, containerSize.toString());
+            this.containerSize = containerSize;
 
-            if (levelConf !== undefined) {
-                console.assert(false, 'todo');
-            }
+            // todo
+            // console.assert(levelConf !== undefined, levelConf.toString());
+            // this.levelConf = levelConf
 
             // initialize all game objects
-            this.balls.push(new Ball(new Vector2(400, 300), 5, '#00f'));
-            this.bricks.push(new Brick(new Vector2(200, 200), new Vector2(10, 3), 1, '#ff0'));
-            this.paddle = new Paddle(new Vector2(400, 500), new Vector2(50, 5), 1, '#0f0');
+            this.balls = [];
+            this.balls.push(new Ball(new Vector2(800 / 2, 600 / 2 + 100), 7, '#fff'));
+
+            this.bricks = [];
+            for (var i = 0; i < 10; i++) {
+                for (var j = 0; j < 8; j++) {
+                    var blockHalfSize = new Vector2(25, 10);
+                    var blockCenter = new Vector2(120 + (i % 10) * (blockHalfSize.x * 2 + 10), 30 + 47.5 + (j % 8) * (blockHalfSize.y * 2 + 10));
+                    this.bricks.push(new Brick(blockCenter, blockHalfSize, 1, '#fff'));
+                }
+            }
+
+            var paddleHalfSize = new Vector2(50, 15);
+            this.paddle = new Paddle(new Vector2(800 / 2, 600 + paddleHalfSize.y * 2 / 2 - 50), paddleHalfSize, 1, '#fff');
         };
         World.prototype = baseWorld;
         return World;
     }());
-
-    function testWorld() {
-        var world1 = new World();
-        console.assert(JSON.stringify(world1.balls) === JSON.stringify([]) && JSON.stringify(world1.bricks) === JSON.stringify([]) && JSON.stringify(world1.paddle) === JSON.stringify(new Paddle()));
-    }
 
 
     function testGameObjects() {
         testBall();
         testBrick();
         testPaddle();
-        testWorld();
     }
 
+    /////////////////////////////////// Game Info
+    var GameInfo = (function() {
+        var baseGameInfo = Object.defineProperties({}, {
+            _containerOffset: {
+                writable: true
+            },
+            get containerOffset() {
+                return this._containerOffset;
+            },
+            set containerOffset(vector) {
+                console.assert(vector instanceof Vector2);
+                this._containerOffset = vector;
+            },
+
+            _containerSize: {
+                writable: true
+            },
+            get containerSize() {
+                return this._containerSize;
+            },
+            set containerSize(vector) {
+                console.assert(vector instanceof Vector2);
+                this._containerSize = vector;
+            },
+
+            render: {
+                value: function(delta) {
+                    g.save();
+                    g.translate(this.containerOffset.x, this.containerOffset.y);
+
+                    // clip the region
+                    g.beginPath();
+                    g.rect(0, 0, this.containerSize.x, this.containerSize.y);
+                    g.clip();
+
+                    // render background
+                    g.fillStyle = settings.gameInfoBackgroundColor;
+                    g.fillRect(0, 0, this.containerSize.x, this.containerSize.y);
+
+                    // render some debug info
+                    g.fillStyle = '#fff';
+                    g.textAlign = 'left';
+                    g.textBaseline = 'top';
+                    g.fillText('FPS: ' + currentFPS, 5, 5);
+                    g.fillText('DELTA: ' + delta, 5, 15);
+                    g.fillText('LOOP: ' + loopTime, 5, 25);
+
+                    g.restore();
+                }
+            },
+
+            toString: {
+                value: function() {
+                    return 'GameInfo()';
+                }
+            }
+        });
+
+        var GameInfo = function(containerOffset, containerSize) {
+            console.assert(containerOffset !== undefined && containerOffset instanceof Vector2, containerOffset.toString());
+            this.containerOffset = containerOffset;
+
+            console.assert(containerSize !== undefined && containerSize instanceof Vector2, containerSize.toString());
+            this.containerSize = containerSize;
+        };
+        GameInfo.prototype = baseGameInfo;
+        return GameInfo;
+    }());
 
     // public stuff
     return {
         version: '0.0',
         init: init,
-        toString: toString
+        resize: initCanvas,
+        toString: toString,
     };
 }());
 

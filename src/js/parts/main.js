@@ -11,8 +11,8 @@ var kappanoid = (function() {
     // private stuff
 
     // default relative dimensions
-    var defaultWidth = 880;
-    var defaultHeight = 660;
+    var defaultWidth = 1100;
+    var defaultHeight = 600;
 
     // keep count of the current mean frame per second
     var currentFPS = 0;
@@ -26,6 +26,9 @@ var kappanoid = (function() {
     // world game ogject
     var world;
 
+    // object used to display game info
+    var gameInfo;
+
     // mouse position relative to upper left corner of canvas(scaled to relative coordinate)
     var mousePos;
 
@@ -34,7 +37,11 @@ var kappanoid = (function() {
 
     // store all the configurable settings
     var settings = {
-        canvasBackgroundColor: '#000'
+        worldBackgroundColor: '#000',
+        worldBorderBackgroundColor: '#f0f',
+        worldBorderThickness: 20,
+
+        gameInfoBackgroundColor: '#f00'
     };
 
 
@@ -43,7 +50,9 @@ var kappanoid = (function() {
         // TODO generate settings interface
         initCanvas(width, height);
 
-        world = new World(new Vector2(40, 50), new Vector2(800, 600));
+        world = new World(new Vector2(0, 0), new Vector2(800, 600));
+
+        gameInfo = new GameInfo(new Vector2(800, 0), new Vector2(300, 600));
 
         startMainLoop();
     };
@@ -131,14 +140,15 @@ var kappanoid = (function() {
     var renderGame = function(delta) {
         g.save();
 
-        //clear the previous frame
-        g.fillStyle = settings.canvasBackgroundColor;
+        // clear the previous frame
+        g.fillStyle = '#00f';
         g.fillRect(0, 0, defaultWidth, defaultHeight);
 
-        //render the game world
-        world.render(g);
+        // render the game world
+        world.render(delta);
 
-        //TODO render the GUI
+        // render game info
+        gameInfo.render(delta);
 
         // DELETE draw a box on current mouse position
         g.fillStyle = '#0ff';
@@ -149,13 +159,6 @@ var kappanoid = (function() {
         tmp += 1;
         g.fillRect(easing.easeOutBounce(tmp % 121, 140, -100, 120), 100, 6, 6);
         g.fillRect(easing.easeOutElastic(tmp % 121, 140, -100, 120), 110, 6, 6);
-
-        g.fillStyle = '#f00';
-        g.textAlign = 'left';
-        g.textBaseline = 'top';
-        g.fillText('FPS: ' + currentFPS, 5, 5);
-        g.fillText('DELTA: ' + delta, 5, 15);
-        g.fillText('LOOP: ' + loopTime, 5, 25);
 
         g.restore();
     };
@@ -177,6 +180,8 @@ var kappanoid = (function() {
     /////////////////////////////////// Game Objects
     // __import__ gameObjects.js
 
+    /////////////////////////////////// Game Info
+    // __import__ gameInfo.js
 
     // public stuff
     return {
