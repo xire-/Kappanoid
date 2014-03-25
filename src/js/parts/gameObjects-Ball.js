@@ -15,6 +15,17 @@ var Ball = (function() {
             writable: true
         },
 
+        _velocity: {
+            writable: true
+        },
+        get velocity() {
+            return this._velocity;
+        },
+        set velocity(vector) {
+            console.assert(vector instanceof Vector2);
+            this._velocity = vector;
+        },
+
         color: {
             writable: true
         },
@@ -30,25 +41,34 @@ var Ball = (function() {
             }
         },
 
+        update: {
+            value: function(delta) {
+                this.center.add(this.velocity.clone().mul(delta / 1000));
+            }
+        },
+
         clone: {
             value: function() {
-                return new Ball(this.center, this.radius, this.color);
+                return new Ball(this.center, this.radius, this.velocity, this.color);
             }
         },
 
         toString: {
             value: function() {
-                return 'Ball(center: ' + this.center + ', radius: ' + this.radius + ', color: ' + this.color + ')';
+                return 'Ball(center: ' + this.center + ', radius: ' + this.radius + ', velocity' + this.velocity + ', color: ' + this.color + ')';
             }
         }
     });
 
-    var Ball = function(center, radius, color) {
+    var Ball = function(center, radius, velocity, color) {
         console.assert(center !== undefined && center instanceof Vector2, center.toString());
         this.center = center;
 
         console.assert(radius !== undefined && typeof radius == 'number', radius.toString());
         this.radius = radius;
+
+        console.assert(velocity !== undefined && velocity instanceof Vector2, velocity.toString());
+        this.velocity = velocity;
 
         console.assert(color !== undefined && typeof color == 'string', color.toString());
         this.color = color;
