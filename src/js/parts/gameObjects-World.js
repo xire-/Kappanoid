@@ -22,10 +22,6 @@ var World = (function() {
             this._containerSize = vector;
         },
 
-        borderThickness: {
-            value: 5
-        },
-
         balls: {
             writable: true
         },
@@ -93,9 +89,7 @@ var World = (function() {
                             ball.velocity.y *= -1;
                         }
                     }
-
                 });
-
             }
         },
 
@@ -124,10 +118,10 @@ var World = (function() {
         this.balls.push(new Ball(new Vector2(123, 456), 7, new Vector2(-300, -300), '#f00'));
 
         this.bricks = [];
+        var blockHalfSize = new Vector2(25, 10);
         for (var i = 0; i < 10; i++) {
             for (var j = 0; j < 8; j++) {
-                var blockHalfSize = new Vector2(25, 10);
-                var blockCenter = new Vector2(120 + (i % 10) * (blockHalfSize.x * 2 + 10), 30 + 47.5 + (j % 8) * (blockHalfSize.y * 2 + 10));
+                var blockCenter = new Vector2(105 + blockHalfSize.x + (i % 10) * (blockHalfSize.x * 2 + 10), 30 + 47.5 + (j % 8) * (blockHalfSize.y * 2 + 10));
                 this.bricks.push(new Brick(blockCenter, blockHalfSize, 1, '#fff'));
             }
         }
