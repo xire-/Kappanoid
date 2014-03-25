@@ -163,6 +163,8 @@ var kappanoid = (function() {
     var updateGame = function(delta) {
         // TODO update physics
 
+        // update paddle position (clamped)
+        world.paddle.center.x = Math.min(Math.max(mousePos.x, 0 + world.paddle.halfSize.x), 800 - world.paddle.halfSize.x);
     };
 
     var toString = function() {
