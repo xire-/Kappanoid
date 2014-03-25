@@ -183,7 +183,8 @@ var kappanoid = (function() {
     return {
         version: '0.0',
         init: init,
-        toString: toString
+        resize: initCanvas,
+        toString: toString,
     };
 }());
 
