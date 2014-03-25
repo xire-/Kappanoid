@@ -83,12 +83,12 @@ var World = (function() {
 
         // initialize all game objects
         this.balls = [];
-        this.balls.push(new Ball(new Vector2(400, 300), 5, '#00f'));
+        this.balls.push(new Ball(new Vector2(400, 300), 7, '#00f'));
 
         this.bricks = [];
-        this.bricks.push(new Brick(new Vector2(200, 200), new Vector2(10, 3), 1, '#ff0'));
+        this.bricks.push(new Brick(new Vector2(200, 200), new Vector2(25, 10), 1, '#ff0'));
 
-        this.paddle = new Paddle(new Vector2(400, 500), new Vector2(50, 5), 1, '#0f0');
+        this.paddle = new Paddle(new Vector2(400, 500), new Vector2(50, 15), 1, '#0f0');
     };
     World.prototype = baseWorld;
     return World;
