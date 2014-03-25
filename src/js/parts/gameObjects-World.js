@@ -63,6 +63,13 @@ var World = (function() {
             }
         },
 
+        update: {
+            value: function(delta) {
+                // update paddle position (clamped)
+                this.paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, 0 + this.paddle.halfSize.x), 800 - this.paddle.halfSize.x);
+            }
+        },
+
         toString: {
             value: function() {
                 return 'World(balls: ' + this.balls + ', bricks: ' + this.bricks + ', paddle: ' + this.paddle + ')';
