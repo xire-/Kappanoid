@@ -35,19 +35,18 @@ var World = (function() {
         },
 
         render: {
-            value: function(g) {
-                var w = this.containerSize.x;
-                var h = this.containerSize.y;
+            value: function(delta) {
                 g.save();
                 g.translate(this.containerOffset.x, this.containerOffset.y);
 
-                //clip the region
+                // clip the region
                 g.beginPath();
-                g.rect(0, 0, w, h);
+                g.rect(0, 0, this.containerSize.x, this.containerSize.y);
                 g.clip();
 
                 // render background
-                g.clearRect(0, 0, 1337, 1337);
+                g.fillStyle = settings.worldBackgroundColor;
+                g.fillRect(0, 0, this.containerSize.x, this.containerSize.y);
 
                 // render balls, bricks and paddle
                 this.balls.forEach(function(ball) {
