@@ -1,7 +1,6 @@
 var World = (function() {
     var baseWorld = Object.defineProperties({}, {
         _containerOffset: {
-            value: new Vector2(),
             writable: true
         },
         get containerOffset() {
@@ -13,7 +12,6 @@ var World = (function() {
         },
 
         _containerSize: {
-            value: new Vector2(720, 540),
             writable: true
         },
         get containerSize() {
@@ -25,17 +23,14 @@ var World = (function() {
         },
 
         balls: {
-            value: [],
             writable: true
         },
 
         bricks: {
-            value: [],
             writable: true
         },
 
         paddle: {
-            value: new Paddle(),
             writable: true
         },
 
@@ -76,28 +71,25 @@ var World = (function() {
     });
 
     var World = function(containerOffset, containerSize, levelConf) {
-        if (containerOffset !== undefined && containerOffset instanceof Vector2) {
-            this.containerOffset = containerOffset;
-        }
+        console.assert(containerOffset !== undefined && containerOffset instanceof Vector2, containerOffset.toString());
+        this.containerOffset = containerOffset;
 
-        if (containerSize !== undefined && containerSize instanceof Vector2) {
-            this.containerSize = containerSize;
-        }
+        console.assert(containerSize !== undefined && containerSize instanceof Vector2, containerSize.toString());
+        this.containerSize = containerSize;
 
-        if (levelConf !== undefined) {
-            console.assert(false, 'todo');
-        }
+        // todo
+        // console.assert(levelConf !== undefined, levelConf.toString());
+        // this.levelConf = levelConf
 
         // initialize all game objects
+        this.balls = [];
         this.balls.push(new Ball(new Vector2(400, 300), 5, '#00f'));
+
+        this.bricks = [];
         this.bricks.push(new Brick(new Vector2(200, 200), new Vector2(10, 3), 1, '#ff0'));
+
         this.paddle = new Paddle(new Vector2(400, 500), new Vector2(50, 5), 1, '#0f0');
     };
     World.prototype = baseWorld;
     return World;
 }());
-
-function testWorld() {
-    var world1 = new World();
-    console.assert(JSON.stringify(world1.balls) === JSON.stringify([]) && JSON.stringify(world1.bricks) === JSON.stringify([]) && JSON.stringify(world1.paddle) === JSON.stringify(new Paddle()));
-}

@@ -63,7 +63,7 @@ var kappanoid = (function() {
         g = canvas.getContext('2d');
         g.scale(scaleFactor, scaleFactor);
 
-        mousePos = new Vector2();
+        mousePos = new Vector2(0, 0);
         // receive mouse movement update
         window.onmousemove = function(e) {
             var x;

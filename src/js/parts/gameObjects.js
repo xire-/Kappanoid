@@ -18,5 +18,4 @@ function testGameObjects() {
     testBall();
     testBrick();
     testPaddle();
-    testWorld();
 }

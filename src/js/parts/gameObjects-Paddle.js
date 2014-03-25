@@ -1,7 +1,6 @@
 var Paddle = (function() {
     var basePaddle = Object.defineProperties({}, {
         _center: {
-            value: new Vector2(),
             writable: true
         },
         get center() {
@@ -13,7 +12,6 @@ var Paddle = (function() {
         },
 
         _halfSize: {
-            value: new Vector2(10, 20),
             writable: true
         },
         get halfSize() {
@@ -25,12 +23,10 @@ var Paddle = (function() {
         },
 
         life: {
-            value: 1,
             writable: true
         },
 
         color: {
-            value: '#f00',
             writable: true
         },
 
@@ -59,42 +55,26 @@ var Paddle = (function() {
     });
 
     var Paddle = function(center, halfSize, life, color) {
-        if (center !== undefined && center instanceof Vector2) {
-            this.center = center;
-        }
+        console.assert(center !== undefined && center instanceof Vector2, center.toString());
+        this.center = center;
 
-        if (halfSize !== undefined && halfSize instanceof Vector2) {
-            this.halfSize = halfSize;
-        }
+        console.assert(halfSize !== undefined && halfSize instanceof Vector2, halfSize.toString());
+        this.halfSize = halfSize;
 
-        if (life !== undefined && typeof life == 'number') {
-            this.life = life;
-        }
+        console.assert(life !== undefined && typeof life == 'number', life.toString());
+        this.life = life;
 
-        if (color !== undefined && typeof color == 'string') {
-            this.color = color;
-        }
+        console.assert(color !== undefined && typeof color == 'string', color.toString());
+        this.color = color;
     };
     Paddle.prototype = basePaddle;
     return Paddle;
 }());
 
 function testPaddle() {
-    var paddle1 = new Paddle();
-    console.assert(JSON.stringify(paddle1.center) === JSON.stringify(new Vector2()) && JSON.stringify(paddle1.halfSize) === JSON.stringify(new Vector2(10, 20)) && paddle1.life === 1 && paddle1.color === '#f00', paddle1.toString());
-
     var center1 = new Vector2(3, 4);
-    paddle1 = new Brick(center1);
-    console.assert(JSON.stringify(paddle1.center) === JSON.stringify(center1) && JSON.stringify(paddle1.halfSize) === JSON.stringify(new Vector2(10, 20)) && paddle1.life === 1 && paddle1.color === '#f00', paddle1.toString());
-
     var halfSize1 = new Vector2(100, 300);
-    paddle1 = new Brick(center1, halfSize1);
-    console.assert(JSON.stringify(paddle1.center) === JSON.stringify(center1) && JSON.stringify(paddle1.halfSize) === JSON.stringify(halfSize1) && paddle1.life === 1 && paddle1.color === '#f00', paddle1.toString());
-
-    paddle1 = new Brick(center1, halfSize1, 4);
-    console.assert(JSON.stringify(paddle1.center) === JSON.stringify(center1) && JSON.stringify(paddle1.halfSize) === JSON.stringify(halfSize1) && paddle1.life === 4 && paddle1.color === '#f00', paddle1.toString());
-
-    paddle1 = new Brick(center1, halfSize1, 4, '#fff');
+    var paddle1 = new Brick(center1, halfSize1, 4, '#fff');
     console.assert(JSON.stringify(paddle1.center) === JSON.stringify(center1) && JSON.stringify(paddle1.halfSize) === JSON.stringify(halfSize1) && paddle1.life === 4 && paddle1.color === '#fff', paddle1.toString());
 
     var paddle2 = paddle1.clone();

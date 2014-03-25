@@ -1,7 +1,6 @@
 var Brick = (function() {
     var baseBrick = Object.defineProperties({}, {
         _center: {
-            value: new Vector2(),
             writable: true
         },
         get center() {
@@ -13,7 +12,6 @@ var Brick = (function() {
         },
 
         _halfSize: {
-            value: new Vector2(10, 20),
             writable: true
         },
         get halfSize() {
@@ -25,12 +23,10 @@ var Brick = (function() {
         },
 
         life: {
-            value: 1,
             writable: true
         },
 
         color: {
-            value: '#f00',
             writable: true
         },
 
@@ -59,42 +55,26 @@ var Brick = (function() {
     });
 
     var Brick = function(center, halfSize, life, color) {
-        if (center !== undefined && center instanceof Vector2) {
-            this.center = center;
-        }
+        console.assert(center !== undefined && center instanceof Vector2, center.toString());
+        this.center = center;
 
-        if (halfSize !== undefined && halfSize instanceof Vector2) {
-            this.halfSize = halfSize;
-        }
+        console.assert(halfSize !== undefined && halfSize instanceof Vector2, halfSize.toString());
+        this.halfSize = halfSize;
 
-        if (life !== undefined && typeof life == 'number') {
-            this.life = life;
-        }
+        console.assert(life !== undefined && typeof life == 'number', life.toString());
+        this.life = life;
 
-        if (color !== undefined && typeof color == 'string') {
-            this.color = color;
-        }
+        console.assert(color !== undefined && typeof color == 'string', color.toString());
+        this.color = color;
     };
     Brick.prototype = baseBrick;
     return Brick;
 }());
 
 function testBrick() {
-    var brick1 = new Brick();
-    console.assert(JSON.stringify(brick1.center) === JSON.stringify(new Vector2()) && JSON.stringify(brick1.halfSize) === JSON.stringify(new Vector2(10, 20)) && brick1.life === 1 && brick1.color === '#f00', brick1.toString());
-
     var center1 = new Vector2(3, 4);
-    brick1 = new Brick(center1);
-    console.assert(JSON.stringify(brick1.center) === JSON.stringify(center1) && JSON.stringify(brick1.halfSize) === JSON.stringify(new Vector2(10, 20)) && brick1.life === 1 && brick1.color === '#f00', brick1.toString());
-
     var halfSize1 = new Vector2(100, 300);
-    brick1 = new Brick(center1, halfSize1);
-    console.assert(JSON.stringify(brick1.center) === JSON.stringify(center1) && JSON.stringify(brick1.halfSize) === JSON.stringify(halfSize1) && brick1.life === 1 && brick1.color === '#f00', brick1.toString());
-
-    brick1 = new Brick(center1, halfSize1, 4);
-    console.assert(JSON.stringify(brick1.center) === JSON.stringify(center1) && JSON.stringify(brick1.halfSize) === JSON.stringify(halfSize1) && brick1.life === 4 && brick1.color === '#f00', brick1.toString());
-
-    brick1 = new Brick(center1, halfSize1, 4, '#fff');
+    var brick1 = new Brick(center1, halfSize1, 4, '#fff');
     console.assert(JSON.stringify(brick1.center) === JSON.stringify(center1) && JSON.stringify(brick1.halfSize) === JSON.stringify(halfSize1) && brick1.life === 4 && brick1.color === '#fff', brick1.toString());
 
     var brick2 = brick1.clone();
