@@ -11,8 +11,8 @@ var kappanoid = (function() {
     // private stuff
 
     // default relative dimensions
-    var defaultWidth = 1100;
-    var defaultHeight = 600;
+    var defaultWidth = 1140;
+    var defaultHeight = 620;
 
     // keep count of the current mean frame per second
     var currentFPS = 0;
@@ -50,9 +50,9 @@ var kappanoid = (function() {
         // TODO generate settings interface
         initCanvas(width, height);
 
-        world = new World(new Vector2(0, 0), new Vector2(800, 600));
+        world = new World(new Vector2(settings.worldBorderThickness, settings.worldBorderThickness), new Vector2(800, 600));
 
-        gameInfo = new GameInfo(new Vector2(800, 0), new Vector2(300, 600));
+        gameInfo = new GameInfo(new Vector2(800 + settings.worldBorderThickness * 2, 0), new Vector2(300, 600 + settings.worldBorderThickness));
 
         startMainLoop();
     };
@@ -143,6 +143,10 @@ var kappanoid = (function() {
         // clear the previous frame
         g.fillStyle = '#00f';
         g.fillRect(0, 0, defaultWidth, defaultHeight);
+
+        // render world borders 
+        g.fillStyle = settings.worldBorderBackgroundColor;
+        g.fillRect(0, 0, world.containerSize.x + settings.worldBorderThickness * 2, world.containerSize.y + settings.worldBorderThickness);
 
         // render the game world
         world.render(delta);

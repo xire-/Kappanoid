@@ -52,12 +52,6 @@ var World = (function() {
                 g.fillStyle = settings.worldBackgroundColor;
                 g.fillRect(0, 0, this.containerSize.x, this.containerSize.y);
 
-                // render borders
-                g.fillStyle = settings.worldBorderBackgroundColor;
-                g.fillRect(0, 0, this.containerSize.x, settings.worldBorderThickness);
-                g.fillRect(0, settings.worldBorderThickness, settings.worldBorderThickness, this.containerSize.y);
-                g.fillRect(this.containerSize.x - settings.worldBorderThickness, settings.worldBorderThickness, this.containerSize.x, this.containerSize.y);
-
                 // render balls, bricks and paddle
                 this.balls.forEach(function(ball) {
                     ball.render(g);
@@ -75,7 +69,7 @@ var World = (function() {
         update: {
             value: function(delta) {
                 // update paddle position (clamped)
-                this.paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, settings.worldBorderThickness + this.paddle.halfSize.x), 800 - settings.worldBorderThickness - this.paddle.halfSize.x);
+                this.paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, 0 + this.paddle.halfSize.x), 800 - this.paddle.halfSize.x);
 
                 this.balls.forEach(function(ball) {
                     ball.update(delta);
