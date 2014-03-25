@@ -38,6 +38,9 @@ var kappanoid = (function() {
     // store all the configurable settings
     var settings = {
         worldBackgroundColor: '#000',
+        worldBorderBackgroundColor: '#f0f',
+        worldBorderThickness: 20,
+
         gameInfoBackgroundColor: '#f00'
     };
 
