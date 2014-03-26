@@ -27,28 +27,44 @@ var World = function() {
 
     var update = function(delta) {
         // update paddle position (clamped)
-        this.paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, 0 + this.paddle.halfSize.x), 800 - this.paddle.halfSize.x);
+        var paddle = this.paddle;
+        paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, 0 + this.paddle.halfSize.x), 800 - this.paddle.halfSize.x);
 
         this.balls.forEach(function(ball) {
             ball.update(delta);
 
-            // move in his own function
-            for (var i = 0; i < 2; i++) {
-                if (ball.center.x - ball.radius < 0) {
-                    ball.center.x = -ball.center.x + ball.radius * 2;
-                    ball.velocity.x *= -1;
+            // check and handle collisions with borders
+            if (ball.center.x - ball.radius < 0) {
+                ball.center.x = -ball.center.x + ball.radius * 2;
+                ball.velocity.x *= -1;
+            }
+            if (ball.center.y - ball.radius < 0) {
+                ball.center.y = -ball.center.y + ball.radius * 2;
+                ball.velocity.y *= -1;
+            }
+            if (ball.center.x + ball.radius >= 800) {
+                ball.center.x = 799 * 2 - ball.center.x - ball.radius;
+                ball.velocity.x *= -1;
+            }
+            if (ball.center.y + ball.radius >= 600) {
+                ball.center.y = 599 * 2 - ball.center.y - ball.radius;
+                ball.velocity.y *= -1;
+            }
+
+            //check ball vs bottom and paddle
+            if (ball.center.y + ball.radius >= paddle.center.y - paddle.halfSize.y) {
+                // if it's actualy going down
+                if (ball.velocity.y > 0) {
+                    var collisionPoint = collisionDetection.testSphereAABB(ball, paddle);
+                    if (collisionPoint !== null) {
+                        ball.velocity.y *= -1;
+                    }
                 }
-                if (ball.center.y - ball.radius < 0) {
-                    ball.center.y = -ball.center.y + ball.radius * 2;
-                    ball.velocity.y *= -1;
-                }
-                if (ball.center.x + ball.radius >= 800) {
-                    ball.center.x = 799 * 2 - ball.center.x - ball.radius;
-                    ball.velocity.x *= -1;
-                }
-                if (ball.center.y + ball.radius >= 600) {
-                    ball.center.y = 599 * 2 - ball.center.y - ball.radius;
-                    ball.velocity.y *= -1;
+
+                // check if ball is dead
+                if (ball.center.y >= paddle.center.y + paddle.halfSize.y) {
+                    // ball is dead, remove it
+                    ball.velocity.x = ball.velocity.y = 0;
                 }
             }
         });
@@ -70,9 +86,9 @@ var World = function() {
 
         // initialize all game objects
         this.balls = [];
-        this.balls.push(new Ball(new Vector2(400, 300), 7, new Vector2(100, -100), '#00f'));
-        this.balls.push(new Ball(new Vector2(50, 50), 7, new Vector2(-100, -100), '#f00'));
-        this.balls.push(new Ball(new Vector2(123, 456), 7, new Vector2(-300, -300), '#f00'));
+        this.balls.push(new Ball(new Vector2(400, 300), 7, new Vector2(100, -100), '#fff'));
+        this.balls.push(new Ball(new Vector2(50, 50), 7, new Vector2(-100, -100), '#fff'));
+        this.balls.push(new Ball(new Vector2(123, 456), 7, new Vector2(-300, -300), '#fff'));
 
         this.bricks = [];
         var blockHalfSize = new Vector2(25, 10);
