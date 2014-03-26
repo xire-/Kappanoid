@@ -35,6 +35,12 @@ var kappanoid = (function() {
     // main loop handle
     var mainLoopHandle;
 
+    // states of the game
+    var states;
+
+    // current state of main
+    var currState;
+
     // store all the configurable settings
     var settings = {
         worldBackgroundColor: '#000',
@@ -48,6 +54,25 @@ var kappanoid = (function() {
     var init = function(width, height) {
         // TODO bind keys to actions
         // TODO generate settings interface
+
+        // init states
+        states = {
+            intro: {
+                update: updateIntro,
+                render: renderIntro,
+                timePassed: 0
+            },
+            playing: {
+                update: updateGame,
+                render: renderGame
+            },
+            ending: {
+                update: updateGame,
+                render: renderGame
+            }
+        };
+        currState = states.intro;
+
         initCanvas(width, height);
 
         world = new World(new Vector2(settings.worldBorderThickness, settings.worldBorderThickness), new Vector2(800, 600));
@@ -124,11 +149,11 @@ var kappanoid = (function() {
                 var ministep = elapsed / steps;
 
                 while (steps > 0) {
-                    updateGame(ministep);
+                    currState.update(ministep);
                     steps -= 1;
                 }
 
-                renderGame(elapsed);
+                currState.render(elapsed);
 
                 loopTime = Date.now() - lastTime;
             },
@@ -140,13 +165,9 @@ var kappanoid = (function() {
     var renderGame = function(delta) {
         g.save();
 
-        // clear the previous frame
-        g.fillStyle = '#00f';
-        g.fillRect(0, 0, defaultWidth, defaultHeight);
-
-        // render world borders 
+        // clear the previous frame (render world borders)
         g.fillStyle = settings.worldBorderBackgroundColor;
-        g.fillRect(0, 0, world.containerSize.x + settings.worldBorderThickness * 2, world.containerSize.y + settings.worldBorderThickness);
+        g.fillRect(0, 0, defaultWidth, defaultHeight);
 
         // render the game world
         world.render();
@@ -171,6 +192,38 @@ var kappanoid = (function() {
         // TODO update physics
 
         world.update(delta);
+    };
+
+
+    var renderIntro = function(delta) {
+        g.save();
+
+        // clear the previous frame
+        g.fillStyle = '#000';
+        g.fillRect(0, 0, defaultWidth, defaultHeight);
+
+        g.save();
+        g.fillStyle = '#fff';
+        g.textAlign = 'center';
+        g.textBaseline = 'middle';
+        g.font = '60px Arial';
+        g.fillText('Kappanoid', currState.titlePosX, currState.titlePosY);
+        g.restore();
+
+        // render game info
+        gameInfo.render(delta);
+
+        g.restore();
+    };
+
+    var updateIntro = function(delta) {
+        currState.timePassed += delta;
+        currState.titlePosX = settings.worldBorderThickness + 400;
+        currState.titlePosY = easing.easeOutBounce(Math.min(currState.timePassed, 1000), 0, defaultHeight / 2, 1000);
+
+        if (currState.timePassed > 1000) {
+            currState = states.playing;
+        }
     };
 
     var toString = function() {
