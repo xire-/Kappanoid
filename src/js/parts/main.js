@@ -41,7 +41,7 @@ var kappanoid = (function() {
         worldBorderBackgroundColor: '#fff',
         worldBorderThickness: 20,
 
-        gameInfoBackgroundColor: '#000'
+        gameInfoBackgroundColor: '#222'
     };
 
 
