@@ -1,5 +1,5 @@
 var Ball = function() {
-    var _render = function(g) {
+    var render = function(g) {
         g.save();
         g.fillStyle = this.color;
         g.beginPath();
@@ -8,36 +8,63 @@ var Ball = function() {
         g.restore();
     };
 
-    var _update = function(delta) {
+    var update = function(delta) {
         this.center.add(this.velocity.clone().mul(delta / 1000));
     };
 
-    var _clone = function() {
+    var clone = function() {
         return new Ball(this.center, this.radius, this.velocity, this.color);
     };
 
-    var _toString = function() {
+    var toString = function() {
         return 'Ball(center: ' + this.center + ', radius: ' + this.radius + ', velocity' + this.velocity + ', color: ' + this.color + ')';
     };
 
 
     var constructor = function Ball(center, radius, velocity, color) {
-        console.assert(center !== undefined && center instanceof Vector2, center.toString());
         this.center = center;
-
-        console.assert(radius !== undefined && typeof radius == 'number', radius.toString());
         this.radius = radius;
-
-        console.assert(velocity !== undefined && velocity instanceof Vector2, velocity.toString());
         this.velocity = velocity;
-
-        console.assert(color !== undefined && typeof color == 'string', color.toString());
         this.color = color;
 
-        this.render = _render;
-        this.update = _update;
-        this.clone = _clone;
-        this.toString = _toString;
+        this.render = render;
+        this.update = update;
+        this.clone = clone;
+        this.toString = toString;
+    };
+
+    constructor.prototype = {
+        set center(value) {
+            console.assert(value !== undefined && value instanceof Vector2, value.toString());
+            this._center = value;
+        },
+        get center() {
+            return this._center;
+        },
+
+        set radius(value) {
+            console.assert(value !== undefined && typeof value == 'number', value.toString());
+            this._radius = value;
+        },
+        get radius() {
+            return this._radius;
+        },
+
+        set velocity(value) {
+            console.assert(value !== undefined && value instanceof Vector2, value.toString());
+            this._velocity = value;
+        },
+        get velocity() {
+            return this._velocity;
+        },
+
+        set color(value) {
+            console.assert(value !== undefined && typeof value == 'string', value.toString());
+            this._color = value;
+        },
+        get color() {
+            return this._color;
+        },
     };
 
     return constructor;
