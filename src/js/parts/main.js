@@ -60,7 +60,8 @@ var kappanoid = (function() {
             intro: {
                 update: updateIntro,
                 render: renderIntro,
-                timePassed: 0
+                timePassed: 0,
+                titleScale: 1
             },
             playing: {
                 update: updateGame,
@@ -203,11 +204,14 @@ var kappanoid = (function() {
         g.fillRect(0, 0, defaultWidth, defaultHeight);
 
         g.save();
+        g.translate(currState.titlePosX, currState.titlePosY);
+        g.scale(currState.titleScale, currState.titleScale);
+
         g.fillStyle = '#fff';
         g.textAlign = 'center';
         g.textBaseline = 'middle';
         g.font = '60px Arial';
-        g.fillText('Kappanoid', currState.titlePosX, currState.titlePosY);
+        g.fillText('Kappanoid', 0, 0);
         g.restore();
 
         // render game info
@@ -218,10 +222,17 @@ var kappanoid = (function() {
 
     var updateIntro = function(delta) {
         currState.timePassed += delta;
-        currState.titlePosX = settings.worldBorderThickness + 400;
-        currState.titlePosY = easing.easeOutBounce(Math.min(currState.timePassed, 1000), 0, defaultHeight / 2, 1000);
-
-        if (currState.timePassed > 1000) {
+        if (currState.timePassed < 1000) {
+            currState.titlePosX = settings.worldBorderThickness + 400;
+            currState.titlePosY = easing.easeOutBounce(currState.timePassed, 0, defaultHeight / 2, 1000);
+        } else if (currState.timePassed < 2000) {
+            currState.titlePosX = settings.worldBorderThickness + 400;
+            currState.titlePosY = defaultHeight / 2;
+        } else if (currState.timePassed < 3000) {
+            currState.titleScale = easing.easeInBack(currState.timePassed - 2000, 1, -1, 1000);
+        } else if (currState.timePassed < 3500) {
+            currState.titleScale = 0;
+        } else {
             currState = states.playing;
         }
     };

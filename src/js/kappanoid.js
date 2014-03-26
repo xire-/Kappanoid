@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-/* Generated: 2014/03/26 16:23:36 */
-=======
-/* Generated: 2014/03/26 16:13:26 */
->>>>>>> origin
+/* Generated: 2014/03/26 19:21:15 */
 
 /*
  * Kappanoid game
@@ -41,19 +37,45 @@ var kappanoid = (function() {
     // main loop handle
     var mainLoopHandle;
 
+    // states of the game
+    var states;
+
+    // current state of main
+    var currState;
+
     // store all the configurable settings
     var settings = {
         worldBackgroundColor: '#000',
         worldBorderBackgroundColor: '#fff',
         worldBorderThickness: 20,
 
-        gameInfoBackgroundColor: '#000'
+        gameInfoBackgroundColor: '#222'
     };
 
 
     var init = function(width, height) {
         // TODO bind keys to actions
         // TODO generate settings interface
+
+        // init states
+        states = {
+            intro: {
+                update: updateIntro,
+                render: renderIntro,
+                timePassed: 0,
+                titleScale: 1
+            },
+            playing: {
+                update: updateGame,
+                render: renderGame
+            },
+            ending: {
+                update: updateGame,
+                render: renderGame
+            }
+        };
+        currState = states.intro;
+
         initCanvas(width, height);
 
         world = new World(new Vector2(settings.worldBorderThickness, settings.worldBorderThickness), new Vector2(800, 600));
@@ -130,11 +152,11 @@ var kappanoid = (function() {
                 var ministep = elapsed / steps;
 
                 while (steps > 0) {
-                    updateGame(ministep);
+                    currState.update(ministep);
                     steps -= 1;
                 }
 
-                renderGame(elapsed);
+                currState.render(elapsed);
 
                 loopTime = Date.now() - lastTime;
             },
@@ -146,13 +168,9 @@ var kappanoid = (function() {
     var renderGame = function(delta) {
         g.save();
 
-        // clear the previous frame
-        g.fillStyle = '#00f';
-        g.fillRect(0, 0, defaultWidth, defaultHeight);
-
-        // render world borders
+        // clear the previous frame (render world borders)
         g.fillStyle = settings.worldBorderBackgroundColor;
-        g.fillRect(0, 0, world.containerSize.x + settings.worldBorderThickness * 2, world.containerSize.y + settings.worldBorderThickness);
+        g.fillRect(0, 0, defaultWidth, defaultHeight);
 
         // render the game world
         world.render();
@@ -179,6 +197,48 @@ var kappanoid = (function() {
         world.update(delta);
     };
 
+
+    var renderIntro = function(delta) {
+        g.save();
+
+        // clear the previous frame
+        g.fillStyle = '#000';
+        g.fillRect(0, 0, defaultWidth, defaultHeight);
+
+        g.save();
+        g.translate(currState.titlePosX, currState.titlePosY);
+        g.scale(currState.titleScale, currState.titleScale);
+
+        g.fillStyle = '#fff';
+        g.textAlign = 'center';
+        g.textBaseline = 'middle';
+        g.font = '60px Arial';
+        g.fillText('Kappanoid', 0, 0);
+        g.restore();
+
+        // render game info
+        gameInfo.render(delta);
+
+        g.restore();
+    };
+
+    var updateIntro = function(delta) {
+        currState.timePassed += delta;
+        if (currState.timePassed < 1000) {
+            currState.titlePosX = settings.worldBorderThickness + 400;
+            currState.titlePosY = easing.easeOutBounce(currState.timePassed, 0, defaultHeight / 2, 1000);
+        } else if (currState.timePassed < 2000) {
+            currState.titlePosX = settings.worldBorderThickness + 400;
+            currState.titlePosY = defaultHeight / 2;
+        } else if (currState.timePassed < 3000) {
+            currState.titleScale = easing.easeInBack(currState.timePassed - 2000, 1, -1, 1000);
+        } else if (currState.timePassed < 3500) {
+            currState.titleScale = 0;
+        } else {
+            currState = states.playing;
+        }
+    };
+
     var toString = function() {
         return JSON.stringify(settings);
     };
@@ -193,7 +253,6 @@ var kappanoid = (function() {
             this.y = vector.y;
             return this;
         };
-<<<<<<< HEAD
 
         var add = function(vector) {
             console.assert(vector instanceof Vector2, vector);
@@ -241,55 +300,6 @@ var kappanoid = (function() {
         var squaredDistance = function(vector) {
             console.assert(vector instanceof Vector2, vector);
 
-=======
-
-        var add = function(vector) {
-            console.assert(vector instanceof Vector2, vector);
-
-            this.x += vector.x;
-            this.y += vector.y;
-            return this;
-        };
-
-        var sub = function(vector) {
-            console.assert(vector instanceof Vector2, vector);
-
-            this.x -= vector.x;
-            this.y -= vector.y;
-            return this;
-        };
-
-        var mul = function(scale) {
-            this.x *= scale;
-            this.y *= scale;
-            return this;
-        };
-
-        var dot = function(vector) {
-            console.assert(vector instanceof Vector2, vector);
-
-            return this.x * vector.x + this.y * vector.y;
-        };
-
-        var normalize = function() {
-            var scale = this.length();
-            this.x /= scale;
-            this.y /= scale;
-
-            console.assert(this.length() === 1, this.length());
-            return this;
-        };
-
-        var distance = function(vector) {
-            console.assert(vector instanceof Vector2, vector);
-
-            return Math.sqrt(this.squaredDistance(vector));
-        };
-
-        var squaredDistance = function(vector) {
-            console.assert(vector instanceof Vector2, vector);
-
->>>>>>> origin
             return (this.x - vector.x) * (this.x - vector.x) + (this.y - vector.y) * (this.y - vector.y);
         };
 
@@ -326,7 +336,6 @@ var kappanoid = (function() {
             this.squaredLength = squaredLength;
             this.clone = clone;
             this.toString = toString;
-<<<<<<< HEAD
         };
         constructor.prototype = {
             set x(value) {
@@ -345,26 +354,6 @@ var kappanoid = (function() {
                 return this._y;
             },
         };
-=======
-        };
-        constructor.prototype = {
-            set x(value) {
-                console.assert(value !== undefined && typeof value == 'number', value.toString());
-                this._x = value;
-            },
-            get x() {
-                return this._x;
-            },
-
-            set y(value) {
-                console.assert(value !== undefined && typeof value == 'number', value.toString());
-                this._y = value;
-            },
-            get y() {
-                return this._y;
-            },
-        };
->>>>>>> origin
 
         return constructor;
     }();
@@ -776,11 +765,7 @@ var kappanoid = (function() {
     /////////////////////////////////// Game Objects
     ///////////////// Ball
     var Ball = function() {
-<<<<<<< HEAD
         var render = function() {
-=======
-        var render = function(g) {
->>>>>>> origin
             g.save();
             g.fillStyle = this.color;
             g.beginPath();
@@ -865,11 +850,7 @@ var kappanoid = (function() {
 
     ///////////////// Brick
     var Brick = function() {
-<<<<<<< HEAD
         var render = function() {
-=======
-        var render = function(g) {
->>>>>>> origin
             g.save();
             g.fillStyle = this.color;
             g.beginPath();
@@ -952,11 +933,7 @@ var kappanoid = (function() {
 
     ///////////////// Paddle
     var Paddle = function() {
-<<<<<<< HEAD
         var render = function() {
-=======
-        var render = function(g) {
->>>>>>> origin
             g.save();
             g.fillStyle = this.color;
             g.beginPath();
@@ -1038,7 +1015,6 @@ var kappanoid = (function() {
 
 
     ///////////////// World
-<<<<<<< HEAD
     var World = function() {
         var render = function() {
             g.save();
@@ -1065,66 +1041,6 @@ var kappanoid = (function() {
             this.paddle.render(g);
             g.restore();
         };
-=======
-    var World = (function() {
-        var baseWorld = Object.defineProperties({}, {
-            _containerOffset: {
-                writable: true
-            },
-            get containerOffset() {
-                return this._containerOffset;
-            },
-            set containerOffset(vector) {
-                console.assert(vector instanceof Vector2);
-                this._containerOffset = vector;
-            },
-
-            _containerSize: {
-                writable: true
-            },
-            get containerSize() {
-                return this._containerSize;
-            },
-            set containerSize(vector) {
-                console.assert(vector instanceof Vector2);
-                this._containerSize = vector;
-            },
-
-            balls: {
-                writable: true
-            },
-
-            bricks: {
-                writable: true
-            },
-
-            paddle: {
-                writable: true
-            },
-
-            render: {
-                value: function(delta) {
-                    g.save();
-                    g.translate(this.containerOffset.x, this.containerOffset.y);
-
-                    // clip the region
-                    g.beginPath();
-                    g.rect(0, 0, this.containerSize.x, this.containerSize.y);
-                    g.clip();
-
-                    // render background
-                    g.fillStyle = settings.worldBackgroundColor;
-                    g.fillRect(0, 0, this.containerSize.x, this.containerSize.y);
-
-                    // render balls, bricks and paddle
-                    this.balls.forEach(function(ball) {
-                        ball.render(g);
-                    });
-
-                    this.bricks.forEach(function(brick) {
-                        brick.render(g);
-                    });
->>>>>>> origin
 
         var update = function(delta) {
             // update paddle position (clamped)
@@ -1155,42 +1071,9 @@ var kappanoid = (function() {
             });
         };
 
-<<<<<<< HEAD
         var toString = function() {
             return 'World(balls: ' + this.balls + ', bricks: ' + this.bricks + ', paddle: ' + this.paddle + ')';
         };
-=======
-            update: {
-                value: function(delta) {
-                    // update paddle position (clamped)
-                    this.paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, 0 + this.paddle.halfSize.x), 800 - this.paddle.halfSize.x);
-
-                    this.balls.forEach(function(ball) {
-                        ball.update(delta);
-
-                        // move in his own function
-                        for (var i = 0; i < 2; i++) {
-                            if (ball.center.x - ball.radius < 0) {
-                                ball.center.x = -ball.center.x + ball.radius * 2;
-                                ball.velocity.x *= -1;
-                            }
-                            if (ball.center.y - ball.radius < 0) {
-                                ball.center.y = -ball.center.y + ball.radius * 2;
-                                ball.velocity.y *= -1;
-                            }
-                            if (ball.center.x + ball.radius >= 800) {
-                                ball.center.x = 799 * 2 - ball.center.x - ball.radius;
-                                ball.velocity.x *= -1;
-                            }
-                            if (ball.center.y + ball.radius >= 600) {
-                                ball.center.y = 599 * 2 - ball.center.y - ball.radius;
-                                ball.velocity.y *= -1;
-                            }
-                        }
-                    });
-                }
-            },
->>>>>>> origin
 
 
         var constructor = function World(containerOffset, containerSize, levelConf) {
@@ -1212,14 +1095,10 @@ var kappanoid = (function() {
             var blockHalfSize = new Vector2(25, 10);
             for (var i = 0; i < 10; i++) {
                 for (var j = 0; j < 8; j++) {
-<<<<<<< HEAD
-                    var blockCenter = new Vector2(105 + blockHalfSize.x + (i % 10) * (blockHalfSize.x * 2 + 10), 30 + 47.5 + (j % 8) * (blockHalfSize.y * 2 + 10));
-=======
                     var blockCenter = new Vector2(
                         105 + blockHalfSize.x + (i % 10) * (blockHalfSize.x * 2 + 10),
                         30 + 47 + (j % 8) * (blockHalfSize.y * 2 + 10)
-                        );
->>>>>>> origin
+                    );
                     this.bricks.push(new Brick(blockCenter, blockHalfSize, 1, '#fff'));
                 }
             }
