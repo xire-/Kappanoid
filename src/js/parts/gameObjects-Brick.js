@@ -1,75 +1,73 @@
-var Brick = (function() {
-    var baseBrick = Object.defineProperties({}, {
-        _center: {
-            writable: true
+var Brick = function() {
+    var render = function(g) {
+        g.save();
+        g.fillStyle = this.color;
+        g.beginPath();
+        g.rect(this.center.x - this.halfSize.x, this.center.y - this.halfSize.y, this.halfSize.x * 2, this.halfSize.y * 2);
+        g.fill();
+        g.restore();
+    };
+
+    var update = function(delta) {};
+
+    var clone = function() {
+        return new Brick(this.center, this.halfSize, this.life, this.color);
+    };
+
+    var toString = function() {
+        return 'Brick(center: ' + this.center + ', halfSize: ' + this.halfSize + ', life: ' + this.life + ', color: ' + this.color + ')';
+    };
+
+
+    var constructor = function Brick(center, halfSize, life, color) {
+        this.center = center;
+        this.halfSize = halfSize;
+        this.life = life;
+        this.color = color;
+
+        this.render = render;
+        this.update = update;
+        this.clone = clone;
+        this.toString = toString;
+    };
+
+    constructor.prototype = {
+        set center(value) {
+            console.assert(value !== undefined && value instanceof Vector2, value.toString());
+            this._center = value;
         },
         get center() {
             return this._center;
         },
-        set center(vector) {
-            console.assert(vector instanceof Vector2);
-            this._center = vector;
-        },
 
-        _halfSize: {
-            writable: true
+        set halfSize(value) {
+            console.assert(value !== undefined && value instanceof Vector2, value.toString());
+            this._halfSize = value;
         },
         get halfSize() {
             return this._halfSize;
         },
-        set halfSize(vector) {
-            console.assert(vector instanceof Vector2);
-            this._halfSize = vector;
+
+        set life(value) {
+            console.assert(value !== undefined && typeof value == 'number', value.toString());
+            this._life = value;
+        },
+        get life() {
+            return this._life;
         },
 
-        life: {
-            writable: true
+        set color(value) {
+            console.assert(value !== undefined && typeof value == 'string', value.toString());
+            this._color = value;
         },
-
-        color: {
-            writable: true
+        get color() {
+            return this._color;
         },
-
-        render: {
-            value: function(g) {
-                g.save();
-                g.fillStyle = this.color;
-                g.beginPath();
-                g.rect(this.center.x - this.halfSize.x, this.center.y - this.halfSize.y, this.halfSize.x * 2, this.halfSize.y * 2);
-                g.fill();
-                g.restore();
-            }
-        },
-
-        clone: {
-            value: function() {
-                return new Brick(this.center, this.halfSize, this.life, this.color);
-            }
-        },
-
-        toString: {
-            value: function() {
-                return 'Brick(center: ' + this.center + ', halfSize: ' + this.halfSize + ', life: ' + this.life + ', color: ' + this.color + ')';
-            }
-        }
-    });
-
-    var Brick = function(center, halfSize, life, color) {
-        console.assert(center !== undefined && center instanceof Vector2, center.toString());
-        this.center = center;
-
-        console.assert(halfSize !== undefined && halfSize instanceof Vector2, halfSize.toString());
-        this.halfSize = halfSize;
-
-        console.assert(life !== undefined && typeof life == 'number', life.toString());
-        this.life = life;
-
-        console.assert(color !== undefined && typeof color == 'string', color.toString());
-        this.color = color;
     };
-    Brick.prototype = baseBrick;
-    return Brick;
-}());
+
+    return constructor;
+}();
+
 
 function testBrick() {
     var center1 = new Vector2(3, 4);
