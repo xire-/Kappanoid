@@ -3,12 +3,11 @@
  * Authors: Francesco Cagnin, Marco Gasparini
  */
 
-/*jslint browser: true, devel: true */
+/*jslint browser: true, devel: true, multistr: true */
 /*global $*/
 
 var kappanoid = (function() {
     'use strict';
-    // private stuff
 
     // default relative dimensions
     var defaultWidth = 1140;
@@ -119,6 +118,7 @@ var kappanoid = (function() {
         };
     };
 
+
     var startMainLoop = function() {
         // timestamp of last game loop iteration (used to calculate delta time)
         var lastTime = Date.now();
@@ -162,28 +162,6 @@ var kappanoid = (function() {
         );
     };
 
-    var renderGame = function(delta) {
-        g.save();
-
-        // clear the previous frame (render world borders)
-        g.fillStyle = settings.worldBorderBackgroundColor;
-        g.fillRect(0, 0, defaultWidth, defaultHeight);
-
-        // render the game world
-        world.render();
-
-        // render game info
-        gameInfo.render(delta);
-
-        g.restore();
-    };
-
-    var updateGame = function(delta) {
-        // TODO update physics
-
-        world.update(delta);
-    };
-
 
     var renderIntro = function(delta) {
         g.save();
@@ -199,8 +177,8 @@ var kappanoid = (function() {
         g.fillStyle = '#fff';
         g.textAlign = 'center';
         g.textBaseline = 'middle';
-        g.font = '60px Arial';
-        g.fillText('Kappanoid', 0, 0);
+        g.font = '15px monospace';
+        drawLogo(0, 0, logos[1], 15);
         g.restore();
 
         // render game info
@@ -226,9 +204,34 @@ var kappanoid = (function() {
         }
     };
 
+
+    var renderGame = function(delta) {
+        g.save();
+
+        // clear the previous frame (render world borders)
+        g.fillStyle = settings.worldBorderBackgroundColor;
+        g.fillRect(0, 0, defaultWidth, defaultHeight);
+
+        // render the game world
+        world.render();
+
+        // render game info
+        gameInfo.render(delta);
+
+        g.restore();
+    };
+
+    var updateGame = function(delta) {
+        // TODO update physics
+
+        world.update(delta);
+    };
+
+
     var toString = function() {
         return JSON.stringify(settings);
     };
+
 
     /////////////////////////////////// Physics
     // __import__ physics.js
@@ -237,10 +240,15 @@ var kappanoid = (function() {
     /////////////////////////////////// Game Objects
     // __import__ gameObjects.js
 
+
     /////////////////////////////////// Game Info
     // __import__ gameInfo.js
 
-    // public stuff
+
+    /////////////////////////////////// Game Logos
+    // __import__ gameLogos.js
+
+
     return {
         version: '0.0',
         init: init,
@@ -249,7 +257,6 @@ var kappanoid = (function() {
     };
 }());
 
-// function to execute once the document is ready
 $(document).ready(function() {
     'use strict';
     kappanoid.init();
