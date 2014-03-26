@@ -3,7 +3,7 @@
  * Authors: Francesco Cagnin, Marco Gasparini
  */
 
-/*jslint browser: true, devel: true */
+/*jslint browser: true, devel: true, multistr: true */
 /*global $*/
 
 var kappanoid = (function() {
@@ -177,8 +177,8 @@ var kappanoid = (function() {
         g.fillStyle = '#fff';
         g.textAlign = 'center';
         g.textBaseline = 'middle';
-        g.font = '60px Arial';
-        g.fillText('Kappanoid', 0, 0);
+        g.font = '15px monospace';
+        drawLogo(0, 0, logos[1], 15);
         g.restore();
 
         // render game info
@@ -243,6 +243,10 @@ var kappanoid = (function() {
 
     /////////////////////////////////// Game Info
     // __import__ gameInfo.js
+
+
+    /////////////////////////////////// Game Logos
+    // __import__ gameLogos.js
 
 
     return {
