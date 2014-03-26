@@ -1,121 +1,102 @@
-var Vector2 = (function() {
-    var baseVector2 = Object.defineProperties({}, {
-        x: {
-            writable: true
-        },
+var Vector2 = function() {
+    var set = function(vector) {
+        console.assert(vector instanceof Vector2, vector);
 
-        y: {
-            writable: true
-        },
+        this.x = vector.x;
+        this.y = vector.y;
+        return this;
+    };
 
-        set: {
-            value: function(vector) {
-                console.assert(vector instanceof Vector2, vector);
+    var add = function(vector) {
+        console.assert(vector instanceof Vector2, vector);
 
-                this.x = vector.x;
-                this.y = vector.y;
-                return this;
-            }
-        },
+        this.x += vector.x;
+        this.y += vector.y;
+        return this;
+    };
 
-        add: {
-            value: function(vector) {
-                console.assert(vector instanceof Vector2, vector);
+    var sub = function(vector) {
+        console.assert(vector instanceof Vector2, vector);
 
-                this.x += vector.x;
-                this.y += vector.y;
-                return this;
-            }
-        },
+        this.x -= vector.x;
+        this.y -= vector.y;
+        return this;
+    };
 
-        sub: {
-            value: function(vector) {
-                console.assert(vector instanceof Vector2, vector);
+    var mul = function(scale) {
+        this.x *= scale;
+        this.y *= scale;
+        return this;
+    };
 
-                this.x -= vector.x;
-                this.y -= vector.y;
-                return this;
-            }
-        },
+    var dot = function(vector) {
+        console.assert(vector instanceof Vector2, vector);
 
-        mul: {
-            value: function(scale) {
-                this.x *= scale;
-                this.y *= scale;
-                return this;
-            }
-        },
+        return this.x * vector.x + this.y * vector.y;
+    };
 
-        dot: {
-            value: function(vector) {
-                console.assert(vector instanceof Vector2, vector);
+    var normalize = function() {
+        var scale = this.length();
+        this.x /= scale;
+        this.y /= scale;
 
-                return this.x * vector.x + this.y * vector.y;
-            }
-        },
+        console.assert(this.length() === 1, this.length());
+        return this;
+    };
 
-        normalize: {
-            value: function() {
-                var scale = this.length();
-                this.x /= scale;
-                this.y /= scale;
+    var distance = function(vector) {
+        console.assert(vector instanceof Vector2, vector);
 
-                console.assert(this.length() === 1, this.length());
-                return this;
-            }
-        },
+        return Math.sqrt(this.squaredDistance(vector));
+    };
 
-        distance: {
-            value: function(vector) {
-                console.assert(vector instanceof Vector2, vector);
+    var squaredDistance = function(vector) {
+        console.assert(vector instanceof Vector2, vector);
 
-                return Math.sqrt(this.squaredDistance(vector));
-            }
-        },
+        return (this.x - vector.x) * (this.x - vector.x) + (this.y - vector.y) * (this.y - vector.y);
+    };
 
-        squaredDistance: {
-            value: function(vector) {
-                console.assert(vector instanceof Vector2, vector);
+    var length = function() {
+        return Math.sqrt(this.squaredLength());
+    };
 
-                return (this.x - vector.x) * (this.x - vector.x) + (this.y - vector.y) * (this.y - vector.y);
-            }
-        },
+    var squaredLength = function() {
+        return this.x * this.x + this.y * this.y;
+    };
 
-        length: {
-            value: function() {
-                return Math.sqrt(this.squaredLength());
-            }
-        },
+    var clone = function() {
+        return new Vector2(this.x, this.y);
+    };
 
-        squaredLength: {
-            value: function() {
-                return this.x * this.x + this.y * this.y;
-            }
-        },
+    var toString = function() {
+        return 'Vector2(x: ' + this.x + ' y: ' + this.y + ')';
+    };
 
-        clone: {
-            value: function() {
-                return new Vector2(this.x, this.y);
-            }
-        },
 
-        toString: {
-            value: function() {
-                return 'Vector2(x: ' + this.x + ' y: ' + this.y + ')';
-            }
-        }
-    });
-
-    var Vector2 = function(x, y) {
+    var constructor = function Vector2(x, y) {
         console.assert(x !== undefined && typeof x == 'number', x.toString());
         this.x = x;
 
         console.assert(y !== undefined && typeof y == 'number', y.toString());
         this.y = y;
+
+        this.set = set;
+        this.add = add;
+        this.sub = sub;
+        this.mul = mul;
+        this.dot = dot;
+        this.normalize = normalize;
+        this.distance = distance;
+        this.squaredDistance = squaredDistance;
+        this.length = length;
+        this.squaredLength = squaredLength;
+        this.clone = clone;
+        this.toString = toString;
     };
-    Vector2.prototype = baseVector2;
-    return Vector2;
-}());
+
+    return constructor;
+}();
+
 
 function testVector2() {
     var vec1 = new Vector2(0, 0);

@@ -1,66 +1,27 @@
-var Ball = (function() {
-    var baseBall = Object.defineProperties({}, {
-        _center: {
-            writable: true
-        },
-        get center() {
-            return this._center;
-        },
-        set center(vector) {
-            console.assert(vector instanceof Vector2);
-            this._center = vector;
-        },
+var Ball = function() {
+    var _render = function(g) {
+        g.save();
+        g.fillStyle = this.color;
+        g.beginPath();
+        g.arc(this.center.x, this.center.y, this.radius, 0, 2 * Math.PI);
+        g.fill();
+        g.restore();
+    };
 
-        radius: {
-            writable: true
-        },
+    var _update = function(delta) {
+        this.center.add(this.velocity.clone().mul(delta / 1000));
+    };
 
-        _velocity: {
-            writable: true
-        },
-        get velocity() {
-            return this._velocity;
-        },
-        set velocity(vector) {
-            console.assert(vector instanceof Vector2);
-            this._velocity = vector;
-        },
+    var _clone = function() {
+        return new Ball(this.center, this.radius, this.velocity, this.color);
+    };
 
-        color: {
-            writable: true
-        },
+    var _toString = function() {
+        return 'Ball(center: ' + this.center + ', radius: ' + this.radius + ', velocity' + this.velocity + ', color: ' + this.color + ')';
+    };
 
-        render: {
-            value: function(g) {
-                g.save();
-                g.fillStyle = this.color;
-                g.beginPath();
-                g.arc(this.center.x, this.center.y, this.radius, 0, 2 * Math.PI);
-                g.fill();
-                g.restore();
-            }
-        },
 
-        update: {
-            value: function(delta) {
-                this.center.add(this.velocity.clone().mul(delta / 1000));
-            }
-        },
-
-        clone: {
-            value: function() {
-                return new Ball(this.center, this.radius, this.velocity, this.color);
-            }
-        },
-
-        toString: {
-            value: function() {
-                return 'Ball(center: ' + this.center + ', radius: ' + this.radius + ', velocity' + this.velocity + ', color: ' + this.color + ')';
-            }
-        }
-    });
-
-    var Ball = function(center, radius, velocity, color) {
+    var constructor = function Ball(center, radius, velocity, color) {
         console.assert(center !== undefined && center instanceof Vector2, center.toString());
         this.center = center;
 
@@ -72,15 +33,21 @@ var Ball = (function() {
 
         console.assert(color !== undefined && typeof color == 'string', color.toString());
         this.color = color;
+
+        this.render = _render;
+        this.update = _update;
+        this.clone = _clone;
+        this.toString = _toString;
     };
-    Ball.prototype = baseBall;
-    return Ball;
-}());
+
+    return constructor;
+}();
 
 function testBall() {
     var center1 = new Vector2(3, 4);
     var radius1 = 10;
-    var ball1 = new Ball(center1, radius1, '#fff');
+    var velocity1 = new Vector2(20, 20);
+    var ball1 = new Ball(center1, radius1, velocity1, '#fff');
     console.assert(JSON.stringify(ball1.center) === JSON.stringify(center1) && ball1.radius === radius1 && ball1.color === '#fff', ball1.toString());
 
     var ball2 = ball1.clone();
