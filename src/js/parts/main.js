@@ -8,7 +8,6 @@
 
 var kappanoid = (function() {
     'use strict';
-    // private stuff
 
     // default relative dimensions
     var defaultWidth = 1140;
@@ -119,6 +118,7 @@ var kappanoid = (function() {
         };
     };
 
+
     var startMainLoop = function() {
         // timestamp of last game loop iteration (used to calculate delta time)
         var lastTime = Date.now();
@@ -160,28 +160,6 @@ var kappanoid = (function() {
             },
             16
         );
-    };
-
-    var renderGame = function(delta) {
-        g.save();
-
-        // clear the previous frame (render world borders)
-        g.fillStyle = settings.worldBorderBackgroundColor;
-        g.fillRect(0, 0, defaultWidth, defaultHeight);
-
-        // render the game world
-        world.render();
-
-        // render game info
-        gameInfo.render(delta);
-
-        g.restore();
-    };
-
-    var updateGame = function(delta) {
-        // TODO update physics
-
-        world.update(delta);
     };
 
 
@@ -226,9 +204,34 @@ var kappanoid = (function() {
         }
     };
 
+
+    var renderGame = function(delta) {
+        g.save();
+
+        // clear the previous frame (render world borders)
+        g.fillStyle = settings.worldBorderBackgroundColor;
+        g.fillRect(0, 0, defaultWidth, defaultHeight);
+
+        // render the game world
+        world.render();
+
+        // render game info
+        gameInfo.render(delta);
+
+        g.restore();
+    };
+
+    var updateGame = function(delta) {
+        // TODO update physics
+
+        world.update(delta);
+    };
+
+
     var toString = function() {
         return JSON.stringify(settings);
     };
+
 
     /////////////////////////////////// Physics
     // __import__ physics.js
@@ -237,10 +240,11 @@ var kappanoid = (function() {
     /////////////////////////////////// Game Objects
     // __import__ gameObjects.js
 
+
     /////////////////////////////////// Game Info
     // __import__ gameInfo.js
 
-    // public stuff
+
     return {
         version: '0.0',
         init: init,
@@ -249,7 +253,6 @@ var kappanoid = (function() {
     };
 }());
 
-// function to execute once the document is ready
 $(document).ready(function() {
     'use strict';
     kappanoid.init();
