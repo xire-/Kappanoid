@@ -74,10 +74,7 @@ var Vector2 = function() {
 
 
     var constructor = function Vector2(x, y) {
-        console.assert(x !== undefined && typeof x == 'number', x.toString());
         this.x = x;
-
-        console.assert(y !== undefined && typeof y == 'number', y.toString());
         this.y = y;
 
         this.set = set;
@@ -92,6 +89,23 @@ var Vector2 = function() {
         this.squaredLength = squaredLength;
         this.clone = clone;
         this.toString = toString;
+    };
+    constructor.prototype = {
+        set x(value) {
+            console.assert(value !== undefined && typeof value == 'number', value.toString());
+            this._x = value;
+        },
+        get x() {
+            return this._x;
+        },
+
+        set y(value) {
+            console.assert(value !== undefined && typeof value == 'number', value.toString());
+            this._y = value;
+        },
+        get y() {
+            return this._y;
+        },
     };
 
     return constructor;
