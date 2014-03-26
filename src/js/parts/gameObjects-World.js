@@ -121,7 +121,10 @@ var World = (function() {
         var blockHalfSize = new Vector2(25, 10);
         for (var i = 0; i < 10; i++) {
             for (var j = 0; j < 8; j++) {
-                var blockCenter = new Vector2(105 + blockHalfSize.x + (i % 10) * (blockHalfSize.x * 2 + 10), 30 + 47.5 + (j % 8) * (blockHalfSize.y * 2 + 10));
+                var blockCenter = new Vector2(
+                    105 + blockHalfSize.x + (i % 10) * (blockHalfSize.x * 2 + 10), 
+                    30 + 47 + (j % 8) * (blockHalfSize.y * 2 + 10)
+                    );
                 this.bricks.push(new Brick(blockCenter, blockHalfSize, 1, '#fff'));
             }
         }
