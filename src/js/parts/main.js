@@ -149,7 +149,7 @@ var kappanoid = (function() {
         g.fillRect(0, 0, world.containerSize.x + settings.worldBorderThickness * 2, world.containerSize.y + settings.worldBorderThickness);
 
         // render the game world
-        world.render(delta);
+        world.render();
 
         // render game info
         gameInfo.render(delta);

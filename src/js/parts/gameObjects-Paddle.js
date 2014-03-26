@@ -1,5 +1,5 @@
 var Paddle = function() {
-    var render = function(g) {
+    var render = function() {
         g.save();
         g.fillStyle = this.color;
         g.beginPath();
