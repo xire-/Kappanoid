@@ -14,33 +14,23 @@ var IntroState = function() {
         g.textBaseline = 'middle';
         g.font = '15px monospace';
 
-        var lineHeight = 15;
+        var lineHeightLogo = 15;
+        var lineHeightText = 20;
+        var logoTextDistance = 60;
+        // calculate starting position
+        var y = -((lineHeightLogo * this.selectedLogo.length + lineHeightText * this.text.length) + logoTextDistance) / 2;
 
-        var logo = this.logos[1];
-        var logoLines = logo.split('\n');
-        var logoWidth = logoLines[1].length;
-
-        var text = [
-            'Francesco Cagnin and Marco Gasparini',
-            '© 2014'
-        ];
-
-        var x = 0;
-        var y = -(lineHeight * (logoLines.length + text.length) / 2);
-
-        x = -logoWidth / 2;
-        for (var i = 0; i < logoLines.length; i++) {
-            g.fillText(logoLines[i], x, y);
-            y += lineHeight;
+        // draw previously randomly selected logo
+        for (var i = 0; i < this.selectedLogo.length; i++) {
+            g.fillText(this.selectedLogo[i], 0, y);
+            y += lineHeightLogo;
         }
 
-        lineHeight = 20;
-        y += lineHeight;
-        for (var j = 0; j < text.length; j++) {
-            var lineWidth = text[j].length;
-            x = -lineWidth / 2;
-            g.fillText(text[j], 0, y);
-            y += lineHeight;
+        // draw text
+        y += logoTextDistance;
+        for (var j = 0; j < this.text.length; j++) {
+            g.fillText(this.text[j], 0, y);
+            y += lineHeightText;
         }
 
         g.restore();
@@ -70,24 +60,35 @@ var IntroState = function() {
 
     var constructor = function IntroState() {
         this.logos = [
-            '\n\
-             _  __                                   _     _ \n\
-            | |/ /                                  (_)   | |\n\
-            | \' / __ _ _ __  _ __   __ _ _ __   ___  _  __| |\n\
-            |  < / _` | \'_ \\| \'_ \\ / _` | \'_ \\ / _ \\| |/ _` |\n\
-            | . \\ (_| | |_) | |_) | (_| | | | | (_) | | (_| |\n\
-            |_|\\_\\__,_| .__/| .__/ \\__,_|_| |_|\\___/|_|\\__,_|\n\
-                      | |   | |                              \n\
-                      |_|   |_|                              \n\
-            ',
-            '\n\
-                __ __                                    _     __\n\
-               / //_/___ _____  ____  ____ _____  ____  (_)___/ /\n\
-              / ,< / __ `/ __ \\/ __ \\/ __ `/ __ \\/ __ \\/ / __  / \n\
-             / /| / /_/ / /_/ / /_/ / /_/ / / / / /_/ / / /_/ /  \n\
-            /_/ |_\\__,_/ .___/ .___/\\__,_/_/ /_/\\____/_/\\__,_/   \n\
-                      /_/   /_/                                  \n\
-            '
+            [
+                ' _  __                                   _     _ ',
+                '| |/ /                                  (_)   | |',
+                '| \' / __ _ _ __  _ __   __ _ _ __   ___  _  __| |',
+                '|  < / _` | \'_ \\| \'_ \\ / _` | \'_ \\ / _ \\| |/ _` |',
+                '| . \\ (_| | |_) | |_) | (_| | | | | (_) | | (_| |',
+                '|_|\\_\\__,_| .__/| .__/ \\__,_|_| |_|\\___/|_|\\__,_|',
+                '          | |   | |                              ',
+                '          |_|   |_|                              '
+            ],
+            [
+                '    __ __                                    _     __',
+                '   / //_/___ _____  ____  ____ _____  ____  (_)___/ /',
+                '  / ,< / __ `/ __ \\/ __ \\/ __ `/ __ \\/ __ \\/ / __  / ',
+                ' / /| / /_/ / /_/ / /_/ / /_/ / / / / /_/ / / /_/ /  ',
+                '/_/ |_\\__,_/ .___/ .___/\\__,_/_/ /_/\\____/_/\\__,_/   ',
+                '          /_/   /_/                                  '
+            ],
+            [
+                ' __ _   __   ____  ____   __   __ _   __  __  ____ ',
+                '(  / ) / _\\ (  _ \\(  _ \\ / _\\ (  ( \\ /  \\(  )(    \\',
+                ' )  ( /    \\ ) __/ ) __//    \\/    /(  O ))(  ) D (',
+                '(__\\_)\\_/\\_/(__)  (__)  \\_/\\_/\\_)__) \\__/(__)(____/'
+            ]
+        ];
+        this.selectedLogo = this.logos[Math.floor(Math.random() * this.logos.length)];
+        this.text = [
+            'Francesco Cagnin and Marco Gasparini',
+            '© 2014'
         ];
         this.timePassed = 0;
         this.titleScale = 1;
