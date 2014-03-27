@@ -9,11 +9,11 @@ var Ball = function() {
     };
 
     var update = function(delta) {
-        this.center.add(this.velocity.clone().mul(delta / 1000));
+        this.center.add(this.direction.clone().mul(this.speed * delta / 1000));
     };
 
     var clone = function() {
-        return new Ball(this.center, this.radius, this.velocity, this.color);
+        return new Ball(this.center.clone(), this.radius, this.speed, this.direction.clone(), this.color);
     };
 
     var toString = function() {
@@ -21,10 +21,11 @@ var Ball = function() {
     };
 
 
-    var constructor = function Ball(center, radius, velocity, color) {
+    var constructor = function Ball(center, radius, speed, direction, color) {
         this.center = center;
         this.radius = radius;
-        this.velocity = velocity;
+        this.speed = speed;
+        this.direction = direction;
         this.color = color;
 
         this.render = render;
@@ -50,12 +51,20 @@ var Ball = function() {
             return this._radius;
         },
 
-        set velocity(value) {
-            console.assert(value !== undefined && value instanceof Vector2, value.toString());
-            this._velocity = value;
+        set speed(value) {
+            console.assert(value !== undefined && typeof value == 'number', value.toString());
+            this._speed = value;
         },
-        get velocity() {
-            return this._velocity;
+        get speed() {
+            return this._speed;
+        },
+
+        set direction(value) {
+            console.assert(value !== undefined && value instanceof Vector2, value.toString());
+            this._direction = value.normalize();
+        },
+        get direction() {
+            return this._direction;
         },
 
         set color(value) {
@@ -74,7 +83,9 @@ function testBall() {
     var center1 = new Vector2(3, 4);
     var radius1 = 10;
     var velocity1 = new Vector2(20, 20);
-    var ball1 = new Ball(center1, radius1, velocity1, '#fff');
+    var speed1 = velocity1.length();
+    var direction1 = velocity1.clone().normalize();
+    var ball1 = new Ball(center1, radius1, speed1, direction1, '#fff');
     console.assert(JSON.stringify(ball1.center) === JSON.stringify(center1) && ball1.radius === radius1 && ball1.color === '#fff', ball1.toString());
 
     var ball2 = ball1.clone();
