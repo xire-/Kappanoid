@@ -8,6 +8,7 @@ var IntroState = function() {
 
         g.translate(currState.titlePosX, currState.titlePosY);
         g.scale(currState.titleScale, currState.titleScale);
+        g.rotate(currState.titleRotation);
 
         g.fillStyle = '#fff';
         g.textAlign = 'center';
@@ -46,8 +47,10 @@ var IntroState = function() {
             currState.titlePosY = defaultHeight / 2;
         } else if (currState.timePassed < 3000) {
             currState.titleScale = easing.easeInBack(currState.timePassed - 2000, 1, -1, 1000);
+            currState.titleRotation = easing.easeInBack(currState.timePassed - 2000, 0, Math.PI * 2, 1000);
         } else if (currState.timePassed < 3500) {
             currState.titleScale = 0;
+            currState.titleRotation = 0;
         } else {
             currState = states.playing;
         }
@@ -196,8 +199,12 @@ var IntroState = function() {
             'Francesco Cagnin and Marco Gasparini',
             '© 2014'
         ];
+
+        this.titlePosX = settings.worldBorderThickness + 400;
+        this.titlePosY = defaultHeight / 2;
         this.timePassed = 0;
         this.titleScale = 1;
+        this.titleRotation = 0;
 
         this.render = render;
         this.update = update;
