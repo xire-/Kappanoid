@@ -1,5 +1,5 @@
 var PlayingState = function() {
-    var render = function(delta) {
+    var render = function( /*delta*/ ) {
         g.save();
 
         // clear the previous frame (render world borders)

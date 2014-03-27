@@ -23,7 +23,7 @@ var GameInfo = function() {
         g.restore();
     };
 
-    var update = function(delta) {};
+    var update = function( /*delta*/ ) {};
 
     var toString = function() {
         return JSON.stringify(this);

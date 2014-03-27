@@ -101,7 +101,7 @@ var kappanoid = (function() {
         // sum of all FPS since last update
         var totalFps = 0;
 
-        //remove previous main loop if any
+        // remove previous main loop if any
         if (mainLoopHandle !== undefined) {
             clearInterval(mainLoopHandle);
         }

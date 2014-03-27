@@ -78,10 +78,10 @@ var World = function() {
     };
 
 
-    var constructor = function World(containerOffset, containerSize, levelConf) {
+    var constructor = function World(containerOffset, containerSize) {
         this.containerOffset = containerOffset;
         this.containerSize = containerSize;
-        // todo this.levelConf = levelConf;
+        // TODO this.levelConf = levelConf;
 
         this.render = render;
         this.update = update;

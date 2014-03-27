@@ -8,7 +8,7 @@ var Brick = function() {
         g.restore();
     };
 
-    var update = function(delta) {};
+    var update = function( /*delta*/ ) {};
 
     var clone = function() {
         return new Brick(this.center, this.halfSize, this.life, this.color);
