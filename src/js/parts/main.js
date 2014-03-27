@@ -160,10 +160,6 @@ var kappanoid = (function() {
     // __import__ gameInfo.js
 
 
-    /////////////////////////////////// Game Logos
-    // __import__ gameLogos.js
-
-
     return {
         version: '0.0',
         init: init,

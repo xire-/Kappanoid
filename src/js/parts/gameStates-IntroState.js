@@ -16,7 +16,7 @@ var IntroState = function() {
 
         var lineHeight = 15;
 
-        var logo = logos[1];
+        var logo = this.logos[1];
         var logoLines = logo.split('\n');
         var logoWidth = logoLines[1].length;
 
@@ -69,6 +69,26 @@ var IntroState = function() {
 
 
     var constructor = function IntroState() {
+        this.logos = [
+            '\n\
+             _  __                                   _     _ \n\
+            | |/ /                                  (_)   | |\n\
+            | \' / __ _ _ __  _ __   __ _ _ __   ___  _  __| |\n\
+            |  < / _` | \'_ \\| \'_ \\ / _` | \'_ \\ / _ \\| |/ _` |\n\
+            | . \\ (_| | |_) | |_) | (_| | | | | (_) | | (_| |\n\
+            |_|\\_\\__,_| .__/| .__/ \\__,_|_| |_|\\___/|_|\\__,_|\n\
+                      | |   | |                              \n\
+                      |_|   |_|                              \n\
+            ',
+            '\n\
+                __ __                                    _     __\n\
+               / //_/___ _____  ____  ____ _____  ____  (_)___/ /\n\
+              / ,< / __ `/ __ \\/ __ \\/ __ `/ __ \\/ __ \\/ / __  / \n\
+             / /| / /_/ / /_/ / /_/ / /_/ / / / / /_/ / / /_/ /  \n\
+            /_/ |_\\__,_/ .___/ .___/\\__,_/_/ /_/\\____/_/\\__,_/   \n\
+                      /_/   /_/                                  \n\
+            '
+        ];
         this.timePassed = 0;
         this.titleScale = 1;
 
