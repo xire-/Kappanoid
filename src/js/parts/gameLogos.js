@@ -1,10 +1,3 @@
-function drawLogo(x, y, text, lineHeight) {
-    var lines = text.split('\n');
-    for (var i = 0; i < lines.length; i++) {
-        g.fillText(lines[i], x, y + (i * lineHeight));
-    }
-}
-
 var logos = [
     '\n\
      _  __                                   _     _ \n\
