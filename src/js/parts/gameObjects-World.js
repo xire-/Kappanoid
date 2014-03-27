@@ -57,7 +57,11 @@ var World = function() {
                 if (ball.velocity.y > 0) {
                     var collisionPoint = collisionDetection.testSphereAABB(ball, paddle);
                     if (collisionPoint !== null) {
-                        ball.velocity.y *= -1;
+                        // determine resultant direction based on collisionPoint
+                        var speed = ball.velocity.length();
+                        var angle = (collisionPoint.x - paddle.center.x) / paddle.halfSize.x;
+                        ball.velocity.x = Math.sin(angle) * speed;
+                        ball.velocity.y = -Math.cos(angle) * speed;
                     }
                 }
 
