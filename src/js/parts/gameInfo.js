@@ -26,7 +26,7 @@ var GameInfo = function() {
     var update = function(delta) {};
 
     var toString = function() {
-        return 'GameInfo()';
+        return JSON.stringify(this);
     };
 
 

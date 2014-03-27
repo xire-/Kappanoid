@@ -15,7 +15,7 @@ var Brick = function() {
     };
 
     var toString = function() {
-        return 'Brick(center: ' + this.center + ', halfSize: ' + this.halfSize + ', life: ' + this.life + ', color: ' + this.color + ')';
+        return JSON.stringify(this);
     };
 
 

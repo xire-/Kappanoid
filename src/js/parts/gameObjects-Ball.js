@@ -17,7 +17,7 @@ var Ball = function() {
     };
 
     var toString = function() {
-        return 'Ball(center: ' + this.center + ', radius: ' + this.radius + ', velocity' + this.velocity + ', color: ' + this.color + ')';
+        return JSON.stringify(this);
     };
 
 

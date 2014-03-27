@@ -15,7 +15,7 @@ var Paddle = function() {
     };
 
     var toString = function() {
-        return 'Paddle(center: ' + this.center + ', halfSize: ' + this.halfSize + ', life: ' + this.life + ', color: ' + this.color + ')';
+        return JSON.stringify(this);
     };
 
 

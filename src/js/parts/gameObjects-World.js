@@ -71,7 +71,7 @@ var World = function() {
     };
 
     var toString = function() {
-        return 'World(balls: ' + this.balls + ', bricks: ' + this.bricks + ', paddle: ' + this.paddle + ')';
+        return JSON.stringify(this);
     };
 
 

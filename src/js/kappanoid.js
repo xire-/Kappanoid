@@ -1,4 +1,4 @@
-/* Generated: 2014/03/27 10:52:49 */
+/* Generated: 2014/03/27 13:28:12 */
 
 /*
  * Kappanoid game
@@ -21,7 +21,8 @@ var kappanoid = (function() {
     // millisecond spent in one iteration of the main loop
     var loopTime = 0;
 
-    // graphic context, used by the rendering process
+    // canvas and graphic context, used by the rendering process
+    var canvas;
     var g;
 
     // world game ogject
@@ -90,7 +91,7 @@ var kappanoid = (function() {
             height = defaultHeight;
         }
 
-        var canvas = $('#gameCanvas')[0];
+        canvas = $('#gameCanvas')[0];
         var scaleFactor = Math.min(width / defaultWidth, height / defaultHeight);
 
         canvas.width = defaultWidth * scaleFactor;
@@ -172,7 +173,9 @@ var kappanoid = (function() {
         g.fillStyle = '#000';
         g.fillRect(0, 0, defaultWidth, defaultHeight);
 
+        // draw logo and other text
         g.save();
+
         g.translate(currState.titlePosX, currState.titlePosY);
         g.scale(currState.titleScale, currState.titleScale);
 
@@ -180,7 +183,37 @@ var kappanoid = (function() {
         g.textAlign = 'center';
         g.textBaseline = 'middle';
         g.font = '15px monospace';
-        drawLogo(0, 0, logos[1], 15);
+
+        var lineHeight = 15;
+
+        var logo = logos[1];
+        var logoLines = logo.split('\n');
+        var logoWidth = logoLines[1].length;
+
+        var text = [
+            'Francesco Cagnin',
+            'Marco Gasparini',
+            '2014'
+        ];
+
+        var x = 0;
+        var y = -(lineHeight * (logoLines.length + text.length) / 2);
+
+        x = -logoWidth / 2;
+        for (var i = 0; i < logoLines.length; i++) {
+            g.fillText(logoLines[i], x, y);
+            y += lineHeight;
+        }
+
+        lineHeight = 20;
+        y += lineHeight;
+        for (var j = 0; j < text.length; j++) {
+            var lineWidth = text[j].length;
+            x = -lineWidth / 2;
+            g.fillText(text[j], x, y);
+            y += lineHeight;
+        }
+
         g.restore();
 
         // render game info
@@ -308,7 +341,7 @@ var kappanoid = (function() {
         };
 
         var toString = function() {
-            return 'Vector2(x: ' + this.x + ' y: ' + this.y + ')';
+            return JSON.stringify(this);
         };
 
 
@@ -798,7 +831,7 @@ var kappanoid = (function() {
         };
 
         var toString = function() {
-            return 'Ball(center: ' + this.center + ', radius: ' + this.radius + ', velocity' + this.velocity + ', color: ' + this.color + ')';
+            return JSON.stringify(this);
         };
 
 
@@ -880,7 +913,7 @@ var kappanoid = (function() {
         };
 
         var toString = function() {
-            return 'Brick(center: ' + this.center + ', halfSize: ' + this.halfSize + ', life: ' + this.life + ', color: ' + this.color + ')';
+            return JSON.stringify(this);
         };
 
 
@@ -961,7 +994,7 @@ var kappanoid = (function() {
         };
 
         var toString = function() {
-            return 'Paddle(center: ' + this.center + ', halfSize: ' + this.halfSize + ', life: ' + this.life + ', color: ' + this.color + ')';
+            return JSON.stringify(this);
         };
 
 
@@ -1098,7 +1131,7 @@ var kappanoid = (function() {
         };
 
         var toString = function() {
-            return 'World(balls: ' + this.balls + ', bricks: ' + this.bricks + ', paddle: ' + this.paddle + ')';
+            return JSON.stringify(this);
         };
 
 
@@ -1191,7 +1224,7 @@ var kappanoid = (function() {
         var update = function(delta) {};
 
         var toString = function() {
-            return 'GameInfo()';
+            return JSON.stringify(this);
         };
 
 
@@ -1227,13 +1260,6 @@ var kappanoid = (function() {
 
 
     /////////////////////////////////// Game Logos
-    function drawLogo(x, y, text, lineHeight) {
-        var lines = text.split('\n');
-        for (var i = 0; i < lines.length; i++) {
-            g.fillText(lines[i], x, y + (i * lineHeight));
-        }
-    }
-
     var logos = [
         '\n\
          _  __                                   _     _ \n\

@@ -69,7 +69,7 @@ var Vector2 = function() {
     };
 
     var toString = function() {
-        return 'Vector2(x: ' + this.x + ' y: ' + this.y + ')';
+        return JSON.stringify(this);
     };
 
 
