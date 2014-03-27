@@ -68,7 +68,6 @@ var Brick = function() {
     return constructor;
 }();
 
-
 function testBrick() {
     var center1 = new Vector2(3, 4);
     var halfSize1 = new Vector2(100, 300);

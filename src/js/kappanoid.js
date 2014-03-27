@@ -1,16 +1,15 @@
-/* Generated: 2014/03/26 19:21:15 */
+/* Generated: 2014/03/27 10:52:49 */
 
 /*
  * Kappanoid game
  * Authors: Francesco Cagnin, Marco Gasparini
  */
 
-/*jslint browser: true, devel: true */
+/*jslint browser: true, devel: true, multistr: true */
 /*global $*/
 
 var kappanoid = (function() {
     'use strict';
-    // private stuff
 
     // default relative dimensions
     var defaultWidth = 1140;
@@ -121,6 +120,7 @@ var kappanoid = (function() {
         };
     };
 
+
     var startMainLoop = function() {
         // timestamp of last game loop iteration (used to calculate delta time)
         var lastTime = Date.now();
@@ -164,39 +164,6 @@ var kappanoid = (function() {
         );
     };
 
-    var tmp = 0; //DELETE delete this shit
-    var renderGame = function(delta) {
-        g.save();
-
-        // clear the previous frame (render world borders)
-        g.fillStyle = settings.worldBorderBackgroundColor;
-        g.fillRect(0, 0, defaultWidth, defaultHeight);
-
-        // render the game world
-        world.render();
-
-        // render game info
-        gameInfo.render(delta);
-
-        // DELETE draw a box on current mouse position
-        g.fillStyle = '#0ff';
-        g.fillRect(mousePos.x - 3, mousePos.y - 3, 6, 6);
-
-        // DELETE draw some animated boxes
-        g.fillStyle = '#f0f';
-        tmp += 1;
-        g.fillRect(easing.easeOutBounce(tmp % 121, 140, -100, 120), 100, 6, 6);
-        g.fillRect(easing.easeOutElastic(tmp % 121, 140, -100, 120), 110, 6, 6);
-
-        g.restore();
-    };
-
-    var updateGame = function(delta) {
-        // TODO update physics
-
-        world.update(delta);
-    };
-
 
     var renderIntro = function(delta) {
         g.save();
@@ -212,8 +179,8 @@ var kappanoid = (function() {
         g.fillStyle = '#fff';
         g.textAlign = 'center';
         g.textBaseline = 'middle';
-        g.font = '60px Arial';
-        g.fillText('Kappanoid', 0, 0);
+        g.font = '15px monospace';
+        drawLogo(0, 0, logos[1], 15);
         g.restore();
 
         // render game info
@@ -239,9 +206,34 @@ var kappanoid = (function() {
         }
     };
 
+
+    var renderGame = function(delta) {
+        g.save();
+
+        // clear the previous frame (render world borders)
+        g.fillStyle = settings.worldBorderBackgroundColor;
+        g.fillRect(0, 0, defaultWidth, defaultHeight);
+
+        // render the game world
+        world.render();
+
+        // render game info
+        gameInfo.render(delta);
+
+        g.restore();
+    };
+
+    var updateGame = function(delta) {
+        // TODO update physics
+
+        world.update(delta);
+    };
+
+
     var toString = function() {
         return JSON.stringify(settings);
     };
+
 
     /////////////////////////////////// Physics
     ///////////////// Vector2
@@ -337,6 +329,7 @@ var kappanoid = (function() {
             this.clone = clone;
             this.toString = toString;
         };
+
         constructor.prototype = {
             set x(value) {
                 console.assert(value !== undefined && typeof value == 'number', value.toString());
@@ -357,7 +350,6 @@ var kappanoid = (function() {
 
         return constructor;
     }();
-
 
     function testVector2() {
         var vec1 = new Vector2(0, 0);
@@ -414,7 +406,6 @@ var kappanoid = (function() {
      */
 
     // t: current time, b: begInnIng value, c: change In value, d: duration
-
     var easing = (function() {
         var easeInQuad = function(t, b, c, d) {
             return c * (t /= d) * t + b;
@@ -643,7 +634,6 @@ var kappanoid = (function() {
         };
     }());
 
-
     /*
      *
      * TERMS OF USE - EASING EQUATIONS
@@ -716,6 +706,31 @@ var kappanoid = (function() {
             // Segments not intersecting (or collinear)
             return null;
         },
+
+        // Returns true if sphere s intersects AABB b, false otherwise.
+        // The point p on the AABB closest to the sphere center is also returned
+        testSphereAABB: function(s, b) {
+            // Find point p on AABB closest to sphere center
+            var p = this.closestPtPointAABB(s.center, b);
+            // Sphere and AABB intersect if the (squared) distance from sphere
+            // center to point p is less than the (squared) sphere radius
+            var v = p.clone().sub(s.center);
+            if (v.dot(v) <= s.radius * s.radius) {
+                return p;
+            } else {
+                return null;
+            }
+        },
+
+        // Given point p, return the point q on or in AABB b that is closest to p
+        closestPtPointAABB: function(p, b) {
+            // For each coordinate axis, if the point coordinate value is
+            // outside box, clamp it to the box, else keep it as is
+            var q = new Vector2(0, 0);
+            q.x = Math.max(b.center.x - b.halfSize.x, Math.min(p.x, b.center.x + b.halfSize.x));
+            q.y = Math.max(b.center.y - b.halfSize.y, Math.min(p.y, b.center.y + b.halfSize.y));
+            return q;
+        }
     };
 
     function testCollisionDetection() {
@@ -847,7 +862,6 @@ var kappanoid = (function() {
         console.assert(JSON.stringify(ball1) === JSON.stringify(ball2));
     }
 
-
     ///////////////// Brick
     var Brick = function() {
         var render = function() {
@@ -919,7 +933,6 @@ var kappanoid = (function() {
         return constructor;
     }();
 
-
     function testBrick() {
         var center1 = new Vector2(3, 4);
         var halfSize1 = new Vector2(100, 300);
@@ -929,7 +942,6 @@ var kappanoid = (function() {
         var brick2 = brick1.clone();
         console.assert(JSON.stringify(brick1) === JSON.stringify(brick2));
     }
-
 
     ///////////////// Paddle
     var Paddle = function() {
@@ -1002,7 +1014,6 @@ var kappanoid = (function() {
         return constructor;
     }();
 
-
     function testPaddle() {
         var center1 = new Vector2(3, 4);
         var halfSize1 = new Vector2(100, 300);
@@ -1012,7 +1023,6 @@ var kappanoid = (function() {
         var paddle2 = paddle1.clone();
         console.assert(JSON.stringify(paddle1) === JSON.stringify(paddle2));
     }
-
 
     ///////////////// World
     var World = function() {
@@ -1044,28 +1054,44 @@ var kappanoid = (function() {
 
         var update = function(delta) {
             // update paddle position (clamped)
-            this.paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, 0 + this.paddle.halfSize.x), 800 - this.paddle.halfSize.x);
+            var paddle = this.paddle;
+            paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, 0 + this.paddle.halfSize.x), 800 - this.paddle.halfSize.x);
 
             this.balls.forEach(function(ball) {
                 ball.update(delta);
 
-                // move in his own function
-                for (var i = 0; i < 2; i++) {
-                    if (ball.center.x - ball.radius < 0) {
-                        ball.center.x = -ball.center.x + ball.radius * 2;
-                        ball.velocity.x *= -1;
+                // check and handle collisions with borders
+                if (ball.center.x - ball.radius < 0) {
+                    ball.center.x = -ball.center.x + ball.radius * 2;
+                    ball.velocity.x *= -1;
+                }
+                if (ball.center.y - ball.radius < 0) {
+                    ball.center.y = -ball.center.y + ball.radius * 2;
+                    ball.velocity.y *= -1;
+                }
+                if (ball.center.x + ball.radius >= 800) {
+                    ball.center.x = 799 * 2 - ball.center.x - ball.radius;
+                    ball.velocity.x *= -1;
+                }
+                if (ball.center.y + ball.radius >= 600) {
+                    ball.center.y = 599 * 2 - ball.center.y - ball.radius;
+                    ball.velocity.y *= -1;
+                }
+
+                // check ball vs bottom and paddle
+                if (ball.center.y + ball.radius >= paddle.center.y - paddle.halfSize.y) {
+                    // if it's actualy going down
+                    if (ball.velocity.y > 0) {
+                        var collisionPoint = collisionDetection.testSphereAABB(ball, paddle);
+                        if (collisionPoint !== null) {
+                            ball.velocity.y *= -1;
+                        }
                     }
-                    if (ball.center.y - ball.radius < 0) {
-                        ball.center.y = -ball.center.y + ball.radius * 2;
-                        ball.velocity.y *= -1;
-                    }
-                    if (ball.center.x + ball.radius >= 800) {
-                        ball.center.x = 799 * 2 - ball.center.x - ball.radius;
-                        ball.velocity.x *= -1;
-                    }
-                    if (ball.center.y + ball.radius >= 600) {
-                        ball.center.y = 599 * 2 - ball.center.y - ball.radius;
-                        ball.velocity.y *= -1;
+
+                    // check if ball is dead
+                    if (ball.center.y >= paddle.center.y + paddle.halfSize.y) {
+                        // ball is dead, remove it
+                        ball.velocity.x = ball.velocity.y = 0;
                     }
                 }
             });
@@ -1087,9 +1113,9 @@ var kappanoid = (function() {
 
             // initialize all game objects
             this.balls = [];
-            this.balls.push(new Ball(new Vector2(400, 300), 7, new Vector2(100, -100), '#00f'));
-            this.balls.push(new Ball(new Vector2(50, 50), 7, new Vector2(-100, -100), '#f00'));
-            this.balls.push(new Ball(new Vector2(123, 456), 7, new Vector2(-300, -300), '#f00'));
+            this.balls.push(new Ball(new Vector2(400, 300), 7, new Vector2(100, -100), '#fff'));
+            this.balls.push(new Ball(new Vector2(50, 50), 7, new Vector2(-100, -100), '#fff'));
+            this.balls.push(new Ball(new Vector2(123, 456), 7, new Vector2(-300, -300), '#fff'));
 
             this.bricks = [];
             var blockHalfSize = new Vector2(25, 10);
@@ -1135,76 +1161,101 @@ var kappanoid = (function() {
         testPaddle();
     }
 
+
     /////////////////////////////////// Game Info
-    var GameInfo = (function() {
-        var baseGameInfo = Object.defineProperties({}, {
-            _containerOffset: {
-                writable: true
+    var GameInfo = function() {
+        var render = function(delta) {
+            g.save();
+            g.translate(this.containerOffset.x, this.containerOffset.y);
+
+            // clip the region
+            g.beginPath();
+            g.rect(0, 0, this.containerSize.x, this.containerSize.y);
+            g.clip();
+
+            // render background
+            g.fillStyle = settings.gameInfoBackgroundColor;
+            g.fillRect(0, 0, this.containerSize.x, this.containerSize.y);
+
+            // render some debug info
+            g.fillStyle = '#fff';
+            g.textAlign = 'left';
+            g.textBaseline = 'top';
+            g.fillText('FPS: ' + currentFPS, 5, 5);
+            g.fillText('DELTA: ' + delta, 5, 15);
+            g.fillText('LOOP: ' + loopTime, 5, 25);
+
+            g.restore();
+        };
+
+        var update = function(delta) {};
+
+        var toString = function() {
+            return 'GameInfo()';
+        };
+
+
+        var constructor = function GameInfo(containerOffset, containerSize) {
+            this.containerOffset = containerOffset;
+            this.containerSize = containerSize;
+
+            this.render = render;
+            this.update = update;
+            this.toString = toString;
+        };
+
+        constructor.prototype = {
+            set containerOffset(value) {
+                console.assert(value !== undefined && value instanceof Vector2, value.toString());
+                this._containerOffset = value;
             },
             get containerOffset() {
                 return this._containerOffset;
             },
-            set containerOffset(vector) {
-                console.assert(vector instanceof Vector2);
-                this._containerOffset = vector;
-            },
 
-            _containerSize: {
-                writable: true
+            set containerSize(value) {
+                console.assert(value !== undefined && value instanceof Vector2, value.toString());
+                this._containerSize = value;
             },
             get containerSize() {
                 return this._containerSize;
-            },
-            set containerSize(vector) {
-                console.assert(vector instanceof Vector2);
-                this._containerSize = vector;
-            },
-
-            render: {
-                value: function(delta) {
-                    g.save();
-                    g.translate(this.containerOffset.x, this.containerOffset.y);
-
-                    // clip the region
-                    g.beginPath();
-                    g.rect(0, 0, this.containerSize.x, this.containerSize.y);
-                    g.clip();
-
-                    // render background
-                    g.fillStyle = settings.gameInfoBackgroundColor;
-                    g.fillRect(0, 0, this.containerSize.x, this.containerSize.y);
-
-                    // render some debug info
-                    g.fillStyle = '#fff';
-                    g.textAlign = 'left';
-                    g.textBaseline = 'top';
-                    g.fillText('FPS: ' + currentFPS, 5, 5);
-                    g.fillText('DELTA: ' + delta, 5, 15);
-                    g.fillText('LOOP: ' + loopTime, 5, 25);
-
-                    g.restore();
-                }
-            },
-
-            toString: {
-                value: function() {
-                    return 'GameInfo()';
-                }
             }
-        });
-
-        var GameInfo = function(containerOffset, containerSize) {
-            console.assert(containerOffset !== undefined && containerOffset instanceof Vector2, containerOffset.toString());
-            this.containerOffset = containerOffset;
-
-            console.assert(containerSize !== undefined && containerSize instanceof Vector2, containerSize.toString());
-            this.containerSize = containerSize;
         };
-        GameInfo.prototype = baseGameInfo;
-        return GameInfo;
-    }());
 
-    // public stuff
+        return constructor;
+    }();
+
+
+    /////////////////////////////////// Game Logos
+    function drawLogo(x, y, text, lineHeight) {
+        var lines = text.split('\n');
+        for (var i = 0; i < lines.length; i++) {
+            g.fillText(lines[i], x, y + (i * lineHeight));
+        }
+    }
+
+    var logos = [
+        '\n\
+         _  __                                   _     _ \n\
+        | |/ /                                  (_)   | |\n\
+        | \' / __ _ _ __  _ __   __ _ _ __   ___  _  __| |\n\
+        |  < / _` | \'_ \\| \'_ \\ / _` | \'_ \\ / _ \\| |/ _` |\n\
+        | . \\ (_| | |_) | |_) | (_| | | | | (_) | | (_| |\n\
+        |_|\\_\\__,_| .__/| .__/ \\__,_|_| |_|\\___/|_|\\__,_|\n\
+                  | |   | |                              \n\
+                  |_|   |_|                              \n\
+        ',
+        '\n\
+            __ __                                    _     __\n\
+           / //_/___ _____  ____  ____ _____  ____  (_)___/ /\n\
+          / ,< / __ `/ __ \\/ __ \\/ __ `/ __ \\/ __ \\/ / __  / \n\
+         / /| / /_/ / /_/ / /_/ / /_/ / / / / /_/ / / /_/ /  \n\
+        /_/ |_\\__,_/ .___/ .___/\\__,_/_/ /_/\\____/_/\\__,_/   \n\
+                  /_/   /_/                                  \n\
+        '
+    ];
+
+
     return {
         version: '0.0',
         init: init,
@@ -1213,7 +1264,6 @@ var kappanoid = (function() {
     };
 }());
 
-// function to execute once the document is ready
 $(document).ready(function() {
     'use strict';
     kappanoid.init();

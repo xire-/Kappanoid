@@ -61,7 +61,6 @@ var collisionDetection = {
         q.y = Math.max(b.center.y - b.halfSize.y, Math.min(p.y, b.center.y + b.halfSize.y));
         return q;
     }
-
 };
 
 function testCollisionDetection() {

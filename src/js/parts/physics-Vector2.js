@@ -90,6 +90,7 @@ var Vector2 = function() {
         this.clone = clone;
         this.toString = toString;
     };
+
     constructor.prototype = {
         set x(value) {
             console.assert(value !== undefined && typeof value == 'number', value.toString());
@@ -110,7 +111,6 @@ var Vector2 = function() {
 
     return constructor;
 }();
-
 
 function testVector2() {
     var vec1 = new Vector2(0, 0);

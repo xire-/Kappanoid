@@ -51,7 +51,7 @@ var World = function() {
                 ball.velocity.y *= -1;
             }
 
-            //check ball vs bottom and paddle
+            // check ball vs bottom and paddle
             if (ball.center.y + ball.radius >= paddle.center.y - paddle.halfSize.y) {
                 // if it's actualy going down
                 if (ball.velocity.y > 0) {

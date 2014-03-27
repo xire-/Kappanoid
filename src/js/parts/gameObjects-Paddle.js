@@ -68,7 +68,6 @@ var Paddle = function() {
     return constructor;
 }();
 
-
 function testPaddle() {
     var center1 = new Vector2(3, 4);
     var halfSize1 = new Vector2(100, 300);
