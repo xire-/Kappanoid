@@ -67,10 +67,6 @@ var IntroState = function() {
         }
     };
 
-    var toString = function() {
-        return JSON.stringify(this);
-    };
-
 
     var constructor = function IntroState() {
         this.logos = [
@@ -220,7 +216,6 @@ var IntroState = function() {
         this.render = render;
         this.update = update;
         this.keyPress = keyPress;
-        this.toString = toString;
     };
 
     return constructor;

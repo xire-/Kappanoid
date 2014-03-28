@@ -42,16 +42,11 @@ var PlayingState = function() {
         }
     };
 
-    var toString = function() {
-        return JSON.stringify(this);
-    };
-
 
     var constructor = function PlayingState() {
         this.render = render;
         this.update = update;
         this.keyPress = keyPress;
-        this.toString = toString;
     };
 
     return constructor;

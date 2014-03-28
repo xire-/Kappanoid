@@ -25,10 +25,6 @@ var GameInfo = function() {
 
     var update = function( /*delta*/ ) {};
 
-    var toString = function() {
-        return JSON.stringify(this);
-    };
-
 
     var constructor = function GameInfo(containerOffset, containerSize) {
         this.containerOffset = containerOffset;
@@ -36,12 +32,11 @@ var GameInfo = function() {
 
         this.render = render;
         this.update = update;
-        this.toString = toString;
     };
 
     constructor.prototype = {
         set containerOffset(value) {
-            console.assert(value !== undefined && value instanceof Vector2, value.toString());
+            console.assert(value !== undefined && value instanceof Vector2, JSON.stringify(value));
             this._containerOffset = value;
         },
         get containerOffset() {
@@ -49,7 +44,7 @@ var GameInfo = function() {
         },
 
         set containerSize(value) {
-            console.assert(value !== undefined && value instanceof Vector2, value.toString());
+            console.assert(value !== undefined && value instanceof Vector2, JSON.stringify(value));
             this._containerSize = value;
         },
         get containerSize() {
