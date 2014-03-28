@@ -17,10 +17,6 @@ var Paddle = function() {
 
     var update = function( /*delta*/ ) {};
 
-    var clone = function() {
-        return new Paddle(this.center, this.halfSize, this.life, this.color);
-    };
-
     var toString = function() {
         return JSON.stringify(this);
     };
@@ -34,7 +30,6 @@ var Paddle = function() {
 
         this.render = render;
         this.update = update;
-        this.clone = clone;
         this.toString = toString;
     };
 
