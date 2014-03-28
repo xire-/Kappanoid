@@ -16,6 +16,20 @@ var PlayingState = function() {
         world.update(delta);
     };
 
+    var keyPress = function(e) {
+        switch (e.keyCode) {
+            case 112: // P
+                world.paused = !world.paused;
+                break;
+            case 114: // R
+                world.reset();
+                break;
+            default:
+                alert(e.keyCode);
+                break;
+        }
+    };
+
     var toString = function() {
         return JSON.stringify(this);
     };
@@ -24,6 +38,7 @@ var PlayingState = function() {
     var constructor = function PlayingState() {
         this.render = render;
         this.update = update;
+        this.keyPress = keyPress;
         this.toString = toString;
     };
 

@@ -56,6 +56,13 @@ var IntroState = function() {
         }
     };
 
+    var keyPress = function(e) {
+        switch (e.keyCode) {
+            default: alert(e.keyCode);
+            break;
+        }
+    };
+
     var toString = function() {
         return JSON.stringify(this);
     };
@@ -208,6 +215,7 @@ var IntroState = function() {
 
         this.render = render;
         this.update = update;
+        this.keyPress = keyPress;
         this.toString = toString;
     };
 

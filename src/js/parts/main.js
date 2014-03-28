@@ -96,18 +96,7 @@ var kappanoid = (function() {
 
         // receive keyboard update
         window.addEventListener('keypress', function(e) {
-            switch (e.keyCode) {
-                case 112: // P
-                    world.paused = !world.paused;
-                    break;
-                case 114: // R
-                    world.reset();
-                    break;
-                default:
-                    alert(e.keyCode);
-                    break;
-            }
-
+            currState.keyPress(e);
         }, false);
     };
 
