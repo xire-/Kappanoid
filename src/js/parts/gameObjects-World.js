@@ -1,8 +1,8 @@
 var World = function() {
     var reset = function() {
         this.balls = [];
-        this.balls.push(new Ball(new Vector2(400, 300), 7, 300, new Vector2(1, -1), settings.ballDefaultColor));
-        this.balls.push(new Ball(new Vector2(50, 50), 7, 300, new Vector2(-1, -1), settings.ballDefaultColor));
+        this.balls.push(new Ball(new Vector2(400, 500), 7, 300, new Vector2(1, -1), settings.ballDefaultColor));
+        this.balls.push(new Ball(new Vector2(90, 57-20), 7, 300, new Vector2(1, 2), settings.ballDefaultColor));
         this.balls.push(new Ball(new Vector2(123, 456), 7, 300, new Vector2(-1, -1), settings.ballDefaultColor));
 
         this.bricks = [];
