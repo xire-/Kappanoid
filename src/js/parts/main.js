@@ -100,6 +100,9 @@ var kappanoid = (function() {
                 case 112: // P
                     world.paused = !world.paused;
                     break;
+                case 114: // R
+                    world.reset();
+                    break;
                 default:
                     alert(e.keyCode);
                     break;

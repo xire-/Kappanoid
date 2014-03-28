@@ -1,4 +1,26 @@
 var World = function() {
+    var reset = function() {
+        this.balls = [];
+        this.balls.push(new Ball(new Vector2(400, 300), 7, 300, new Vector2(1, -1), '#fff'));
+        this.balls.push(new Ball(new Vector2(50, 50), 7, 300, new Vector2(-1, -1), '#fff'));
+        this.balls.push(new Ball(new Vector2(123, 456), 7, 300, new Vector2(-1, -1), '#fff'));
+
+        this.bricks = [];
+        var blockHalfSize = new Vector2(25, 10);
+        for (var i = 0; i < 10; i++) {
+            for (var j = 0; j < 8; j++) {
+                var blockCenter = new Vector2(
+                    105 + blockHalfSize.x + i * (blockHalfSize.x * 2 + 10),
+                    30 + 47 + j * (blockHalfSize.y * 2 + 10)
+                );
+                this.bricks.push(new Brick(blockCenter, blockHalfSize, 1, '#fff'));
+            }
+        }
+
+        var paddleHalfSize = new Vector2(50, 15);
+        this.paddle = new Paddle(new Vector2(800 / 2, 600 + paddleHalfSize.y * 2 / 2 - 50), paddleHalfSize, 1, '#fff');
+    };
+
     var render = function() {
         g.save();
         g.translate(this.containerOffset.x, this.containerOffset.y);
@@ -88,30 +110,13 @@ var World = function() {
         // TODO this.levelConf = levelConf;
         this.paused = false;
 
+        this.reset = reset;
         this.render = render;
         this.update = update;
         this.toString = toString;
 
         // initialize all game objects
-        this.balls = [];
-        this.balls.push(new Ball(new Vector2(400, 300), 7, 300, new Vector2(1, -1), '#fff'));
-        this.balls.push(new Ball(new Vector2(50, 50), 7, 300, new Vector2(-1, -1), '#fff'));
-        this.balls.push(new Ball(new Vector2(123, 456), 7, 300, new Vector2(-1, -1), '#fff'));
-
-        this.bricks = [];
-        var blockHalfSize = new Vector2(25, 10);
-        for (var i = 0; i < 10; i++) {
-            for (var j = 0; j < 8; j++) {
-                var blockCenter = new Vector2(
-                    105 + blockHalfSize.x + i * (blockHalfSize.x * 2 + 10),
-                    30 + 47 + j * (blockHalfSize.y * 2 + 10)
-                );
-                this.bricks.push(new Brick(blockCenter, blockHalfSize, 1, '#fff'));
-            }
-        }
-
-        var paddleHalfSize = new Vector2(50, 15);
-        this.paddle = new Paddle(new Vector2(800 / 2, 600 + paddleHalfSize.y * 2 / 2 - 50), paddleHalfSize, 1, '#fff');
+        this.reset();
     };
 
     constructor.prototype = {
