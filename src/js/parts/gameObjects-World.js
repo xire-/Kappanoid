@@ -1,9 +1,9 @@
 var World = function() {
     var reset = function() {
         this.balls = [];
-        this.balls.push(new Ball(new Vector2(400, 300), 7, 300, new Vector2(1, -1), '#fff'));
-        this.balls.push(new Ball(new Vector2(50, 50), 7, 300, new Vector2(-1, -1), '#fff'));
-        this.balls.push(new Ball(new Vector2(123, 456), 7, 300, new Vector2(-1, -1), '#fff'));
+        this.balls.push(new Ball(new Vector2(400, 300), 7, 300, new Vector2(1, -1), settings.ballDefaultColor));
+        this.balls.push(new Ball(new Vector2(50, 50), 7, 300, new Vector2(-1, -1), settings.ballDefaultColor));
+        this.balls.push(new Ball(new Vector2(123, 456), 7, 300, new Vector2(-1, -1), settings.ballDefaultColor));
 
         this.bricks = [];
         var blockHalfSize = new Vector2(25, 10);
@@ -13,16 +13,26 @@ var World = function() {
                     105 + blockHalfSize.x + i * (blockHalfSize.x * 2 + 10),
                     30 + 47 + j * (blockHalfSize.y * 2 + 10)
                 );
-                this.bricks.push(new Brick(blockCenter, blockHalfSize, 1, '#fff'));
+                this.bricks.push(new Brick(blockCenter, blockHalfSize, 1, settings.brickDefaultColor));
             }
         }
 
         var paddleHalfSize = new Vector2(50, 15);
-        this.paddle = new Paddle(new Vector2(800 / 2, 600 + paddleHalfSize.y * 2 / 2 - 50), paddleHalfSize, 1, '#fff');
+        this.paddle = new Paddle(new Vector2(800 / 2, 600 + paddleHalfSize.y * 2 / 2 - 50), paddleHalfSize, 1, settings.paddleDefaultColor);
     };
 
     var render = function() {
         g.save();
+
+        // render borders (as background)
+        if (settings.colors) {
+            g.fillStyle = this.bordersColor;
+        } else {
+            g.fillStyle = '#fff';
+        }
+        g.fillRect(0, 0, this.containerSize.x + this.containerOffset.x * 2, this.containerSize.y + this.containerOffset.y);
+
+        // translate to render the world area
         g.translate(this.containerOffset.x, this.containerOffset.y);
 
         // clip the region
@@ -31,7 +41,11 @@ var World = function() {
         g.clip();
 
         // render background
-        g.fillStyle = settings.worldBackgroundColor;
+        if (settings.colors) {
+            g.fillStyle = this.backgroundColor;
+        } else {
+            g.fillStyle = '#000';
+        }
         g.fillRect(0, 0, this.containerSize.x, this.containerSize.y);
 
         // render balls, bricks and paddle
@@ -108,6 +122,8 @@ var World = function() {
         this.containerOffset = containerOffset;
         this.containerSize = containerSize;
         // TODO this.levelConf = levelConf;
+        this.backgroundColor = settings.backgroundDefaultColor;
+        this.bordersColor = settings.bordersDefaultColor;
         this.paused = false;
 
         this.reset = reset;

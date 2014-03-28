@@ -18,6 +18,9 @@ var PlayingState = function() {
 
     var keyPress = function(e) {
         switch (e.keyCode) {
+            case 49: // 1
+                settings.colors = !settings.colors;
+                break;
             case 112: // P
                 world.paused = !world.paused;
                 break;

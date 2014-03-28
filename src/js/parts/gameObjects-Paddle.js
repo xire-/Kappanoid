@@ -1,10 +1,17 @@
 var Paddle = function() {
     var render = function() {
         g.save();
-        g.fillStyle = this.color;
+
+        if (settings.colors) {
+            g.fillStyle = this.color;
+        } else {
+            g.fillStyle = '#fff';
+        }
+
         g.beginPath();
         g.rect(this.center.x - this.halfSize.x, this.center.y - this.halfSize.y, this.halfSize.x * 2, this.halfSize.y * 2);
         g.fill();
+
         g.restore();
     };
 

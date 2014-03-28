@@ -1,13 +1,19 @@
 var Ball = function() {
     var render = function() {
         g.save();
-        g.fillStyle = this.color;
+
+        if (settings.colors) {
+            g.fillStyle = this.color;
+        } else {
+            g.fillStyle = '#fff';
+        }
 
         g.translate(this.center.x, this.center.y);
         if (settings.ballFaceDirection) {
             g.rotate(-Math.atan2(this.direction.x, this.direction.y));
         }
         g.fillRect(-this.radius, -this.radius, this.radius * 2, this.radius * 2);
+
         g.restore();
     };
 

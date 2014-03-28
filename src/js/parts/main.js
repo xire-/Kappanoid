@@ -49,6 +49,14 @@ var kappanoid = (function() {
         gameInfoBackgroundColor: '#222',
 
         ballFaceDirection: true,
+
+        // colors
+        colors: false,
+        backgroundDefaultColor: '#F8F2B3',
+        bordersDefaultColor: '#88D1A3',
+        ballDefaultColor: '#d26635',
+        brickDefaultColor: '#62bd84',
+        paddleDefaultColor: '#CF3746'
     };
 
 
