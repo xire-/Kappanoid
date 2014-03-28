@@ -58,8 +58,12 @@ var IntroState = function() {
 
     var keyPress = function(e) {
         switch (e.keyCode) {
-            default: alert(e.keyCode);
-            break;
+            case 13: // ENTER
+                this.timePassed = 3500;
+                break;
+            default:
+                alert(e.keyCode);
+                break;
         }
     };
 
