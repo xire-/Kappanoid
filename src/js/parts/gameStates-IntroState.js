@@ -38,19 +38,19 @@ var IntroState = function() {
     };
 
     var update = function(delta) {
-        currState.timePassed += delta;
-        if (currState.timePassed < 1000) {
-            currState.titlePosX = settings.worldBorderThickness + 400;
-            currState.titlePosY = easing.easeOutBounce(currState.timePassed, 0, defaultHeight / 2, 1000);
-        } else if (currState.timePassed < 2000) {
-            currState.titlePosX = settings.worldBorderThickness + 400;
-            currState.titlePosY = defaultHeight / 2;
-        } else if (currState.timePassed < 3000) {
-            currState.titleScale = easing.easeInBack(currState.timePassed - 2000, 1, -1, 1000);
-            currState.titleRotation = easing.easeInBack(currState.timePassed - 2000, 0, Math.PI * 2, 1000);
-        } else if (currState.timePassed < 3500) {
-            currState.titleScale = 0;
-            currState.titleRotation = 0;
+        this.timePassed += delta;
+        if (this.timePassed < 1000) {
+            this.titlePosX = settings.worldBorderThickness + 400;
+            this.titlePosY = easing.easeOutBounce(this.timePassed, 0, defaultHeight / 2, 1000);
+        } else if (this.timePassed < 2000) {
+            this.titlePosX = settings.worldBorderThickness + 400;
+            this.titlePosY = defaultHeight / 2;
+        } else if (this.timePassed < 3000) {
+            this.titleScale = easing.easeInBack(this.timePassed - 2000, 1, -1, 1000);
+            this.titleRotation = easing.easeInBack(this.timePassed - 2000, 0, Math.PI * 2, 1000);
+        } else if (this.timePassed < 3500) {
+            this.titleScale = 0;
+            this.titleRotation = 0;
         } else {
             currState = states.playing;
         }
