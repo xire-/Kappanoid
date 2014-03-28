@@ -107,9 +107,9 @@ var kappanoid = (function() {
         };
 
         // receive keyboard update
-        window.addEventListener('keypress', function(e) {
+        window.onkeypress = function(e) {
             currState.keyPress(e);
-        }, false);
+        };
     };
 
     var startMainLoop = function() {
