@@ -28,7 +28,7 @@ var kappanoid = (function() {
     // graphic context, used by the rendering process
     var g;
 
-    // world game ogject
+    // world game object
     var world;
 
     // object used to display game info

@@ -68,6 +68,7 @@ var World = function() {
 
         // update paddle position (clamped)
         var paddle = this.paddle;
+        var bricks = this.bricks;
         paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, 0 + this.paddle.halfSize.x), 800 - this.paddle.halfSize.x);
 
         this.balls.forEach(function(ball) {
@@ -110,6 +111,20 @@ var World = function() {
                     ball.direction.x = ball.direction.y = 0;
                 }
             }
+
+            // TODO get closer bricks from pruning structure
+            var closerBricks = bricks;
+            closerBricks.forEach(function(brick) {
+                var collisionPoint = collisionDetection.testSphereAABB(ball, brick);
+                if (collisionPoint !== null) {
+                    if (collisionPoint.x == brick.center.x - brick.halfSize.x || collisionPoint.x == brick.center.x + brick.halfSize.x) {
+                        ball.direction.x *= -1;
+                    }
+                    if (collisionPoint.y == brick.center.y - brick.halfSize.y || collisionPoint.y == brick.center.y + brick.halfSize.y) {
+                        ball.direction.y *= -1;
+                    }
+                }
+            });
         });
     };
 
