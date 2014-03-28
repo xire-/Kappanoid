@@ -21,10 +21,6 @@ var Ball = function() {
         this.center.add(this.direction.clone().mul(this.speed * delta / 1000));
     };
 
-    var clone = function() {
-        return new Ball(this.center.clone(), this.radius, this.speed, this.direction.clone(), this.color);
-    };
-
     var toString = function() {
         return JSON.stringify(this);
     };
@@ -39,7 +35,6 @@ var Ball = function() {
 
         this.render = render;
         this.update = update;
-        this.clone = clone;
         this.toString = toString;
     };
 
