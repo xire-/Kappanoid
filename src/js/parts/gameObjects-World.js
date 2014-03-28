@@ -2,7 +2,7 @@ var World = function() {
     var reset = function() {
         this.balls = [];
         this.balls.push(new Ball(new Vector2(400, 500), 7, 300, new Vector2(1, -1), settings.ballDefaultColor));
-        this.balls.push(new Ball(new Vector2(90, 57-20), 7, 300, new Vector2(1, 2), settings.ballDefaultColor));
+        this.balls.push(new Ball(new Vector2(90, 57 - 20), 7, 300, new Vector2(1, 2), settings.ballDefaultColor));
         this.balls.push(new Ball(new Vector2(123, 456), 7, 300, new Vector2(-1, -1), settings.ballDefaultColor));
 
         this.bricks = [];
@@ -66,14 +66,21 @@ var World = function() {
             return;
         }
 
-        // update paddle position (clamped)
-        var paddle = this.paddle;
-        var bricks = this.bricks;
-        paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, 0 + this.paddle.halfSize.x), 800 - this.paddle.halfSize.x);
-
+        // update single components
         this.balls.forEach(function(ball) {
             ball.update(delta);
+        });
+        this.bricks.forEach(function(brick) {
+            brick.update(delta);
+        });
+        this.paddle.update(delta);
 
+        // compute interaction between components
+
+        // update paddle position (clamped)
+        this.paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, 0 + this.paddle.halfSize.x), 800 - this.paddle.halfSize.x);
+
+        this.balls.forEach(function(ball) {
             // check and handle collisions with borders
             if (ball.center.x - ball.radius < 0) {
                 ball.center.x = -ball.center.x + ball.radius * 2;
@@ -93,27 +100,27 @@ var World = function() {
             }
 
             // check ball vs bottom and paddle
-            if (ball.center.y + ball.radius >= paddle.center.y - paddle.halfSize.y) {
+            if (ball.center.y + ball.radius >= this.paddle.center.y - this.paddle.halfSize.y) {
                 // if it's actualy going down
                 if (ball.direction.y > 0) {
-                    var collisionPoint = collisionDetection.testSphereAABB(ball, paddle);
+                    var collisionPoint = collisionDetection.testSphereAABB(ball, this.paddle);
                     if (collisionPoint !== null) {
                         // determine resultant direction based on collisionPoint
-                        var angle = (collisionPoint.x - paddle.center.x) / paddle.halfSize.x;
+                        var angle = (collisionPoint.x - this.paddle.center.x) / this.paddle.halfSize.x;
                         ball.direction.x = Math.sin(angle);
                         ball.direction.y = -Math.cos(angle);
                     }
                 }
 
                 // check if ball is dead
-                if (ball.center.y >= paddle.center.y + paddle.halfSize.y) {
+                if (ball.center.y >= this.paddle.center.y + this.paddle.halfSize.y) {
                     // ball is dead, remove it
                     ball.direction.x = ball.direction.y = 0;
                 }
             }
 
             // TODO get closer bricks from pruning structure
-            var closerBricks = bricks;
+            var closerBricks = this.bricks;
             closerBricks.forEach(function(brick) {
                 var collisionPoint = collisionDetection.testSphereAABB(ball, brick);
                 if (collisionPoint !== null) {
@@ -124,8 +131,8 @@ var World = function() {
                         ball.direction.y *= -1;
                     }
                 }
-            });
-        });
+            }, this);
+        }, this);
     };
 
 
