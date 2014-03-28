@@ -48,6 +48,8 @@ var kappanoid = (function() {
 
         gameInfoBackgroundColor: '#222',
 
+        timeScale: 1,
+
         ballFaceDirection: true,
 
         // colors
@@ -151,7 +153,7 @@ var kappanoid = (function() {
                 var ministep = elapsed / steps;
 
                 while (steps > 0) {
-                    currState.update(ministep);
+                    currState.update(ministep * settings.timeScale);
                     steps -= 1;
                 }
 

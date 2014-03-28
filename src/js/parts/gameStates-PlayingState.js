@@ -21,8 +21,18 @@ var PlayingState = function() {
             case 49: // 1
                 settings.colors = !settings.colors;
                 break;
+            case 117: // U
+                settings.timeScale = 1;
+                //world.paused = !world.paused;
+                break;
+            case 105: // I
+                settings.timeScale = 0.50;
+                break;
+            case 111: // O
+                settings.timeScale = 0.15;
+                break;
             case 112: // P
-                world.paused = !world.paused;
+                settings.timeScale = 0;
                 break;
             case 114: // R
                 world.reset();

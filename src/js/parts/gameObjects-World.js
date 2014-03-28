@@ -62,7 +62,7 @@ var World = function() {
     };
 
     var update = function(delta) {
-        if (this.paused) {
+        if (delta === 0) {
             return;
         }
 
@@ -124,7 +124,6 @@ var World = function() {
         // TODO this.levelConf = levelConf;
         this.backgroundColor = settings.backgroundDefaultColor;
         this.bordersColor = settings.bordersDefaultColor;
-        this.paused = false;
 
         this.reset = reset;
         this.render = render;
@@ -151,14 +150,6 @@ var World = function() {
         get containerSize() {
             return this._containerSize;
         },
-
-        set paused(value) {
-            console.assert(value !== undefined && typeof value == 'boolean', value.toString());
-            this._paused = value;
-        },
-        get paused() {
-            return this._paused;
-        }
     };
 
     return constructor;
