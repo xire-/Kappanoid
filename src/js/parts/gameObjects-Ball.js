@@ -2,9 +2,12 @@ var Ball = function() {
     var render = function() {
         g.save();
         g.fillStyle = this.color;
-        g.beginPath();
-        g.arc(this.center.x, this.center.y, this.radius, 0, 2 * Math.PI);
-        g.fill();
+
+        g.translate(this.center.x, this.center.y);
+        if (settings.ballFaceDirection) {
+            g.rotate(-Math.atan2(this.direction.x, this.direction.y));
+        }
+        g.fillRect(-this.radius, -this.radius, this.radius * 2, this.radius * 2);
         g.restore();
     };
 

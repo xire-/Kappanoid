@@ -40,7 +40,9 @@ var kappanoid = (function() {
         worldBorderBackgroundColor: '#fff',
         worldBorderThickness: 20,
 
-        gameInfoBackgroundColor: '#222'
+        gameInfoBackgroundColor: '#222',
+
+        ballFaceDirection: true,
     };
 
 
