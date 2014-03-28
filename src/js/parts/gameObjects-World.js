@@ -113,10 +113,6 @@ var World = function() {
         });
     };
 
-    var toString = function() {
-        return JSON.stringify(this);
-    };
-
 
     var constructor = function World(containerOffset, containerSize) {
         this.containerOffset = containerOffset;
@@ -128,7 +124,6 @@ var World = function() {
         this.reset = reset;
         this.render = render;
         this.update = update;
-        this.toString = toString;
 
         // initialize all game objects
         this.reset();
@@ -136,7 +131,7 @@ var World = function() {
 
     constructor.prototype = {
         set containerOffset(value) {
-            console.assert(value !== undefined && value instanceof Vector2, value.toString());
+            console.assert(value !== undefined && value instanceof Vector2, JSON.stringify(value));
             this._containerOffset = value;
         },
         get containerOffset() {
@@ -144,7 +139,7 @@ var World = function() {
         },
 
         set containerSize(value) {
-            console.assert(value !== undefined && value instanceof Vector2, value.toString());
+            console.assert(value !== undefined && value instanceof Vector2, JSON.stringify(value));
             this._containerSize = value;
         },
         get containerSize() {

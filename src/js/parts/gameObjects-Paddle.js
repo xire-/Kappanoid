@@ -17,10 +17,6 @@ var Paddle = function() {
 
     var update = function( /*delta*/ ) {};
 
-    var toString = function() {
-        return JSON.stringify(this);
-    };
-
 
     var constructor = function Paddle(center, halfSize, life, color) {
         this.center = center;
@@ -30,12 +26,11 @@ var Paddle = function() {
 
         this.render = render;
         this.update = update;
-        this.toString = toString;
     };
 
     constructor.prototype = {
         set center(value) {
-            console.assert(value !== undefined && value instanceof Vector2, value.toString());
+            console.assert(value !== undefined && value instanceof Vector2, JSON.stringify(value));
             this._center = value;
         },
         get center() {
@@ -43,7 +38,7 @@ var Paddle = function() {
         },
 
         set halfSize(value) {
-            console.assert(value !== undefined && value instanceof Vector2, value.toString());
+            console.assert(value !== undefined && value instanceof Vector2, JSON.stringify(value));
             this._halfSize = value;
         },
         get halfSize() {
@@ -51,7 +46,7 @@ var Paddle = function() {
         },
 
         set life(value) {
-            console.assert(value !== undefined && typeof value == 'number', value.toString());
+            console.assert(value !== undefined && typeof value == 'number', JSON.stringify(value));
             this._life = value;
         },
         get life() {
@@ -59,7 +54,7 @@ var Paddle = function() {
         },
 
         set color(value) {
-            console.assert(value !== undefined && typeof value == 'string', value.toString());
+            console.assert(value !== undefined && typeof value == 'string', JSON.stringify(value));
             this._color = value;
         },
         get color() {
@@ -74,7 +69,7 @@ function testPaddle() {
     var center1 = new Vector2(3, 4);
     var halfSize1 = new Vector2(100, 300);
     var paddle1 = new Brick(center1, halfSize1, 4, '#fff');
-    console.assert(JSON.stringify(paddle1.center) === JSON.stringify(center1) && JSON.stringify(paddle1.halfSize) === JSON.stringify(halfSize1) && paddle1.life === 4 && paddle1.color === '#fff', paddle1.toString());
+    console.assert(JSON.stringify(paddle1.center) === JSON.stringify(center1) && JSON.stringify(paddle1.halfSize) === JSON.stringify(halfSize1) && paddle1.life === 4 && paddle1.color === '#fff', JSON.stringify(paddle1));
 
     var paddle2 = paddle1.clone();
     console.assert(JSON.stringify(paddle1) === JSON.stringify(paddle2));

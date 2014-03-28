@@ -21,10 +21,6 @@ var Ball = function() {
         this.center.add(this.direction.clone().mul(this.speed * delta / 1000));
     };
 
-    var toString = function() {
-        return JSON.stringify(this);
-    };
-
 
     var constructor = function Ball(center, radius, speed, direction, color) {
         this.center = center;
@@ -35,12 +31,11 @@ var Ball = function() {
 
         this.render = render;
         this.update = update;
-        this.toString = toString;
     };
 
     constructor.prototype = {
         set center(value) {
-            console.assert(value !== undefined && value instanceof Vector2, value.toString());
+            console.assert(value !== undefined && value instanceof Vector2, JSON.stringify(value));
             this._center = value;
         },
         get center() {
@@ -48,7 +43,7 @@ var Ball = function() {
         },
 
         set radius(value) {
-            console.assert(value !== undefined && typeof value == 'number', value.toString());
+            console.assert(value !== undefined && typeof value == 'number', JSON.stringify(value));
             this._radius = value;
         },
         get radius() {
@@ -56,7 +51,7 @@ var Ball = function() {
         },
 
         set speed(value) {
-            console.assert(value !== undefined && typeof value == 'number', value.toString());
+            console.assert(value !== undefined && typeof value == 'number', JSON.stringify(value));
             this._speed = value;
         },
         get speed() {
@@ -64,7 +59,7 @@ var Ball = function() {
         },
 
         set direction(value) {
-            console.assert(value !== undefined && value instanceof Vector2, value.toString());
+            console.assert(value !== undefined && value instanceof Vector2, JSON.stringify(value));
             this._direction = value.normalize();
         },
         get direction() {
@@ -72,7 +67,7 @@ var Ball = function() {
         },
 
         set color(value) {
-            console.assert(value !== undefined && typeof value == 'string', value.toString());
+            console.assert(value !== undefined && typeof value == 'string', JSON.stringify(value));
             this._color = value;
         },
         get color() {
@@ -90,7 +85,7 @@ function testBall() {
     var speed1 = velocity1.length();
     var direction1 = velocity1.clone().normalize();
     var ball1 = new Ball(center1, radius1, speed1, direction1, '#fff');
-    console.assert(JSON.stringify(ball1.center) === JSON.stringify(center1) && ball1.radius === radius1 && ball1.color === '#fff', ball1.toString());
+    console.assert(JSON.stringify(ball1.center) === JSON.stringify(center1) && ball1.radius === radius1 && ball1.color === '#fff', JSON.stringify(ball1));
 
     var ball2 = ball1.clone();
     console.assert(JSON.stringify(ball1) === JSON.stringify(ball2));

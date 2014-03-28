@@ -17,10 +17,6 @@ var Brick = function() {
 
     var update = function( /*delta*/ ) {};
 
-    var toString = function() {
-        return JSON.stringify(this);
-    };
-
 
     var constructor = function Brick(center, halfSize, life, color) {
         this.center = center;
@@ -30,12 +26,11 @@ var Brick = function() {
 
         this.render = render;
         this.update = update;
-        this.toString = toString;
     };
 
     constructor.prototype = {
         set center(value) {
-            console.assert(value !== undefined && value instanceof Vector2, value.toString());
+            console.assert(value !== undefined && value instanceof Vector2, JSON.stringify(value));
             this._center = value;
         },
         get center() {
@@ -43,7 +38,7 @@ var Brick = function() {
         },
 
         set halfSize(value) {
-            console.assert(value !== undefined && value instanceof Vector2, value.toString());
+            console.assert(value !== undefined && value instanceof Vector2, JSON.stringify(value));
             this._halfSize = value;
         },
         get halfSize() {
@@ -51,7 +46,7 @@ var Brick = function() {
         },
 
         set life(value) {
-            console.assert(value !== undefined && typeof value == 'number', value.toString());
+            console.assert(value !== undefined && typeof value == 'number', JSON.stringify(value));
             this._life = value;
         },
         get life() {
@@ -59,7 +54,7 @@ var Brick = function() {
         },
 
         set color(value) {
-            console.assert(value !== undefined && typeof value == 'string', value.toString());
+            console.assert(value !== undefined && typeof value == 'string', JSON.stringify(value));
             this._color = value;
         },
         get color() {
@@ -74,7 +69,7 @@ function testBrick() {
     var center1 = new Vector2(3, 4);
     var halfSize1 = new Vector2(100, 300);
     var brick1 = new Brick(center1, halfSize1, 4, '#fff');
-    console.assert(JSON.stringify(brick1.center) === JSON.stringify(center1) && JSON.stringify(brick1.halfSize) === JSON.stringify(halfSize1) && brick1.life === 4 && brick1.color === '#fff', brick1.toString());
+    console.assert(JSON.stringify(brick1.center) === JSON.stringify(center1) && JSON.stringify(brick1.halfSize) === JSON.stringify(halfSize1) && brick1.life === 4 && brick1.color === '#fff', JSON.stringify(brick1));
 
     var brick2 = brick1.clone();
     console.assert(JSON.stringify(brick1) === JSON.stringify(brick2));
