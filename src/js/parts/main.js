@@ -19,6 +19,12 @@ var kappanoid = (function() {
     // millisecond spent in one iteration of the main loop
     var loopTime = 0;
 
+    // states of the game
+    var states;
+
+    // current state of main
+    var currState;
+
     // graphic context, used by the rendering process
     var g;
 
@@ -49,6 +55,12 @@ var kappanoid = (function() {
     var init = function(width, height) {
         // TODO bind keys to actions
         // TODO generate settings interface
+        states = {
+            intro: new IntroState(),
+            playing: new PlayingState()
+        };
+
+        currState = states.intro;
 
         initCanvas(width, height);
 
