@@ -13,7 +13,8 @@ var World = function() {
                     105 + blockHalfSize.x + i * (blockHalfSize.x * 2 + 10),
                     30 + 47 + j * (blockHalfSize.y * 2 + 10)
                 );
-                this.bricks.push(new Brick(blockCenter, blockHalfSize, 1, settings.brickDefaultColor));
+                var life = Math.floor(1 + Math.random() * 10);
+                this.bricks.push(new Brick(blockCenter, blockHalfSize, life, settings.brickDefaultColor));
             }
         }
 
@@ -80,6 +81,12 @@ var World = function() {
         // update paddle position (clamped)
         this.paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, 0 + this.paddle.halfSize.x), 800 - this.paddle.halfSize.x);
 
+        handleBallBordersCollisions.call(this);
+        handleBallPaddleCollisions.call(this);
+        handleBallBrickCollisions.call(this);
+    };
+
+    var handleBallBordersCollisions = function() {
         this.balls.forEach(function(ball) {
             // check and handle collisions with borders
             if (ball.center.x - ball.radius < 0) {
@@ -98,7 +105,12 @@ var World = function() {
                 ball.center.y = 599 * 2 - ball.center.y - ball.radius;
                 ball.direction.y *= -1;
             }
+        }, this);
+    };
 
+    var handleBallPaddleCollisions = function() {
+        var deadBalls = [];
+        this.balls.forEach(function(ball, i) {
             // check ball vs bottom and paddle
             if (ball.center.y + ball.radius >= this.paddle.center.y - this.paddle.halfSize.y) {
                 // if it's actualy going down
@@ -114,14 +126,26 @@ var World = function() {
 
                 // check if ball is dead
                 if (ball.center.y >= this.paddle.center.y + this.paddle.halfSize.y) {
-                    // ball is dead, remove it
-                    ball.direction.x = ball.direction.y = 0;
+                    // ball is dead
+                    deadBalls.push(i);
                 }
             }
+        }, this);
 
+        for (var i = deadBalls.length - 1; i >= 0; i--) {
+            var index = deadBalls[i];
+            // ball.die();
+            this.balls.splice(index, 1);
+        }
+    };
+
+    var handleBallBrickCollisions = function() {
+        this.balls.forEach(function(ball) {
             // TODO get closer bricks from pruning structure
             var closerBricks = this.bricks;
-            closerBricks.forEach(function(brick) {
+            var hitBricks = [];
+
+            closerBricks.forEach(function(brick, index) {
                 var collisionPoint = collisionDetection.testSphereAABB(ball, brick);
                 if (collisionPoint !== null) {
                     if (collisionPoint.x == brick.center.x - brick.halfSize.x || collisionPoint.x == brick.center.x + brick.halfSize.x) {
@@ -130,11 +154,20 @@ var World = function() {
                     if (collisionPoint.y == brick.center.y - brick.halfSize.y || collisionPoint.y == brick.center.y + brick.halfSize.y) {
                         ball.direction.y *= -1;
                     }
+                    hitBricks.push(index);
                 }
             }, this);
+
+            for (var i = hitBricks.length - 1; i >= 0; i--) {
+                var index = hitBricks[i];
+                var brick = this.bricks[index];
+                brick.hit();
+                if (brick.life <= 0) {
+                    this.bricks.splice(index, 1);
+                }
+            }
         }, this);
     };
-
 
     var constructor = function World(containerOffset, containerSize) {
         this.containerOffset = containerOffset;

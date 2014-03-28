@@ -12,10 +12,19 @@ var Brick = function() {
         g.rect(this.center.x - this.halfSize.x, this.center.y - this.halfSize.y, this.halfSize.x * 2, this.halfSize.y * 2);
         g.fill();
 
+        g.fillStyle = '#000';
+        g.textAlign = 'center';
+        g.textBaseline = 'middle';
+        g.fillText(this.life, this.center.x, this.center.y);
+
         g.restore();
     };
 
     var update = function( /*delta*/ ) {};
+
+    var hit = function() {
+        this.life -= 1;
+    };
 
 
     var constructor = function Brick(center, halfSize, life, color) {
@@ -24,6 +33,7 @@ var Brick = function() {
         this.life = life;
         this.color = color;
 
+        this.hit = hit;
         this.render = render;
         this.update = update;
     };
