@@ -26,6 +26,10 @@ var World = function() {
     };
 
     var update = function(delta) {
+        if (this.paused) {
+            return;
+        }
+
         // update paddle position (clamped)
         var paddle = this.paddle;
         paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, 0 + this.paddle.halfSize.x), 800 - this.paddle.halfSize.x);
@@ -82,6 +86,7 @@ var World = function() {
         this.containerOffset = containerOffset;
         this.containerSize = containerSize;
         // TODO this.levelConf = levelConf;
+        this.paused = false;
 
         this.render = render;
         this.update = update;
@@ -124,6 +129,14 @@ var World = function() {
         },
         get containerSize() {
             return this._containerSize;
+        },
+
+        set paused(value) {
+            console.assert(value !== undefined && typeof value == 'boolean', value.toString());
+            this._paused = value;
+        },
+        get paused() {
+            return this._paused;
         }
     };
 

@@ -93,6 +93,19 @@ var kappanoid = (function() {
             mousePos.x = x / scaleFactor;
             mousePos.y = y / scaleFactor;
         };
+
+        // receive keyboard update
+        window.addEventListener('keypress', function(e) {
+            switch (e.keyCode) {
+                case 112: // P
+                    world.paused = !world.paused;
+                    break;
+                default:
+                    alert(e.keyCode);
+                    break;
+            }
+
+        }, false);
     };
 
     var startMainLoop = function() {
