@@ -23,7 +23,6 @@ var PlayingState = function() {
                 break;
             case 117: // U
                 settings.timeScale = 1;
-                //world.paused = !world.paused;
                 break;
             case 105: // I
                 settings.timeScale = 0.50;

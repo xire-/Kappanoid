@@ -149,7 +149,7 @@ var World = function() {
         },
         get containerSize() {
             return this._containerSize;
-        },
+        }
     };
 
     return constructor;
