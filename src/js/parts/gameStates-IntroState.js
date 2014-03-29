@@ -17,9 +17,11 @@ var IntroState = function() {
 
         var lineHeightLogo = 15;
         var lineHeightText = 20;
-        var logoTextDistance = 60;
+        var logoImageDistance = 0;
+        var imageTextDistance = 150;
+
         // calculate starting position
-        var y = -((lineHeightLogo * this.selectedLogo.length + lineHeightText * this.text.length) + logoTextDistance) / 2;
+        var y = -((lineHeightLogo * this.selectedLogo.length + this.insertCoinImage.height + lineHeightText * this.text.length) + logoImageDistance + imageTextDistance) / 2;
 
         // draw previously randomly selected logo
         for (var i = 0; i < this.selectedLogo.length; i++) {
@@ -27,8 +29,15 @@ var IntroState = function() {
             y += lineHeightLogo;
         }
 
+        // draw insert coin image
+        if (this.drawInsertCoinImage) {
+            y += logoImageDistance;
+            g.drawImage(this.insertCoinImage, -this.insertCoinImage.width / 2, y);
+        }
+        y += this.insertCoinImage.height;
+
         // draw text
-        y += logoTextDistance;
+        y += imageTextDistance;
         for (var j = 0; j < this.text.length; j++) {
             g.fillText(this.text[j], 0, y);
             y += lineHeightText;
@@ -45,10 +54,20 @@ var IntroState = function() {
         } else if (this.timePassed < 2000) {
             this.titlePosX = settings.worldBorderThickness + 400;
             this.titlePosY = defaultHeight / 2;
-        } else if (this.timePassed < 3000) {
+        } else if (this.timePassed < 2500) {
+            this.drawInsertCoinImage = false;
+        } else if (this.timePassed < 4000) {
+            this.drawInsertCoinImage = true;
+        } else if (this.timePassed < 4500) {
+            this.drawInsertCoinImage = false;
+        } else if (this.timePassed < 6000) {
+            this.drawInsertCoinImage = true;
+        } else if (this.timePassed < 7000) {
+            // TODO fix
+            this.drawInsertCoinImage = false;
             this.titleScale = easing.easeInBack(this.timePassed - 2000, 1, -1, 1000);
             this.titleRotation = easing.easeInBack(this.timePassed - 2000, 0, Math.PI * 2, 1000);
-        } else if (this.timePassed < 3500) {
+        } else if (this.timePassed < 8000) {
             this.titleScale = 0;
             this.titleRotation = 0;
         } else {
@@ -59,7 +78,7 @@ var IntroState = function() {
     var keyPress = function(e) {
         switch (e.keyCode) {
             case 13: // ENTER
-                this.timePassed = 3500;
+                this.timePassed = 8000;
                 break;
             default:
                 alert(e.keyCode);
@@ -202,6 +221,9 @@ var IntroState = function() {
             ]
         ];
         this.selectedLogo = this.logos[randomInt(this.logos.length)];
+        this.insertCoinImage = new Image();
+        this.insertCoinImage.src = 'img/insert coin to continue.jpeg';
+        this.drawInsertCoinImage = true;
         this.text = [
             'Francesco Cagnin and Marco Gasparini',
             '© 2014'
