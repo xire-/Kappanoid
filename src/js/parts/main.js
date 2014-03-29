@@ -155,6 +155,13 @@ var kappanoid = (function() {
         window.requestAnimationFrame(mainLoop);
     };
 
+    /////////////////////////////////// Utils
+
+    // clamp val to the interval [min, max]
+    var clamp = function(min, val, max) {
+        return Math.min(Math.max(val, min), max);
+    };
+
 
     /////////////////////////////////// Game States
     // __import__ gameStates.js

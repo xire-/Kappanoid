@@ -1,7 +1,6 @@
 var World = function() {
     var reset = function() {
         // reset intro animation parameters
-        animScale = 1;
         timePassed = 0;
         brickSecsOff = [];
 
@@ -35,72 +34,6 @@ var World = function() {
         this.particles = [];
     };
 
-    var animScale = 1;
-    var timePassed = 0;
-    var renderIntro = function() {
-        g.save();
-
-        var tx = this.containerSize.x / 2 + this.containerOffset.x;
-        var ty = (this.containerSize.y + this.containerOffset.y) / 2;
-
-        g.translate(tx, ty);
-        g.scale(animScale, animScale);
-        g.rotate(animScale * Math.PI * 2);
-        g.translate(-tx, -ty);
-
-        drawEmptyWorld.call(this);
-
-        g.restore();
-    };
-
-    var brickSecsOff;
-    var renderIntroFalling = function() {
-        g.save();
-
-        drawEmptyWorld.call(this);
-
-
-        this.bricks.forEach(function(brick, i) {
-            g.save();
-
-            var offy = easing.easeOutBack(Math.min(Math.max(0, -brickSecsOff[i] + timePassed - 1000), 1000), -1, 1, 1000);
-            g.translate(0, 500 * offy);
-
-            brick.render();
-            g.restore();
-        });
-
-        g.globalAlpha = easing.easeInQuad(Math.min(Math.max(0, timePassed - 2300), 700), 0, 1, 700);
-
-        // render balls and paddle
-        this.balls.forEach(function(ball) {
-            ball.render();
-        });
-
-        this.paddle.render();
-
-        g.restore();
-    };
-
-    var updateIntro = function(delta) {
-        timePassed += delta;
-        if (timePassed < 1000) {
-            animScale = easing.easeOutBack(timePassed, 0, 1, 1000);
-        } else if (timePassed < 2300) {
-            animScale = 1;
-            this.render = renderIntroFalling;
-        } else if (timePassed < 3000) {
-
-        } else {
-            this.render = renderPlaying;
-            this.update = updatePlaying;
-        }
-
-        // update paddle position (clamped)
-        this.paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, 0 + this.paddle.halfSize.x), 800 - this.paddle.halfSize.x);
-
-    };
-
     var drawEmptyWorld = function() {
         // render borders (as background)
         if (settings.colors) {
@@ -126,6 +59,78 @@ var World = function() {
         }
         g.fillRect(0, 0, this.containerSize.x, this.containerSize.y);
     };
+
+    // INTRO STATE ////////////////////////////////////////////////////////////
+
+    var timePassed = 0;
+    var brickSecsOff;
+    var renderIntro = function() {
+        g.save();
+
+        var tx = this.containerSize.x / 2 + this.containerOffset.x;
+        var ty = (this.containerSize.y + this.containerOffset.y) / 2;
+        var animScale = easing.easeOutBack(clamp(0, timePassed, 1000), 0, 1, 1000);
+
+        g.translate(tx, ty);
+        g.scale(animScale, animScale);
+        g.rotate(animScale * Math.PI * 2);
+        g.translate(-tx, -ty);
+
+        drawEmptyWorld.call(this);
+
+        g.restore();
+    };
+
+    var renderIntroFalling = function() {
+        g.save();
+
+        drawEmptyWorld.call(this);
+
+
+        this.bricks.forEach(function(brick, i) {
+            g.save();
+
+            var offy = easing.easeOutBack(clamp(0, -brickSecsOff[i] + timePassed - 1000, 1000), -1, 1, 1000);
+            g.translate(0, 500 * offy);
+
+            brick.render();
+            g.restore();
+        });
+
+        g.globalAlpha = easing.easeInQuad(clamp(0, timePassed - 2300, 700), 0, 1, 700);
+
+        // render balls and paddle
+        this.balls.forEach(function(ball) {
+            ball.render();
+        });
+
+        this.paddle.render();
+
+        g.restore();
+    };
+
+    var updateIntro = function(delta) {
+        timePassed += delta;
+
+        if (timePassed < 1000) {
+            // [0, 1000) zoom in with rotation
+        } else if (timePassed < 2300) {
+            // [1000, 2300) falling bricks
+            this.render = renderIntroFalling;
+        } else if (timePassed < 3000) {
+            // [2300, 3000) paddle and balls fade in
+        } else {
+            // >3000 end of animation, transition to next state
+            this.render = renderPlaying;
+            this.update = updatePlaying;
+        }
+
+        // update paddle position (clamped)
+        this.paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, 0 + this.paddle.halfSize.x), 800 - this.paddle.halfSize.x);
+
+    };
+
+    // PLAYING STATE //////////////////////////////////////////////////////////
 
     var renderPlaying = function() {
         g.save();
@@ -188,6 +193,8 @@ var World = function() {
             this.particles.splice(index, 1);
         }
     };
+
+    // COLLISIONS /////////////////////////////////////////////////////////////
 
     var handleBallBordersCollisions = function() {
         this.balls.forEach(function(ball) {
