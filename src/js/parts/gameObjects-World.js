@@ -17,13 +17,13 @@ var World = function() {
         for (var i = 0; i < 10; i++) {
             for (var j = 0; j < 8; j++) {
                 // randomize falling animation offset
-                brickSecsOff.push(randomInt(300)));
+                brickSecsOff.push(randomInt(300));
 
                 var blockCenter = new Vector2(
                     105 + blockHalfSize.x + i * (blockHalfSize.x * 2 + 10),
                     30 + 47 + j * (blockHalfSize.y * 2 + 10)
                 );
-                var life = randomInt(1,5);
+                var life = randomInt(1, 5);
                 this.bricks.push(new Brick(blockCenter, blockHalfSize, life, settings.brickDefaultColor));
             }
         }
