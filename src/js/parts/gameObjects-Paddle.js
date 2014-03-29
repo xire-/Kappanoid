@@ -15,8 +15,8 @@ var Paddle = function() {
             g.fillStyle = '#fff';
         }
 
-        g.translate(this.center.x, this.center.y)
-        g.scale(1/speedScale, speedScale);
+        g.translate(this.center.x, this.center.y);
+        g.scale(1 / speedScale, speedScale);
 
         g.beginPath();
         g.rect(-this.halfSize.x, -this.halfSize.y, this.halfSize.x * 2, this.halfSize.y * 2);
