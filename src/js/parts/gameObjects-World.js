@@ -262,16 +262,39 @@ var World = function() {
             // TODO get closer bricks from pruning structure
             var closerBricks = this.bricks;
             var hitBricks = [];
+            var tmpVec = new Vector2(0, 0);
 
             closerBricks.forEach(function(brick, index) {
                 var collisionPoint = collisionDetection.testSphereAABB(ball, brick);
                 if (collisionPoint !== null) {
-                    if (collisionPoint.x == brick.center.x - brick.halfSize.x || collisionPoint.x == brick.center.x + brick.halfSize.x) {
-                        ball.direction.x *= -1;
+                    var xColl = collisionPoint.x == brick.center.x - brick.halfSize.x || collisionPoint.x == brick.center.x + brick.halfSize.x;
+                    var yColl = collisionPoint.y == brick.center.y - brick.halfSize.y || collisionPoint.y == brick.center.y + brick.halfSize.y;
+
+                    if (xColl && yColl) {
+                        tmpVec.set(brick.center).sub(collisionPoint);
+                        var xDir = ball.direction.x * tmpVec.x > 0;
+                        var yDir = ball.direction.y * tmpVec.y > 0;
+                        if (xDir && yDir) {
+                            var ang = Math.atan2(-ball.direction.x, -ball.direction.y);
+                            ang = ang + randomFloat(-0.25, 0.25);
+                            ball.direction.x = Math.cos(ang);
+                            ball.direction.y = Math.sin(ang);
+                        } else {
+                            if (xDir) {
+                                ball.direction.x *= -1;
+                            } else {
+                                ball.direction.y *= -1;
+                            }
+                        }
+
+                    } else {
+                        if (xColl) {
+                            ball.direction.x *= -1;
+                        } else if (yColl) {
+                            ball.direction.y *= -1;
+                        }
                     }
-                    if (collisionPoint.y == brick.center.y - brick.halfSize.y || collisionPoint.y == brick.center.y + brick.halfSize.y) {
-                        ball.direction.y *= -1;
-                    }
+
                     hitBricks.push(index);
                 }
             }, this);
