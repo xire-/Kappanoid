@@ -3,7 +3,7 @@ var PlayingState = function() {
         g.save();
 
         // clear the previous frame (render world borders)
-        g.fillStyle = settings.worldBorderBackgroundColor;
+        g.fillStyle = settings.worldBackgroundColor;
         g.fillRect(0, 0, defaultWidth, defaultHeight);
 
         // render the game world

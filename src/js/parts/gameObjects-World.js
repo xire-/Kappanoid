@@ -22,7 +22,56 @@ var World = function() {
         this.paddle = new Paddle(new Vector2(800 / 2, 600 + paddleHalfSize.y * 2 / 2 - 50), paddleHalfSize, 1, settings.paddleDefaultColor);
     };
 
-    var render = function() {
+    var animScale = 1;
+    var timePassed = 0;
+    var renderIntro = function() {
+        g.save();
+
+        var tx = this.containerSize.x / 2 + this.containerOffset.x;
+        var ty = (this.containerSize.y + this.containerOffset.y) / 2;
+
+        g.translate(tx, ty);
+        g.scale(animScale, animScale);
+        g.rotate(animScale * Math.PI * 2);
+        g.translate(-tx, -ty);
+
+        // render borders (as background)
+        if (settings.colors) {
+            g.fillStyle = this.bordersColor;
+        } else {
+            g.fillStyle = '#fff';
+        }
+        g.fillRect(0, 0, this.containerSize.x + this.containerOffset.x * 2, this.containerSize.y + this.containerOffset.y);
+
+        // translate to render the world area
+        g.translate(this.containerOffset.x, this.containerOffset.y);
+
+        // clip the region
+        g.beginPath();
+        g.rect(0, 0, this.containerSize.x, this.containerSize.y);
+        g.clip();
+
+        // render background
+        if (settings.colors) {
+            g.fillStyle = this.backgroundColor;
+        } else {
+            g.fillStyle = '#000';
+        }
+        g.fillRect(0, 0, this.containerSize.x, this.containerSize.y);
+
+        g.restore();
+    };
+
+    var updateIntro = function(delta) {
+        timePassed += delta;
+        if (timePassed < 1000) {
+            animScale = easing.easeOutBack(timePassed, 0, 1, 1000);
+        } else {
+
+        }
+    };
+
+    var renderPlaying = function() {
         g.save();
 
         // render borders (as background)
@@ -62,7 +111,7 @@ var World = function() {
         g.restore();
     };
 
-    var update = function(delta) {
+    var updatePlaying = function(delta) {
         if (delta === 0) {
             return;
         }
@@ -177,8 +226,8 @@ var World = function() {
         this.bordersColor = settings.bordersDefaultColor;
 
         this.reset = reset;
-        this.render = render;
-        this.update = update;
+        this.render = renderIntro;
+        this.update = updateIntro;
 
         // initialize all game objects
         this.reset();
