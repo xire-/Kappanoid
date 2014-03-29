@@ -5,5 +5,8 @@ debug:
 	@echo Done
 
 production:
-	./assemble.py ./ -o kappanoid.js 
+	./assemble.py ./ -o kappanoid.js
 	@echo Done
+
+clean:
+	rm kappanoid.js
