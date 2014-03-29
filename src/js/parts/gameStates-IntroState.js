@@ -201,7 +201,7 @@ var IntroState = function() {
                 '          |    |                         '
             ]
         ];
-        this.selectedLogo = this.logos[Math.floor(Math.random() * this.logos.length)];
+        this.selectedLogo = this.logos[randomInt(this.logos.length)];
         this.text = [
             'Francesco Cagnin and Marco Gasparini',
             '© 2014'
