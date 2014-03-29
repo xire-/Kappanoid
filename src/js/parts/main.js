@@ -13,32 +13,32 @@ var kappanoid = (function() {
     var defaultWidth = 1140;
     var defaultHeight = 620;
 
+    // graphic context, used by the rendering process
+    var g;
+
+    // timestamp of last game loop iteration (used to calculate delta time)
+    var lastTime;
+    // frames since last FPS update
+    var count = 0;
+    // sum of all FPS since last update
+    var totalFps = 0;
     // keep count of the current mean frame per second
     var currentFPS = 0;
-
     // millisecond spent in one iteration of the main loop
     var loopTime = 0;
 
     // states of the game
     var states;
-
     // current state of main
     var currState;
 
-    // graphic context, used by the rendering process
-    var g;
-
     // world game object
     var world;
-
     // object used to display game info
     var gameInfo;
 
     // mouse position relative to upper left corner of canvas(scaled to relative coordinate)
     var mousePos;
-
-    // main loop handle
-    var mainLoopHandle;
 
     // store all the configurable settings
     var settings = {
@@ -78,7 +78,8 @@ var kappanoid = (function() {
 
         gameInfo = new GameInfo(new Vector2(800 + settings.worldBorderThickness * 2, 0), new Vector2(300, 600 + settings.worldBorderThickness));
 
-        startMainLoop();
+        lastTime = Date.now();
+        mainLoop();
     };
 
     var initCanvas = function(width, height) {
@@ -122,50 +123,36 @@ var kappanoid = (function() {
         };
     };
 
-    var startMainLoop = function() {
-        // timestamp of last game loop iteration (used to calculate delta time)
-        var lastTime = Date.now();
-        // frames since last FPS update
-        var count = 0;
-        // sum of all FPS since last update
-        var totalFps = 0;
+    var mainLoop = function( /*timestamp*/ ) {
+        var currentTime = Date.now();
+        var elapsed = currentTime - lastTime;
+        lastTime = currentTime;
 
-        // remove previous main loop if any
-        if (mainLoopHandle !== undefined) {
-            clearInterval(mainLoopHandle);
+        // calculate fps
+        totalFps += 1000 / elapsed;
+        count += 1;
+        if (count % 50 === 0) {
+            currentFPS = totalFps / 50;
+            totalFps = 0;
+            count = 0;
         }
-        mainLoopHandle = setInterval(
-            function() {
-                var currentTime = Date.now();
-                var elapsed = currentTime - lastTime;
-                lastTime = currentTime;
 
-                // calculate fps
-                totalFps += 1000 / elapsed;
-                count += 1;
-                if (count % 50 === 0) {
-                    currentFPS = totalFps / 50;
-                    totalFps = 0;
-                    count = 0;
-                }
+        var steps = 10;
+        var ministep = elapsed / steps;
 
-                var steps = 10;
-                var ministep = elapsed / steps;
+        while (steps > 0) {
+            currState.update(ministep * settings.timeScale);
+            steps -= 1;
+        }
 
-                while (steps > 0) {
-                    currState.update(ministep * settings.timeScale);
-                    steps -= 1;
-                }
+        currState.render(elapsed);
 
-                currState.render(elapsed);
+        // render game info
+        gameInfo.render(elapsed);
 
-                // render game info
-                gameInfo.render(elapsed);
+        loopTime = Date.now() - lastTime;
 
-                loopTime = Date.now() - lastTime;
-            },
-            16
-        );
+        window.requestAnimationFrame(mainLoop);
     };
 
 
@@ -188,8 +175,7 @@ var kappanoid = (function() {
     return {
         version: '0.0',
         init: init,
-        resize: initCanvas,
-        toString: toString,
+        resize: initCanvas
     };
 }());
 
