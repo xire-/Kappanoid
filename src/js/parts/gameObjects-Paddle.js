@@ -1,5 +1,12 @@
 var Paddle = function() {
+
+    var oldPosX = 200;
     var render = function() {
+        // even if it may seem this belong to the update method, it must stay here
+        // since it is dependant on the frame rate
+        var speedScale = clamp(0.5, Math.abs(1 - (mousePos.x - oldPosX - 8) / 50), 1);
+        oldPosX = mousePos.x;
+
         g.save();
 
         if (settings.colors) {
@@ -8,8 +15,11 @@ var Paddle = function() {
             g.fillStyle = '#fff';
         }
 
+        g.translate(this.center.x, this.center.y)
+        g.scale(1/speedScale, speedScale);
+
         g.beginPath();
-        g.rect(this.center.x - this.halfSize.x, this.center.y - this.halfSize.y, this.halfSize.x * 2, this.halfSize.y * 2);
+        g.rect(-this.halfSize.x, -this.halfSize.y, this.halfSize.x * 2, this.halfSize.y * 2);
         g.fill();
 
         g.restore();
