@@ -279,7 +279,7 @@ var World = function() {
                         var yDir = ball.direction.y * tmpVec.y > 0;
                         if (xDir && yDir) {
                             var ang = Math.atan2(-ball.direction.x, -ball.direction.y);
-                            ang = ang + randomFloat(-0.25, 0.25);
+                            ang = ang + randomFloat(-0.10, 0.10);
                             ball.direction.x = Math.cos(ang);
                             ball.direction.y = Math.sin(ang);
                         } else {
