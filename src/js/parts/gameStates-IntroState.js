@@ -17,8 +17,8 @@ var IntroState = function() {
 
         var lineHeightLogo = 15;
         var lineHeightText = 20;
-        var logoImageDistance = 0;
-        var imageTextDistance = 150;
+        var logoImageDistance = 80;
+        var imageTextDistance = 80;
 
         // calculate starting position
         var y = -((lineHeightLogo * this.selectedLogo.length + this.insertCoinImage.height + lineHeightText * this.text.length) + logoImageDistance + imageTextDistance) / 2;
@@ -30,8 +30,8 @@ var IntroState = function() {
         }
 
         // draw insert coin image
+        y += logoImageDistance;
         if (this.drawInsertCoinImage) {
-            y += logoImageDistance;
             g.drawImage(this.insertCoinImage, -this.insertCoinImage.width / 2, y);
         }
         y += this.insertCoinImage.height;
@@ -63,10 +63,9 @@ var IntroState = function() {
         } else if (this.timePassed < 6000) {
             this.drawInsertCoinImage = true;
         } else if (this.timePassed < 7000) {
-            // TODO fix
             this.drawInsertCoinImage = false;
-            this.titleScale = easing.easeInBack(this.timePassed - 2000, 1, -1, 1000);
-            this.titleRotation = easing.easeInBack(this.timePassed - 2000, 0, Math.PI * 2, 1000);
+            this.titleScale = easing.easeInBack(this.timePassed - 6000, 1, -1, 1000);
+            this.titleRotation = easing.easeInBack(this.timePassed - 6000, 0, Math.PI * 2, 1000);
         } else if (this.timePassed < 8000) {
             this.titleScale = 0;
             this.titleRotation = 0;
@@ -222,7 +221,7 @@ var IntroState = function() {
         ];
         this.selectedLogo = this.logos[randomInt(this.logos.length)];
         this.insertCoinImage = new Image();
-        this.insertCoinImage.src = 'img/insert coin to continue.jpeg';
+        this.insertCoinImage.src = 'img/insert_coin.png';
         this.drawInsertCoinImage = true;
         this.text = [
             'Francesco Cagnin and Marco Gasparini',
