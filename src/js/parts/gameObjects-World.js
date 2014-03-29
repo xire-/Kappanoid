@@ -277,24 +277,18 @@ var World = function() {
                         tmpVec.set(brick.center).sub(collisionPoint);
                         var xDir = ball.direction.x * tmpVec.x > 0;
                         var yDir = ball.direction.y * tmpVec.y > 0;
-                        if (xDir && yDir) {
-                            var ang = Math.atan2(-ball.direction.x, -ball.direction.y);
-                            ang = ang + randomFloat(-0.10, 0.10);
-                            ball.direction.x = Math.cos(ang);
-                            ball.direction.y = Math.sin(ang);
-                        } else {
-                            if (xDir) {
-                                ball.direction.x *= -1;
-                            } else {
-                                ball.direction.y *= -1;
-                            }
-                        }
 
+                        if (xDir) {
+                            ball.direction.x = -ball.direction.x;
+                        }
+                        if (yDir) {
+                            ball.direction.y = -ball.direction.y;
+                        }
                     } else {
                         if (xColl) {
-                            ball.direction.x *= -1;
+                            ball.direction.x = -ball.direction.x;
                         } else if (yColl) {
-                            ball.direction.y *= -1;
+                            ball.direction.y = -ball.direction.y;
                         }
                     }
 
