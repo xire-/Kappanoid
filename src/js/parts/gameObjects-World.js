@@ -1,7 +1,10 @@
 var World = function() {
     var reset = function() {
+        // reset intro animation parameters
         animScale = 1;
         timePassed = 0;
+        brickSecsOff = [];
+
         this.render = renderIntro;
         this.update = updateIntro;
 
@@ -14,6 +17,9 @@ var World = function() {
         var blockHalfSize = new Vector2(25, 10);
         for (var i = 0; i < 10; i++) {
             for (var j = 0; j < 8; j++) {
+                // randomize falling animation offset
+                brickSecsOff.push(Math.floor(Math.random() * 300));
+
                 var blockCenter = new Vector2(
                     105 + blockHalfSize.x + i * (blockHalfSize.x * 2 + 10),
                     30 + 47 + j * (blockHalfSize.y * 2 + 10)
@@ -40,29 +46,36 @@ var World = function() {
         g.rotate(animScale * Math.PI * 2);
         g.translate(-tx, -ty);
 
-        // render borders (as background)
-        if (settings.colors) {
-            g.fillStyle = this.bordersColor;
-        } else {
-            g.fillStyle = '#fff';
-        }
-        g.fillRect(0, 0, this.containerSize.x + this.containerOffset.x * 2, this.containerSize.y + this.containerOffset.y);
+        drawEmptyWorld.call(this);
 
-        // translate to render the world area
-        g.translate(this.containerOffset.x, this.containerOffset.y);
+        g.restore();
+    };
 
-        // clip the region
-        g.beginPath();
-        g.rect(0, 0, this.containerSize.x, this.containerSize.y);
-        g.clip();
+    var brickSecsOff;
+    var renderIntroFalling = function() {
+        g.save();
 
-        // render background
-        if (settings.colors) {
-            g.fillStyle = this.backgroundColor;
-        } else {
-            g.fillStyle = '#000';
-        }
-        g.fillRect(0, 0, this.containerSize.x, this.containerSize.y);
+        drawEmptyWorld.call(this);
+
+
+        this.bricks.forEach(function(brick, i) {
+            g.save();
+
+            var offy = easing.easeOutBack(Math.min(Math.max(0, -brickSecsOff[i] + timePassed - 1000), 1000), -1, 1, 1000);
+            g.translate(0, 500 * offy);
+
+            brick.render();
+            g.restore();
+        });
+
+        g.globalAlpha = easing.easeInQuad(Math.min(Math.max(0, timePassed - 2300), 700), 0, 1, 700);
+
+        // render balls and paddle
+        this.balls.forEach(function(ball) {
+            ball.render();
+        });
+
+        this.paddle.render();
 
         g.restore();
     };
@@ -71,19 +84,22 @@ var World = function() {
         timePassed += delta;
         if (timePassed < 1000) {
             animScale = easing.easeOutBack(timePassed, 0, 1, 1000);
-        } else if (timePassed < 2000) {
+        } else if (timePassed < 2300) {
             animScale = 1;
+            this.render = renderIntroFalling;
+        } else if (timePassed < 3000) {
 
+        } else {
             this.render = renderPlaying;
             this.update = updatePlaying;
-        } else {
-            // TODO finire animazione
         }
+
+        // update paddle position (clamped)
+        this.paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, 0 + this.paddle.halfSize.x), 800 - this.paddle.halfSize.x);
+
     };
 
-    var renderPlaying = function() {
-        g.save();
-
+    var drawEmptyWorld = function() {
         // render borders (as background)
         if (settings.colors) {
             g.fillStyle = this.bordersColor;
@@ -107,17 +123,23 @@ var World = function() {
             g.fillStyle = '#000';
         }
         g.fillRect(0, 0, this.containerSize.x, this.containerSize.y);
+    };
+
+    var renderPlaying = function() {
+        g.save();
+
+        drawEmptyWorld.call(this);
 
         // render balls, bricks and paddle
         this.balls.forEach(function(ball) {
-            ball.render(g);
+            ball.render();
         });
 
         this.bricks.forEach(function(brick) {
-            brick.render(g);
+            brick.render();
         });
 
-        this.paddle.render(g);
+        this.paddle.render();
         g.restore();
     };
 
