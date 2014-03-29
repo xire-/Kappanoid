@@ -162,6 +162,19 @@ var kappanoid = (function() {
     var clamp = function(min, val, max) {
         return Math.min(Math.max(val, min), max);
     };
+
+    /*
+     * return a random number in the interval [min, max)
+     * or [0, max) if only one value is given
+     */
+    var randomFloat = function(min, max) {
+        if (max === undefined) {
+            max = min;
+            min = 0;
+        }
+        return min + Math.random() * max;
+    }
+
     /*
      * return a random integer in the interval [min, max)
      * or [0, max) if only one value is given
