@@ -7,6 +7,9 @@
 ///////////////// Paddle
 // __import__ gameObjects-Paddle.js
 
+///////////////// Particle
+// __import__ gameObjects-Particle.js
+
 ///////////////// World
 // __import__ gameObjects-World.js
 
@@ -15,4 +18,5 @@ function testGameObjects() {
     testBall();
     testBrick();
     testPaddle();
+    testParticle();
 }

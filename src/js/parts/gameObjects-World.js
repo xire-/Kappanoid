@@ -31,6 +31,8 @@ var World = function() {
 
         var paddleHalfSize = new Vector2(50, 15);
         this.paddle = new Paddle(new Vector2(800 / 2, 600 + paddleHalfSize.y * 2 / 2 - 50), paddleHalfSize, 1, settings.paddleDefaultColor);
+
+        this.particles = [];
     };
 
     var animScale = 1;
@@ -140,6 +142,12 @@ var World = function() {
         });
 
         this.paddle.render();
+
+        // render particles
+        this.particles.forEach(function(particle) {
+            particle.render(g);
+        });
+
         g.restore();
     };
 
@@ -165,6 +173,20 @@ var World = function() {
         handleBallBordersCollisions.call(this);
         handleBallPaddleCollisions.call(this);
         handleBallBrickCollisions.call(this);
+
+        // update particles
+        var deadParticles = [];
+        this.particles.forEach(function(particle, i) {
+            particle.update(delta);
+            if (particle.life <= 0) {
+                deadParticles.push(i);
+            }
+        }, this);
+
+        for (var i = deadParticles.length - 1; i >= 0; i--) {
+            var index = deadParticles[i];
+            this.particles.splice(index, 1);
+        }
     };
 
     var handleBallBordersCollisions = function() {
@@ -202,6 +224,14 @@ var World = function() {
                         var angle = (collisionPoint.x - this.paddle.center.x) / this.paddle.halfSize.x;
                         ball.direction.x = Math.sin(angle);
                         ball.direction.y = -Math.cos(angle);
+
+                        // PARTICLES!!!!1111
+                        for (var p = 0; p < 12; p++) {
+                            var particleAngle = 2 * Math.PI * (p / 12);
+                            this.particles.push(new Particle(new Vector2(collisionPoint.x, collisionPoint.y), new Vector2(10 * Math.cos(particleAngle), 10 * Math.sin(particleAngle)), new Vector2(0, 0)));
+                            this.particles.push(new Particle(new Vector2(collisionPoint.x, collisionPoint.y), new Vector2(15 * Math.cos(particleAngle), 15 * Math.sin(particleAngle)), new Vector2(0, 0)));
+                            this.particles.push(new Particle(new Vector2(collisionPoint.x, collisionPoint.y), new Vector2(20 * Math.cos(particleAngle), 20 * Math.sin(particleAngle)), new Vector2(0, 0)));
+                        }
                     }
                 }
 
