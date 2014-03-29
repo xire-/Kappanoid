@@ -52,6 +52,9 @@ var kappanoid = (function() {
 
         ballFaceDirection: true,
 
+        // particles
+        particles: true,
+
         // colors
         colors: false,
         backgroundDefaultColor: '#F8F2B3',
@@ -172,8 +175,8 @@ var kappanoid = (function() {
             max = min;
             min = 0;
         }
-        return min + Math.random() * max;
-    }
+        return Math.random() * (max - min) + min;
+    };
 
     /*
      * return a random integer in the interval [min, max)
@@ -184,7 +187,7 @@ var kappanoid = (function() {
             max = min;
             min = 0;
         }
-        return Math.floor(min + Math.random() * max);
+        return Math.floor(Math.random() * (max - min + 1)) + min;
     };
 
 

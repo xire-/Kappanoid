@@ -2,8 +2,9 @@ var Particle = function() {
     var render = function() {
         g.save();
 
+        g.globalAlpha = this.life / this.initialLife;
         g.fillStyle = '#fff';
-        g.fillRect(this.position.x, this.position.y, 1, 1);
+        g.fillRect(this.position.x - 2, this.position.y - 2, 4, 4);
 
         g.restore();
     };
@@ -19,12 +20,13 @@ var Particle = function() {
     };
 
 
-    var constructor = function Particle(position, velocity, acceleration) {
+    var constructor = function Particle(position, velocity, acceleration, color, life) {
         this.position = position;
         this.velocity = velocity;
         this.acceleration = acceleration;
-        // TODO this.color = color;
-        this.life = 2000; // milliseconds
+        this.color = color;
+        this.life = life;
+        this.initialLife = life;
         this.tmpVector2 = new Vector2(0, 0);
 
         this.render = render;
@@ -62,6 +64,14 @@ var Particle = function() {
         },
         get color() {
             return this._color;
+        },
+
+        set life(value) {
+            console.assert(value !== undefined && typeof value == 'number', JSON.stringify(value));
+            this._life = value;
+        },
+        get life() {
+            return this._life;
         },
     };
 

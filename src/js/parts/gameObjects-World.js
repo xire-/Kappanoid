@@ -232,12 +232,15 @@ var World = function() {
                         ball.direction.x = Math.sin(angle);
                         ball.direction.y = -Math.cos(angle);
 
-                        // PARTICLES!!!!1111
-                        for (var p = 0; p < 12; p++) {
-                            var particleAngle = 2 * Math.PI * (p / 12);
-                            this.particles.push(new Particle(new Vector2(collisionPoint.x, collisionPoint.y), new Vector2(10 * Math.cos(particleAngle), 10 * Math.sin(particleAngle)), new Vector2(0, 0)));
-                            this.particles.push(new Particle(new Vector2(collisionPoint.x, collisionPoint.y), new Vector2(15 * Math.cos(particleAngle), 15 * Math.sin(particleAngle)), new Vector2(0, 0)));
-                            this.particles.push(new Particle(new Vector2(collisionPoint.x, collisionPoint.y), new Vector2(20 * Math.cos(particleAngle), 20 * Math.sin(particleAngle)), new Vector2(0, 0)));
+                        if (settings.particles) {
+                            for (var p = 0; p < 4; p++) {
+                                var particleAngle = (p % 2 === 0) ? randomFloat(Math.PI / 4, Math.PI / 2) : randomFloat(Math.PI / 2, Math.PI * 3 / 4);
+                                var particleSpeedX = -randomInt(60, 110);
+                                var particleSpeedY = -randomInt(80, 110);
+                                var particleGravity = 110;
+                                var particleLife = 3000;
+                                this.particles.push(new Particle(new Vector2(collisionPoint.x, collisionPoint.y), new Vector2(particleSpeedX * Math.cos(particleAngle), particleSpeedY * Math.sin(particleAngle)), new Vector2(0, particleGravity), '#fff', particleLife));
+                            }
                         }
                     }
                 }
@@ -273,6 +276,17 @@ var World = function() {
                         ball.direction.y *= -1;
                     }
                     hitBricks.push(index);
+
+                    if (settings.particles) {
+                        for (var p = 0; p < 4; p++) {
+                            var particleAngle = (p % 2 === 0) ? randomFloat(Math.PI / 4, Math.PI / 2) : randomFloat(Math.PI / 2, Math.PI * 3 / 4);
+                            var particleSpeedX = -randomInt(60, 110);
+                            var particleSpeedY = -randomInt(80, 110);
+                            var particleGravity = 110;
+                            var particleLife = 3000;
+                            this.particles.push(new Particle(new Vector2(collisionPoint.x, collisionPoint.y), new Vector2(particleSpeedX * Math.cos(particleAngle), particleSpeedY * Math.sin(particleAngle)), new Vector2(0, particleGravity), '#fff', particleLife));
+                        }
+                    }
                 }
             }, this);
 
