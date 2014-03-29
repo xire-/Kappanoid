@@ -1,5 +1,10 @@
 var World = function() {
     var reset = function() {
+        animScale = 1;
+        timePassed = 0;
+        this.render = renderIntro;
+        this.update = updateIntro;
+
         this.balls = [];
         this.balls.push(new Ball(new Vector2(400, 500), 7, 300, new Vector2(1, -1), settings.ballDefaultColor));
         this.balls.push(new Ball(new Vector2(90, 57 - 20), 7, 300, new Vector2(1, 2), settings.ballDefaultColor));
@@ -66,8 +71,13 @@ var World = function() {
         timePassed += delta;
         if (timePassed < 1000) {
             animScale = easing.easeOutBack(timePassed, 0, 1, 1000);
-        } else {
+        } else if (timePassed < 2000) {
+            animScale = 1;
 
+            this.render = renderPlaying;
+            this.update = updatePlaying;
+        } else {
+            // TODO finire animazione
         }
     };
 
