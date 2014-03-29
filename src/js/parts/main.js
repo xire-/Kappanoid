@@ -168,10 +168,6 @@ var kappanoid = (function() {
         );
     };
 
-    var toString = function() {
-        return JSON.stringify(settings);
-    };
-
 
     /////////////////////////////////// Game States
     // __import__ gameStates.js
