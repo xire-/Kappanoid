@@ -7,8 +7,12 @@
 ///////////////// CollisionDetection
 // __import__ physics-CollisionDetection.js
 
+///////////////// PruningGrid
+// __import__ physics-PruningGrid.js
+
 
 function testPhysics() {
     testVector2();
     testCollisionDetection();
+    testPruningGrid();
 }

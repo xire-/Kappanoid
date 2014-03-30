@@ -11,6 +11,7 @@ var World = function() {
         this.balls = [];
         this.balls.push(new Ball(new Vector2(400, 600 - 50 - 7), 7, 0, new Vector2(0, -1), settings.ballDefaultColor));
 
+        this.pruningGrid = new PruningGrid(new Vector2(20, 15), new Vector2(0, 0), new Vector2(800, 600), 7);
         this.bricks = [];
         var blockHalfSize = new Vector2(25, 10);
         for (var i = 0; i < 10; i++) {
@@ -23,7 +24,10 @@ var World = function() {
                     30 + 47 + j * (blockHalfSize.y * 2 + 10)
                 );
                 var life = randomInt(1, 5);
-                this.bricks.push(new Brick(blockCenter, blockHalfSize, life, settings.brickDefaultColor));
+
+                var newBrick = new Brick(blockCenter, blockHalfSize, life, settings.brickDefaultColor);
+                this.bricks.push(newBrick);
+                this.pruningGrid.addAABB(newBrick);
             }
         }
 
@@ -296,12 +300,13 @@ var World = function() {
 
     var handleBallBrickCollisions = function() {
         this.balls.forEach(function(ball) {
-            // TODO get closer bricks from pruning structure
-            var closerBricks = this.bricks;
+            // get closer bricks from pruning structure
+            var closerBricks = this.pruningGrid.getNearby(ball.center);
             var hitBricks = [];
             var tmpVec = new Vector2(0, 0);
 
-            closerBricks.forEach(function(brick, index) {
+            closerBricks.forEach(function(brick) {
+                brick.color = '#f00';
                 var collisionPoint = collisionDetection.testSphereAABB(ball, brick);
                 if (collisionPoint !== null) {
                     var xColl = collisionPoint.x == brick.center.x - brick.halfSize.x || collisionPoint.x == brick.center.x + brick.halfSize.x;
@@ -342,19 +347,23 @@ var World = function() {
                         }
                     }
 
-                    hitBricks.push(index);
+                    hitBricks.push(brick);
                 }
             }, this);
 
             for (var i = hitBricks.length - 1; i >= 0; i--) {
-                var index = hitBricks[i];
-                var brick = this.bricks[index];
-                brick.hit();
-                if (brick.life <= 0) {
-                    this.bricks.splice(index, 1);
+                var hitbrick = hitBricks[i];
+                for (var j = this.bricks.length - 1; j >= 0; j--) {
+                    if (this.bricks[j] === hitbrick) {
+                        hitbrick.hit();
+                        if (hitbrick.life <= 0) {
+                            this.bricks.splice(j, 1);
+                            this.pruningGrid.removeAABB(hitbrick);
 
-                    if (settings.particles) {
-                        Particle.spawn(this.particles, brick.center, 0, 2 * Math.PI, 30, Particle.shapes.MEDIUM_RECTANGLE, brick.color);
+                            if (settings.particles) {
+                                Particle.spawn(this.particles, hitbrick.center, 0, 2 * Math.PI, 30, Particle.shapes.MEDIUM_RECTANGLE, hitbrick.color);
+                            }
+                        }
                     }
                 }
             }
