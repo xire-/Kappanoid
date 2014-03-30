@@ -273,11 +273,7 @@ var IntroState = function() {
             '© 2014'
         ];
 
-        this.titlePosX = settings.worldBorderThickness + 400;
-        this.titlePosY = defaultHeight / 2;
         this.timePassed = 0;
-        this.titleScale = 1;
-        this.titleRotation = 0;
 
         this.render = renderIntroIdle;
         this.update = updateIdle;
