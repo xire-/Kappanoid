@@ -3,7 +3,7 @@ var Paddle = function() {
     var render = function() {
         // even if it may seem this belong to the update method, it must stay here
         // since it is dependant on the frame rate
-        var speedScale = clamp(0.5, 1 - (Math.abs(mousePos.x - oldPosX) - 8) / 50, 1);
+        var speedScale = clamp(0.5, 1 - (Math.abs(mousePos.x - oldPosX) - 20) / 60, 1);
         oldPosX = mousePos.x;
 
         g.save();
