@@ -20,13 +20,13 @@ var Particle = function() {
     };
 
 
-    var constructor = function Particle(position, velocity, acceleration, color, life) {
+    var constructor = function Particle(position, velocity, acceleration, life, color) {
         this.position = position;
         this.velocity = velocity;
         this.acceleration = acceleration;
-        this.color = color;
         this.life = life;
         this.initialLife = life;
+        this.color = color;
         this.tmpVector2 = new Vector2(0, 0);
 
         this.render = render;
@@ -84,6 +84,6 @@ function testParticle() {
     var acceleration1 = new Vector2(3, 4);
     var life1 = 4000;
     var color1 = '#abc';
-    var particle1 = new Particle(position1, velocity1, acceleration1, color1, life1);
+    var particle1 = new Particle(position1, velocity1, acceleration1, life1, color1);
     console.assert(JSON.stringify(particle1.position) === JSON.stringify(position1) && JSON.stringify(particle1.velocity) === JSON.stringify(velocity1) && JSON.stringify(particle1.acceleration) === JSON.stringify(acceleration1) && particle1.life === life1 && particle1.color === color1, JSON.stringify(particle1));
 }

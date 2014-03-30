@@ -272,7 +272,7 @@ var World = function() {
                                 var particleSpeedY = -randomInt(80, 110);
                                 var particleGravity = 110;
                                 var particleLife = 3000;
-                                this.particles.push(new Particle(new Vector2(collisionPoint.x, collisionPoint.y), new Vector2(particleSpeedX * Math.cos(particleAngle), particleSpeedY * Math.sin(particleAngle)), new Vector2(0, particleGravity), '#fff', particleLife));
+                                this.particles.push(new Particle(new Vector2(collisionPoint.x, collisionPoint.y), new Vector2(particleSpeedX * Math.cos(particleAngle), particleSpeedY * Math.sin(particleAngle)), new Vector2(0, particleGravity), particleLife, '#fff'));
                             }
                         }
                     }
@@ -334,7 +334,7 @@ var World = function() {
                             var particleSpeedY = -randomInt(80, 110);
                             var particleGravity = 110;
                             var particleLife = 3000;
-                            this.particles.push(new Particle(new Vector2(collisionPoint.x, collisionPoint.y), new Vector2(particleSpeedX * Math.cos(particleAngle), particleSpeedY * Math.sin(particleAngle)), new Vector2(0, particleGravity), '#fff', particleLife));
+                            this.particles.push(new Particle(new Vector2(collisionPoint.x, collisionPoint.y), new Vector2(particleSpeedX * Math.cos(particleAngle), particleSpeedY * Math.sin(particleAngle)), new Vector2(0, particleGravity), particleLife, '#fff'));
                         }
                     }
                 }
