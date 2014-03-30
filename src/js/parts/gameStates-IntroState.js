@@ -17,8 +17,8 @@ var IntroState = function() {
 
         var lineHeightLogo = 15;
         var lineHeightText = 20;
-        var logoImageDistance = 80;
-        var imageTextDistance = 80;
+        var logoImageDistance = 40;
+        var imageTextDistance = 220;
 
         // calculate starting position
         var y = -((lineHeightLogo * this.selectedLogo.length + this.insertCoinImage.height + lineHeightText * this.text.length) + logoImageDistance + imageTextDistance) / 2;
