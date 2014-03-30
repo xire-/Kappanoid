@@ -352,6 +352,10 @@ var World = function() {
                 brick.hit();
                 if (brick.life <= 0) {
                     this.bricks.splice(index, 1);
+
+                    if (settings.particles) {
+                        Particle.spawn(this.particles, brick.center, 0, 2 * Math.PI, 30, brick.color);
+                    }
                 }
             }
         }, this);
