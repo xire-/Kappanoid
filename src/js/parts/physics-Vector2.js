@@ -108,17 +108,19 @@ var Vector2 = function() {
 }();
 
 function testVector2() {
-    var vec1 = new Vector2(0, 0);
-    console.assert(vec1.x === 0 && vec1.y === 0, vec1.x, vec1.y);
+    var vector1 = new Vector2(0, 0);
+    console.assert(vector1.x === 0 && vector1.y === 0, JSON.stringify(vector1));
 
-    vec1 = new Vector2(3, 4);
-    console.assert(vec1.x === 3 && vec1.y === 4, vec1.x, vec1.y);
-    console.assert(vec1.length() === 5, vec1.length());
-    console.assert(vec1.squaredLength() === 25, vec1.squaredLength());
-    console.assert(vec1.normalize().length() === 1, vec1.length());
+    vector1 = new Vector2(3, 4);
+    console.assert(vector1.x === 3 && vector1.y === 4, JSON.stringify(vector1));
+    console.assert(vector1.length() === 5, JSON.stringify(vector1));
+    console.assert(vector1.squaredLength() === 25, JSON.stringify(vector1));
+    console.assert(vector1.normalize().length() === 1, JSON.stringify(vector1));
 
-    var vec2 = new Vector2(3, 4);
-    vec1 = new Vector2(3, 4);
-    console.assert(vec1.distance(vec2) === 0, vec1.x, vec1.y);
-    console.assert(vec1.squaredDistance(vec2) === 0, vec1.squaredDistance(vec2));
+    vector1 = new Vector2(3, 4);
+    var vector2 = new Vector2(3, 4);
+    console.assert(vector1.distance(vector2) === 0, JSON.stringify(vector1), JSON.stringify(vector2));
+    console.assert(vector1.squaredDistance(vector2) === 0, JSON.stringify(vector1), JSON.stringify(vector2));
+
+    console.log('testVector2 OK');
 }

@@ -78,9 +78,10 @@ var Brick = function() {
 function testBrick() {
     var center1 = new Vector2(3, 4);
     var halfSize1 = new Vector2(100, 300);
-    var brick1 = new Brick(center1, halfSize1, 4, '#fff');
-    console.assert(JSON.stringify(brick1.center) === JSON.stringify(center1) && JSON.stringify(brick1.halfSize) === JSON.stringify(halfSize1) && brick1.life === 4 && brick1.color === '#fff', JSON.stringify(brick1));
+    var life1 = 5;
+    var color1 = '#abc';
+    var brick1 = new Brick(center1, halfSize1, life1, color1);
+    console.assert(JSON.stringify(brick1.center) === JSON.stringify(center1) && JSON.stringify(brick1.halfSize) === JSON.stringify(halfSize1) && brick1.life === life1 && brick1.color === color1, JSON.stringify(brick1));
 
-    var brick2 = brick1.clone();
-    console.assert(JSON.stringify(brick1) === JSON.stringify(brick2));
+    console.log('testBrick OK');
 }

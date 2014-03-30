@@ -86,4 +86,6 @@ function testParticle() {
     var color1 = '#abc';
     var particle1 = new Particle(position1, velocity1, acceleration1, life1, color1);
     console.assert(JSON.stringify(particle1.position) === JSON.stringify(position1) && JSON.stringify(particle1.velocity) === JSON.stringify(velocity1) && JSON.stringify(particle1.acceleration) === JSON.stringify(acceleration1) && particle1.life === life1 && particle1.color === color1, JSON.stringify(particle1));
+
+    console.log('testParticle OK');
 }

@@ -69,33 +69,39 @@ function testCollisionDetection() {
     var c = new Vector2(3, 1);
     var d = new Vector2(3, 3);
     var r = collisionDetection.test2DSegmentSegment(a, b, c, d);
-    console.assert(r.t === 0.5 && JSON.stringify(r.p) === JSON.stringify(new Vector2(3, 2)));
+    var t = 0.5;
+    var p = new Vector2(3, 2);
+    console.assert(r.t === t && JSON.stringify(r.p) === JSON.stringify(p), JSON.stringify(r), JSON.stringify(p));
 
     a = new Vector2(2, 2);
     b = new Vector2(4, 2);
     c = new Vector2(3, 3);
     d = new Vector2(3, 3);
     r = collisionDetection.test2DSegmentSegment(a, b, c, d);
-    console.assert(r === null);
+    console.assert(r === null, JSON.stringify(r));
 
     a = new Vector2(0, 0);
     b = new Vector2(0, 1);
     c = new Vector2(0, 1);
     d = new Vector2(1, 1);
     r = collisionDetection.test2DSegmentSegment(a, b, c, d);
-    console.assert(r === null);
+    console.assert(r === null, JSON.stringify(r));
 
     a = new Vector2(0, 0);
     b = new Vector2(0, 1);
     c = new Vector2(0, 1);
     d = new Vector2(0, 0.75);
     r = collisionDetection.test2DSegmentSegment(a, b, c, d);
-    console.assert(r === null);
+    console.assert(r === null, JSON.stringify(r));
 
     a = new Vector2(0, 0);
     b = new Vector2(0, 1);
     c = new Vector2(-1, 0.75);
     d = new Vector2(1, 0.75);
     r = collisionDetection.test2DSegmentSegment(a, b, c, d);
-    console.assert(r.t === 0.75 && JSON.stringify(r.p) === JSON.stringify(new Vector2(0, 0.75)));
+    t = 0.75;
+    p = new Vector2(0, 0.75);
+    console.assert(r.t === t && JSON.stringify(r.p) === JSON.stringify(p), JSON.stringify(r), JSON.stringify(p));
+
+    console.log('testCollisionDetection OK');
 }

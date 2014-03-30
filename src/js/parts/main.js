@@ -66,6 +66,11 @@ var kappanoid = (function() {
 
 
     var init = function(width, height) {
+        if (typeof testPhysics !== 'undefined' && typeof testGameObjects !== 'undefined') {
+            testPhysics();
+            testGameObjects();
+        }
+
         // TODO bind keys to actions
         // TODO generate settings interface
         states = {

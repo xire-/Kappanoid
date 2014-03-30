@@ -84,9 +84,9 @@ function testBall() {
     var velocity1 = new Vector2(20, 20);
     var speed1 = velocity1.length();
     var direction1 = velocity1.clone().normalize();
-    var ball1 = new Ball(center1, radius1, speed1, direction1, '#fff');
-    console.assert(JSON.stringify(ball1.center) === JSON.stringify(center1) && ball1.radius === radius1 && ball1.color === '#fff', JSON.stringify(ball1));
+    var color1 = '#abc';
+    var ball1 = new Ball(center1, radius1, speed1, direction1, color1);
+    console.assert(JSON.stringify(ball1.center) === JSON.stringify(center1) && ball1.radius === radius1 && ball1.speed === speed1 && JSON.stringify(ball1.direction) === JSON.stringify(direction1) && ball1.color === color1, JSON.stringify(ball1));
 
-    var ball2 = ball1.clone();
-    console.assert(JSON.stringify(ball1) === JSON.stringify(ball2));
+    console.log('testBall OK');
 }

@@ -1,5 +1,4 @@
 var Paddle = function() {
-
     var oldPosX = 200;
     var render = function() {
         // even if it may seem this belong to the update method, it must stay here
@@ -78,9 +77,10 @@ var Paddle = function() {
 function testPaddle() {
     var center1 = new Vector2(3, 4);
     var halfSize1 = new Vector2(100, 300);
-    var paddle1 = new Brick(center1, halfSize1, 4, '#fff');
-    console.assert(JSON.stringify(paddle1.center) === JSON.stringify(center1) && JSON.stringify(paddle1.halfSize) === JSON.stringify(halfSize1) && paddle1.life === 4 && paddle1.color === '#fff', JSON.stringify(paddle1));
+    var life1 = 5;
+    var color1 = '#abc';
+    var paddle1 = new Paddle(center1, halfSize1, life1, color1);
+    console.assert(JSON.stringify(paddle1.center) === JSON.stringify(center1) && JSON.stringify(paddle1.halfSize) === JSON.stringify(halfSize1) && paddle1.life === life1 && paddle1.color === color1, JSON.stringify(paddle1));
 
-    var paddle2 = paddle1.clone();
-    console.assert(JSON.stringify(paddle1) === JSON.stringify(paddle2));
+    console.log('testPaddle OK');
 }
