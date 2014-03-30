@@ -50,6 +50,7 @@ var kappanoid = (function() {
 
         timeScale: 1,
 
+        paddleSpeedDistortion: true,
         ballFaceDirection: true,
 
         // particles
