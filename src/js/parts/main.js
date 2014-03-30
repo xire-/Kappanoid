@@ -17,7 +17,7 @@ var kappanoid = (function() {
     var g;
 
     // timestamp of last game loop iteration (used to calculate delta time)
-    var lastTime;
+    var lastTime = 0;
     // frames since last FPS update
     var count = 0;
     // sum of all FPS since last update
@@ -87,8 +87,7 @@ var kappanoid = (function() {
 
         gameInfo = new GameInfo(new Vector2(800 + settings.worldBorderThickness * 2, 0), new Vector2(300, 600 + settings.worldBorderThickness));
 
-        lastTime = Date.now();
-        mainLoop();
+        mainLoop(0);
     };
 
     var initCanvas = function(width, height) {
@@ -135,10 +134,15 @@ var kappanoid = (function() {
         };
     };
 
-    var mainLoop = function( /*timestamp*/ ) {
-        var currentTime = Date.now();
-        var elapsed = currentTime - lastTime;
-        lastTime = currentTime;
+    var mainLoop = function(timestamp) {
+        var elapsed = timestamp - lastTime;
+        lastTime = timestamp;
+        loopTime = Date.now();
+
+        // prevent super long delta when changing tabs
+        if (elapsed > 34) {
+            elapsed = 34;
+        }
 
         // calculate fps
         totalFps += 1000 / elapsed;
@@ -162,7 +166,7 @@ var kappanoid = (function() {
         // render game info
         gameInfo.render(elapsed);
 
-        loopTime = Date.now() - lastTime;
+        loopTime = Date.now() - loopTime;
 
         window.requestAnimationFrame(mainLoop);
     };
