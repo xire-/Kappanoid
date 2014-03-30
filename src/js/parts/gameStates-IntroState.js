@@ -1,14 +1,71 @@
 var IntroState = function() {
-    var render = function( /*delta*/ ) {
+
+    var renderIntroIdle = function( /*delta*/ ) {
         g.save();
 
         // clear the previous frame
         g.fillStyle = '#000';
         g.fillRect(0, 0, defaultWidth, defaultHeight);
 
-        g.translate(currState.titlePosX, currState.titlePosY);
-        g.scale(currState.titleScale, currState.titleScale);
-        g.rotate(currState.titleRotation);
+        var titlePosX = settings.worldBorderThickness + 400;
+        var titlePosY = easing.easeOutBounce(clamp(0, this.timePassed, 1000), 0, defaultHeight / 2, 1000);
+
+        g.translate(titlePosX, titlePosY);
+
+        g.fillStyle = '#fff';
+        g.textAlign = 'center';
+        g.textBaseline = 'middle';
+        g.font = '15px monospace';
+
+        var lineHeightLogo = 15;
+        var lineHeightText = 20;
+        var logoImageDistance = 40;
+        var imageTextDistance = 220;
+
+        // calculate starting position
+        var y = -((lineHeightLogo * this.selectedLogo.length + this.insertCoinImage.height + lineHeightText * this.text.length) + logoImageDistance + imageTextDistance) / 2;
+
+        // draw previously randomly selected logo
+        for (var i = 0; i < this.selectedLogo.length; i++) {
+            g.fillText(this.selectedLogo[i], 0, y);
+            y += lineHeightLogo;
+        }
+
+        // draw insert coin image
+        y += logoImageDistance;
+        if (Math.max(0, this.timePassed - 2000) % 2000 < 1500) {
+            g.drawImage(this.insertCoinImage, -this.insertCoinImage.width / 2, y);
+        }
+        y += this.insertCoinImage.height;
+
+        // draw text
+        y += imageTextDistance;
+        g.fillStyle = getColorString({
+            h: (this.timePassed / 3),
+            s: 100,
+            l: 50
+        })
+        for (var j = 0; j < this.text.length; j++) {
+            g.fillText(this.text[j], 0, y);
+            y += lineHeightText;
+        }
+
+        g.restore();
+    };
+
+    var renderOutro = function( /*delta*/ ) {
+        g.save();
+
+        // clear the previous frame
+        g.fillStyle = '#000';
+        g.fillRect(0, 0, defaultWidth, defaultHeight);
+
+        var titleScale = easing.easeInBack(clamp(0, this.timePassed, 1000), 1, -1, 1000);
+        var titleRotation = easing.easeInBack(clamp(0, this.timePassed, 1000), 0, Math.PI * 2, 1000);
+
+        g.translate(settings.worldBorderThickness + 400, defaultHeight / 2);
+        g.scale(titleScale, titleScale);
+        g.rotate(titleRotation);
 
         g.fillStyle = '#fff';
         g.textAlign = 'center';
@@ -46,30 +103,13 @@ var IntroState = function() {
         g.restore();
     };
 
-    var update = function(delta) {
+    var updateIdle = function(delta) {
         this.timePassed += delta;
-        if (this.timePassed < 1000) {
-            this.titlePosX = settings.worldBorderThickness + 400;
-            this.titlePosY = easing.easeOutBounce(this.timePassed, 0, defaultHeight / 2, 1000);
-        } else if (this.timePassed < 2000) {
-            this.titlePosX = settings.worldBorderThickness + 400;
-            this.titlePosY = defaultHeight / 2;
-        } else if (this.timePassed < 2500) {
-            this.drawInsertCoinImage = false;
-        } else if (this.timePassed < 4000) {
-            this.drawInsertCoinImage = true;
-        } else if (this.timePassed < 4500) {
-            this.drawInsertCoinImage = false;
-        } else if (this.timePassed < 6000) {
-            this.drawInsertCoinImage = true;
-        } else if (this.timePassed < 7000) {
-            this.drawInsertCoinImage = false;
-            this.titleScale = easing.easeInBack(this.timePassed - 6000, 1, -1, 1000);
-            this.titleRotation = easing.easeInBack(this.timePassed - 6000, 0, Math.PI * 2, 1000);
-        } else if (this.timePassed < 8000) {
-            this.titleScale = 0;
-            this.titleRotation = 0;
-        } else {
+    };
+
+    var updateOutro = function(delta) {
+        this.timePassed += delta;
+        if (this.timePassed > 1000) {
             currState = states.playing;
         }
     };
@@ -77,7 +117,11 @@ var IntroState = function() {
     var keyPress = function(e) {
         switch (e.keyCode) {
             case 32: // SPACE
-                this.timePassed = 8000;
+                if (this.update === updateIdle) {
+                    this.update = updateOutro;
+                    this.render = renderOutro;
+                    this.timePassed = 0;
+                }
                 // prevent space from scrolling the page
                 return false;
             default:
@@ -235,8 +279,8 @@ var IntroState = function() {
         this.titleScale = 1;
         this.titleRotation = 0;
 
-        this.render = render;
-        this.update = update;
+        this.render = renderIntroIdle;
+        this.update = updateIdle;
         this.keyPress = keyPress;
     };
 
