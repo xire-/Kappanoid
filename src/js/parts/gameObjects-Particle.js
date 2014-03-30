@@ -1,12 +1,13 @@
 var Particle = function() {
-    var spawn = function(container, collisionPoint, count) {
+    var spawn = function(container, position, baseAngle, spreadAngle, count) {
         for (var i = 0; i < count; i++) {
-            var particleAngle = (i % 2 === 0) ? randomFloat(Math.PI / 4, Math.PI / 2) : randomFloat(Math.PI / 2, Math.PI * 3 / 4);
-            var particleSpeedX = -randomInt(60, 110);
-            var particleSpeedY = -randomInt(80, 110);
+            var angle = randomFloat(baseAngle - spreadAngle / 2, baseAngle + spreadAngle / 2);
+            var particleSpeedX = randomInt(60, 110) * -Math.cos(angle);
+            var particleSpeedY = randomInt(80, 110) * -Math.sin(angle);
             var particleGravity = 110;
             var particleLife = 3000;
-            container.push(new Particle(new Vector2(collisionPoint.x, collisionPoint.y), new Vector2(particleSpeedX * Math.cos(particleAngle), particleSpeedY * Math.sin(particleAngle)), new Vector2(0, particleGravity), particleLife, '#fff'));
+            var particle = new Particle(new Vector2(position.x, position.y), new Vector2(particleSpeedX, particleSpeedY), new Vector2(0, particleGravity), particleLife, '#fff');
+            container.push(particle);
         }
     };
 
