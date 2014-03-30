@@ -1,5 +1,18 @@
 var Particle = function() {
-    var spawn = function(container, position, baseAngle, spreadAngle, count, color) {
+    var shapes = {
+        SMALL_RECTANGLE: {
+            render: function() {
+                g.fillRect(this.position.x - 2, this.position.y - 2, 4, 4);
+            }
+        },
+        MEDIUM_RECTANGLE: {
+            render: function() {
+                g.fillRect(this.position.x - 4, this.position.y - 4, 8, 8);
+            }
+        },
+    };
+
+    var spawn = function(container, position, baseAngle, spreadAngle, count, shape, color) {
         for (var i = 0; i < count; i++) {
             var angle = randomFloat(baseAngle - spreadAngle / 2, baseAngle + spreadAngle / 2);
             var particleSpeedX = randomInt(60, 110) * -Math.cos(angle);
@@ -7,7 +20,7 @@ var Particle = function() {
             var particleGravity = 110;
             var particleLife = 3000;
             var particleColor = (i % 2 === 0) ? shadeColor(color, 5 * i) : shadeColor(color, -5 * i);
-            var particle = new Particle(new Vector2(position.x, position.y), new Vector2(particleSpeedX, particleSpeedY), new Vector2(0, particleGravity), particleLife, particleColor);
+            var particle = new Particle(new Vector2(position.x, position.y), new Vector2(particleSpeedX, particleSpeedY), new Vector2(0, particleGravity), particleLife, shape, particleColor);
             container.push(particle);
         }
     };
@@ -23,7 +36,7 @@ var Particle = function() {
             g.fillStyle = '#fff';
         }
 
-        g.fillRect(this.position.x - 2, this.position.y - 2, 4, 4);
+        this.shape.render.call(this);
 
         g.restore();
     };
@@ -39,11 +52,12 @@ var Particle = function() {
     };
 
 
-    var constructor = function Particle(position, velocity, acceleration, life, color) {
+    var constructor = function Particle(position, velocity, acceleration, life, shape, color) {
         this.position = position;
         this.velocity = velocity;
         this.acceleration = acceleration;
         this.life = life;
+        this.shape = shape;
         this.initialLife = life;
         this.color = color;
         this.tmpVector2 = new Vector2(0, 0);
@@ -94,6 +108,7 @@ var Particle = function() {
         },
     };
 
+    constructor.shapes = shapes;
     constructor.spawn = spawn;
     return constructor;
 }();
@@ -103,9 +118,10 @@ function testParticle() {
     var velocity1 = new Vector2(7, 6);
     var acceleration1 = new Vector2(3, 4);
     var life1 = 4000;
+    var shape1 = Particle.shapes.SMALL_RECTANGLE;
     var color1 = '#abc';
-    var particle1 = new Particle(position1, velocity1, acceleration1, life1, color1);
-    console.assert(JSON.stringify(particle1.position) === JSON.stringify(position1) && JSON.stringify(particle1.velocity) === JSON.stringify(velocity1) && JSON.stringify(particle1.acceleration) === JSON.stringify(acceleration1) && particle1.life === life1 && particle1.color === color1, JSON.stringify(particle1));
+    var particle1 = new Particle(position1, velocity1, acceleration1, life1, shape1, color1);
+    console.assert(JSON.stringify(particle1.position) === JSON.stringify(position1) && JSON.stringify(particle1.velocity) === JSON.stringify(velocity1) && JSON.stringify(particle1.acceleration) === JSON.stringify(acceleration1) && particle1.life === life1 && JSON.stringify(particle1.shape) === JSON.stringify(shape1) && particle1.color === color1, JSON.stringify(particle1));
 
     console.log('testParticle OK');
 }

@@ -237,7 +237,7 @@ var World = function() {
                 ball.direction.x *= -1;
 
                 if (settings.particles) {
-                    Particle.spawn(this.particles, new Vector2(0, ball.center.y), -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, this.bordersColor);
+                    Particle.spawn(this.particles, new Vector2(0, ball.center.y), -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, Particle.shapes.SMALL_RECTANGLE, this.bordersColor);
                 }
             }
             if (ball.center.y - ball.radius < 0) {
@@ -245,7 +245,7 @@ var World = function() {
                 ball.direction.y *= -1;
 
                 if (settings.particles) {
-                    Particle.spawn(this.particles, new Vector2(ball.center.x, 0), -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, this.bordersColor);
+                    Particle.spawn(this.particles, new Vector2(ball.center.x, 0), -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, Particle.shapes.SMALL_RECTANGLE, this.bordersColor);
                 }
             }
             if (ball.center.x + ball.radius >= 800) {
@@ -253,7 +253,7 @@ var World = function() {
                 ball.direction.x *= -1;
 
                 if (settings.particles) {
-                    Particle.spawn(this.particles, ball.center, -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, this.bordersColor);
+                    Particle.spawn(this.particles, ball.center, -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, Particle.shapes.SMALL_RECTANGLE, this.bordersColor);
                 }
             }
         }, this);
@@ -274,7 +274,7 @@ var World = function() {
                         ball.direction.y = -Math.cos(angle);
 
                         if (settings.particles) {
-                            Particle.spawn(this.particles, collisionPoint, -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, this.paddle.color);
+                            Particle.spawn(this.particles, collisionPoint, -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, Particle.shapes.SMALL_RECTANGLE, this.paddle.color);
                         }
                     }
                 }
@@ -316,14 +316,14 @@ var World = function() {
                             ball.direction.x = -ball.direction.x;
 
                             if (settings.particles) {
-                                Particle.spawn(this.particles, collisionPoint, -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, brick.color);
+                                Particle.spawn(this.particles, collisionPoint, -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, Particle.shapes.SMALL_RECTANGLE, brick.color);
                             }
                         }
                         if (yDir) {
                             ball.direction.y = -ball.direction.y;
 
                             if (settings.particles) {
-                                Particle.spawn(this.particles, collisionPoint, -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, brick.color);
+                                Particle.spawn(this.particles, collisionPoint, -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, Particle.shapes.SMALL_RECTANGLE, brick.color);
                             }
                         }
                     } else {
@@ -331,13 +331,13 @@ var World = function() {
                             ball.direction.x = -ball.direction.x;
 
                             if (settings.particles) {
-                                Particle.spawn(this.particles, collisionPoint, -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, brick.color);
+                                Particle.spawn(this.particles, collisionPoint, -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, Particle.shapes.SMALL_RECTANGLE, brick.color);
                             }
                         } else if (yColl) {
                             ball.direction.y = -ball.direction.y;
 
                             if (settings.particles) {
-                                Particle.spawn(this.particles, collisionPoint, -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, brick.color);
+                                Particle.spawn(this.particles, collisionPoint, -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, Particle.shapes.SMALL_RECTANGLE, brick.color);
                             }
                         }
                     }
@@ -354,7 +354,7 @@ var World = function() {
                     this.bricks.splice(index, 1);
 
                     if (settings.particles) {
-                        Particle.spawn(this.particles, brick.center, 0, 2 * Math.PI, 30, brick.color);
+                        Particle.spawn(this.particles, brick.center, 0, 2 * Math.PI, 30, Particle.shapes.MEDIUM_RECTANGLE, brick.color);
                     }
                 }
             }
