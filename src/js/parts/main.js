@@ -138,7 +138,7 @@ var kappanoid = (function() {
     var mainLoop = function(timestamp) {
         var elapsed = timestamp - lastTime;
         lastTime = timestamp;
-        loopTime = Date.now();
+        var startLoopTime = Date.now();
 
         // prevent super long delta when changing tabs
         if (elapsed > 34) {
@@ -167,7 +167,7 @@ var kappanoid = (function() {
         // render game info
         gameInfo.render(elapsed);
 
-        loopTime = Date.now() - loopTime;
+        loopTime = Date.now() - startLoopTime;
 
         window.requestAnimationFrame(mainLoop);
     };
