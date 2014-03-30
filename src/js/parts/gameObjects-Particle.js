@@ -6,7 +6,8 @@ var Particle = function() {
             var particleSpeedY = randomInt(80, 110) * -Math.sin(angle);
             var particleGravity = 110;
             var particleLife = 3000;
-            var particle = new Particle(new Vector2(position.x, position.y), new Vector2(particleSpeedX, particleSpeedY), new Vector2(0, particleGravity), particleLife, color);
+            var particleColor = (i % 2 === 0) ? shadeColor(color, 5 * i) : shadeColor(color, -5 * i);
+            var particle = new Particle(new Vector2(position.x, position.y), new Vector2(particleSpeedX, particleSpeedY), new Vector2(0, particleGravity), particleLife, particleColor);
             container.push(particle);
         }
     };
@@ -15,7 +16,7 @@ var Particle = function() {
         g.save();
 
         g.globalAlpha = this.life / this.initialLife;
-        
+
         if (settings.colors) {
             g.fillStyle = this.color;
         } else {
