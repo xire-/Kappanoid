@@ -76,10 +76,8 @@ var IntroState = function() {
 
     var keyPress = function(e) {
         switch (e.keyCode) {
-            case 13: // ENTER
-                this.timePassed = 8000;
-                break;
             case 32: // SPACE
+                this.timePassed = 8000;
                 // prevent space from scrolling the page
                 return false;
             default:
