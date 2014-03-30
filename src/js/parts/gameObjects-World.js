@@ -249,16 +249,12 @@ var World = function() {
                 }
             }
             if (ball.center.x + ball.radius >= 800) {
-                ball.center.x = 799 * 2 - ball.center.x - ball.radius;
+                ball.center.x = 800 - ((ball.center.x + ball.radius) - 800) - ball.radius;
                 ball.direction.x *= -1;
 
                 if (settings.particles) {
                     Particle.spawn(this.particles, ball.center, -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4);
                 }
-            }
-            if (ball.center.y + ball.radius >= 600) {
-                ball.center.y = 599 * 2 - ball.center.y - ball.radius;
-                ball.direction.y *= -1;
             }
         }, this);
     };
