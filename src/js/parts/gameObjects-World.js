@@ -6,6 +6,7 @@ var World = function() {
 
         this.render = renderIntro;
         this.update = updateIntro;
+        this.releaseBalls = false;
 
         this.balls = [];
         this.balls.push(new Ball(new Vector2(400, 600 - 50 - 7), 7, 0, new Vector2(0, -1), settings.ballDefaultColor));
@@ -180,9 +181,10 @@ var World = function() {
 
         if (this.releaseBalls) {
             this.balls.forEach(function(ball) {
-                ball.direction.x = 0;
+                ball.direction = new Vector2(randomFloat(-1, 1), -1);
                 ball.speed = 300;
             }, this);
+            this.releaseBalls = false;
             this.update = updatePlaying;
         }
     };
@@ -355,6 +357,7 @@ var World = function() {
         // TODO this.levelConf = levelConf;
         this.backgroundColor = settings.backgroundDefaultColor;
         this.bordersColor = settings.bordersDefaultColor;
+        this.releaseBalls = false;
 
         this.reset = reset;
         this.render = renderIntro;
