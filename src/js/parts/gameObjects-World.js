@@ -266,14 +266,7 @@ var World = function() {
                         ball.direction.y = -Math.cos(angle);
 
                         if (settings.particles) {
-                            for (var p = 0; p < 4; p++) {
-                                var particleAngle = (p % 2 === 0) ? randomFloat(Math.PI / 4, Math.PI / 2) : randomFloat(Math.PI / 2, Math.PI * 3 / 4);
-                                var particleSpeedX = -randomInt(60, 110);
-                                var particleSpeedY = -randomInt(80, 110);
-                                var particleGravity = 110;
-                                var particleLife = 3000;
-                                this.particles.push(new Particle(new Vector2(collisionPoint.x, collisionPoint.y), new Vector2(particleSpeedX * Math.cos(particleAngle), particleSpeedY * Math.sin(particleAngle)), new Vector2(0, particleGravity), particleLife, '#fff'));
-                            }
+                            Particle.spawn(this.particles, collisionPoint, 4);
                         }
                     }
                 }
@@ -328,14 +321,7 @@ var World = function() {
                     hitBricks.push(index);
 
                     if (settings.particles) {
-                        for (var p = 0; p < 4; p++) {
-                            var particleAngle = (p % 2 === 0) ? randomFloat(Math.PI / 4, Math.PI / 2) : randomFloat(Math.PI / 2, Math.PI * 3 / 4);
-                            var particleSpeedX = -randomInt(60, 110);
-                            var particleSpeedY = -randomInt(80, 110);
-                            var particleGravity = 110;
-                            var particleLife = 3000;
-                            this.particles.push(new Particle(new Vector2(collisionPoint.x, collisionPoint.y), new Vector2(particleSpeedX * Math.cos(particleAngle), particleSpeedY * Math.sin(particleAngle)), new Vector2(0, particleGravity), particleLife, '#fff'));
-                        }
+                        Particle.spawn(this.particles, collisionPoint, 4);
                     }
                 }
             }, this);
