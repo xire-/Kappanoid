@@ -62,7 +62,8 @@ var kappanoid = (function() {
         bordersDefaultColor: '#88D1A3',
         ballDefaultColor: '#d26635',
         brickDefaultColor: '#62bd84',
-        paddleDefaultColor: '#CF3746'
+        paddleDefaultColor: '#CF3746',
+        particleDefaultColor: '#d26635'
     };
 
 

@@ -1,12 +1,12 @@
 var Particle = function() {
-    var spawn = function(container, position, baseAngle, spreadAngle, count) {
+    var spawn = function(container, position, baseAngle, spreadAngle, count, color) {
         for (var i = 0; i < count; i++) {
             var angle = randomFloat(baseAngle - spreadAngle / 2, baseAngle + spreadAngle / 2);
             var particleSpeedX = randomInt(60, 110) * -Math.cos(angle);
             var particleSpeedY = randomInt(80, 110) * -Math.sin(angle);
             var particleGravity = 110;
             var particleLife = 3000;
-            var particle = new Particle(new Vector2(position.x, position.y), new Vector2(particleSpeedX, particleSpeedY), new Vector2(0, particleGravity), particleLife, '#fff');
+            var particle = new Particle(new Vector2(position.x, position.y), new Vector2(particleSpeedX, particleSpeedY), new Vector2(0, particleGravity), particleLife, color);
             container.push(particle);
         }
     };
@@ -15,7 +15,13 @@ var Particle = function() {
         g.save();
 
         g.globalAlpha = this.life / this.initialLife;
-        g.fillStyle = '#fff';
+        
+        if (settings.colors) {
+            g.fillStyle = this.color;
+        } else {
+            g.fillStyle = '#fff';
+        }
+
         g.fillRect(this.position.x - 2, this.position.y - 2, 4, 4);
 
         g.restore();

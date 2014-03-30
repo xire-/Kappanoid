@@ -237,7 +237,7 @@ var World = function() {
                 ball.direction.x *= -1;
 
                 if (settings.particles) {
-                    Particle.spawn(this.particles, new Vector2(0, ball.center.y), -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4);
+                    Particle.spawn(this.particles, new Vector2(0, ball.center.y), -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, this.bordersColor);
                 }
             }
             if (ball.center.y - ball.radius < 0) {
@@ -245,7 +245,7 @@ var World = function() {
                 ball.direction.y *= -1;
 
                 if (settings.particles) {
-                    Particle.spawn(this.particles, new Vector2(ball.center.x, 0), -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4);
+                    Particle.spawn(this.particles, new Vector2(ball.center.x, 0), -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, this.bordersColor);
                 }
             }
             if (ball.center.x + ball.radius >= 800) {
@@ -253,7 +253,7 @@ var World = function() {
                 ball.direction.x *= -1;
 
                 if (settings.particles) {
-                    Particle.spawn(this.particles, ball.center, -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4);
+                    Particle.spawn(this.particles, ball.center, -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, this.bordersColor);
                 }
             }
             if (ball.center.y + ball.radius >= 600) {
@@ -278,7 +278,7 @@ var World = function() {
                         ball.direction.y = -Math.cos(angle);
 
                         if (settings.particles) {
-                            Particle.spawn(this.particles, collisionPoint, -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4);
+                            Particle.spawn(this.particles, collisionPoint, -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, this.paddle.color);
                         }
                     }
                 }
@@ -320,14 +320,14 @@ var World = function() {
                             ball.direction.x = -ball.direction.x;
 
                             if (settings.particles) {
-                                Particle.spawn(this.particles, collisionPoint, -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4);
+                                Particle.spawn(this.particles, collisionPoint, -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, brick.color);
                             }
                         }
                         if (yDir) {
                             ball.direction.y = -ball.direction.y;
 
                             if (settings.particles) {
-                                Particle.spawn(this.particles, collisionPoint, -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4);
+                                Particle.spawn(this.particles, collisionPoint, -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, brick.color);
                             }
                         }
                     } else {
@@ -335,13 +335,13 @@ var World = function() {
                             ball.direction.x = -ball.direction.x;
 
                             if (settings.particles) {
-                                Particle.spawn(this.particles, collisionPoint, -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4);
+                                Particle.spawn(this.particles, collisionPoint, -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, brick.color);
                             }
                         } else if (yColl) {
                             ball.direction.y = -ball.direction.y;
 
                             if (settings.particles) {
-                                Particle.spawn(this.particles, collisionPoint, -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4);
+                                Particle.spawn(this.particles, collisionPoint, -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, brick.color);
                             }
                         }
                     }
