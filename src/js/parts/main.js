@@ -204,6 +204,33 @@ var kappanoid = (function() {
         return Math.floor(Math.random() * (max - min)) + min;
     };
 
+    /*
+     * given an object with rgb or hsl properties, returns the corresponding string
+     * an optional alpha value can be added to the object, with name 'a'
+     */
+    var getColorString = function(color) {
+        console.assert(color !== undefined, 'color is undefined');
+
+        var a = (color.a !== undefined) ? clamp(0, color.a, 1) : 1;
+
+        if (color.r !== undefined) {
+            //it's rgb or rgba
+            var r = clamp(0, Math.floor(color.r), 255);
+            var g = clamp(0, Math.floor(color.g), 255);
+            var b = clamp(0, Math.floor(color.b), 255);
+
+            return 'rgba(' + r + ', ' + g + ', ' + b + ', ' + a + ')';
+        }
+        if (color.h !== undefined) {
+            //it's hsl or hsla
+            var h = color.h % 360;
+            var s = clamp(0, color.s, 100);
+            var l = clamp(0, color.l, 100);
+
+            return 'hsla(' + h + ', ' + s + '%, ' + l + '%, ' + a + ')';
+        }
+    };
+
 
     /////////////////////////////////// Game States
     // __import__ gameStates.js
