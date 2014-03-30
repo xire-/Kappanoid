@@ -79,5 +79,11 @@ var Particle = function() {
 }();
 
 function testParticle() {
-    // TODO
+    var position1 = new Vector2(4, 5);
+    var velocity1 = new Vector2(7, 6);
+    var acceleration1 = new Vector2(3, 4);
+    var life1 = 4000;
+    var color1 = '#abc';
+    var particle1 = new Particle(position1, velocity1, acceleration1, color1, life1);
+    console.assert(JSON.stringify(particle1.position) === JSON.stringify(position1) && JSON.stringify(particle1.velocity) === JSON.stringify(velocity1) && JSON.stringify(particle1.acceleration) === JSON.stringify(acceleration1) && particle1.life === life1 && particle1.color === color1, JSON.stringify(particle1));
 }
