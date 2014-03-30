@@ -235,14 +235,26 @@ var World = function() {
             if (ball.center.x - ball.radius < 0) {
                 ball.center.x = -ball.center.x + ball.radius * 2;
                 ball.direction.x *= -1;
+
+                if (settings.particles) {
+                    Particle.spawn(this.particles, new Vector2(0, ball.center.y), -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4);
+                }
             }
             if (ball.center.y - ball.radius < 0) {
                 ball.center.y = -ball.center.y + ball.radius * 2;
                 ball.direction.y *= -1;
+
+                if (settings.particles) {
+                    Particle.spawn(this.particles, new Vector2(ball.center.x, 0), -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4);
+                }
             }
             if (ball.center.x + ball.radius >= 800) {
                 ball.center.x = 799 * 2 - ball.center.x - ball.radius;
                 ball.direction.x *= -1;
+
+                if (settings.particles) {
+                    Particle.spawn(this.particles, ball.center, -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4);
+                }
             }
             if (ball.center.y + ball.radius >= 600) {
                 ball.center.y = 599 * 2 - ball.center.y - ball.radius;
@@ -266,7 +278,7 @@ var World = function() {
                         ball.direction.y = -Math.cos(angle);
 
                         if (settings.particles) {
-                            Particle.spawn(this.particles, collisionPoint, 4);
+                            Particle.spawn(this.particles, collisionPoint, -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4);
                         }
                     }
                 }
@@ -306,23 +318,35 @@ var World = function() {
 
                         if (xDir) {
                             ball.direction.x = -ball.direction.x;
+
+                            if (settings.particles) {
+                                Particle.spawn(this.particles, collisionPoint, -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4);
+                            }
                         }
                         if (yDir) {
                             ball.direction.y = -ball.direction.y;
+
+                            if (settings.particles) {
+                                Particle.spawn(this.particles, collisionPoint, -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4);
+                            }
                         }
                     } else {
                         if (xColl) {
                             ball.direction.x = -ball.direction.x;
+
+                            if (settings.particles) {
+                                Particle.spawn(this.particles, collisionPoint, -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4);
+                            }
                         } else if (yColl) {
                             ball.direction.y = -ball.direction.y;
+
+                            if (settings.particles) {
+                                Particle.spawn(this.particles, collisionPoint, -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4);
+                            }
                         }
                     }
 
                     hitBricks.push(index);
-
-                    if (settings.particles) {
-                        Particle.spawn(this.particles, collisionPoint, 4);
-                    }
                 }
             }, this);
 
