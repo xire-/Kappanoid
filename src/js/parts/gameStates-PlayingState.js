@@ -36,8 +36,12 @@ var PlayingState = function() {
             case 114: // R
                 world.reset();
                 break;
+            case 32: // SPACE
+                world.releaseBalls = true;
+                // prevent space from scrolling the page
+                return false;
             default:
-                alert(e.keyCode);
+                // alert(e.keyCode);
                 break;
         }
     };

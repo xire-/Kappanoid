@@ -8,9 +8,7 @@ var World = function() {
         this.update = updateIntro;
 
         this.balls = [];
-        this.balls.push(new Ball(new Vector2(400, 500), 7, 300, new Vector2(1, -1), settings.ballDefaultColor));
-        this.balls.push(new Ball(new Vector2(90, 57 - 20), 7, 300, new Vector2(1, 2), settings.ballDefaultColor));
-        this.balls.push(new Ball(new Vector2(123, 456), 7, 300, new Vector2(-1, -1), settings.ballDefaultColor));
+        this.balls.push(new Ball(new Vector2(400, 600 - 50 - 7), 7, 0, new Vector2(0, -1), settings.ballDefaultColor));
 
         this.bricks = [];
         var blockHalfSize = new Vector2(25, 10);
@@ -29,7 +27,7 @@ var World = function() {
         }
 
         var paddleHalfSize = new Vector2(50, 15);
-        this.paddle = new Paddle(new Vector2(800 / 2, 600 + paddleHalfSize.y * 2 / 2 - 50), paddleHalfSize, 1, settings.paddleDefaultColor);
+        this.paddle = new Paddle(new Vector2(800 / 2, 600 + paddleHalfSize.y - 50), paddleHalfSize, 1, settings.paddleDefaultColor);
 
         this.particles = [];
     };
@@ -122,12 +120,16 @@ var World = function() {
         } else {
             // >3000 end of animation, transition to next state
             this.render = renderPlaying;
-            this.update = updatePlaying;
+            this.update = updatePrePlaying;
         }
 
         // update paddle position (clamped)
         this.paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, 0 + this.paddle.halfSize.x), 800 - this.paddle.halfSize.x);
 
+        // bring balls along
+        this.balls.forEach(function(ball) {
+            ball.center.x = this.paddle.center.x;
+        }, this);
     };
 
     // PLAYING STATE //////////////////////////////////////////////////////////
@@ -154,6 +156,35 @@ var World = function() {
         });
 
         g.restore();
+    };
+
+    var updatePrePlaying = function(delta) {
+        // update single components
+        this.balls.forEach(function(ball) {
+            ball.update(delta);
+        });
+        this.bricks.forEach(function(brick) {
+            brick.update(delta);
+        });
+        this.paddle.update(delta);
+
+        // compute interaction between components
+
+        // update paddle position (clamped)
+        this.paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, 0 + this.paddle.halfSize.x), 800 - this.paddle.halfSize.x);
+
+        // bring balls along
+        this.balls.forEach(function(ball) {
+            ball.center.x = this.paddle.center.x;
+        }, this);
+
+        if (this.releaseBalls) {
+            this.balls.forEach(function(ball) {
+                ball.direction.x = 0;
+                ball.speed = 300;
+            }, this);
+            this.update = updatePlaying;
+        }
     };
 
     var updatePlaying = function(delta) {

@@ -122,7 +122,10 @@ var kappanoid = (function() {
 
         // receive keyboard update
         window.onkeypress = function(e) {
-            currState.keyPress(e);
+            var ret = currState.keyPress(e);
+            if (ret !== undefined) {
+                return ret;
+            }
         };
     };
 

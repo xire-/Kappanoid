@@ -79,8 +79,11 @@ var IntroState = function() {
             case 13: // ENTER
                 this.timePassed = 8000;
                 break;
+            case 32: // SPACE
+                // prevent space from scrolling the page
+                return false;
             default:
-                alert(e.keyCode);
+                // alert(e.keyCode);
                 break;
         }
     };
