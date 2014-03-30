@@ -1,5 +1,4 @@
 var IntroState = function() {
-
     var renderIntroIdle = function( /*delta*/ ) {
         g.save();
 
@@ -33,8 +32,11 @@ var IntroState = function() {
 
         // draw insert coin image
         y += logoImageDistance;
-        if (Math.max(0, this.timePassed - 2000) % 2000 < 1500) {
+        if (this.timePassed % 2000 < 1500) {
+            this.drawInsertCoinImage = true;
             g.drawImage(this.insertCoinImage, -this.insertCoinImage.width / 2, y);
+        } else {
+            this.drawInsertCoinImage = false;
         }
         y += this.insertCoinImage.height;
 
