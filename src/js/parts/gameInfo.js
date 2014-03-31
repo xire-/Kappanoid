@@ -20,6 +20,14 @@ var GameInfo = function() {
         g.fillText('DELTA: ' + delta, 5, 15);
         g.fillText('LOOP: ' + loopTime, 5, 25);
 
+        g.font = '16px emulogic';
+        g.fillStyle = '#FF0000';
+        g.fillText('1 UP', 250, 5);
+        g.fillText('HIGH SCORE', 480, 5);
+
+        g.fillStyle = '#FFFFFF';
+        g.fillText('123456', 510, 30);
+
         g.restore();
     };
 
