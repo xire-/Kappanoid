@@ -1,17 +1,16 @@
 var World = function() {
     var reset = function(skipIntro) {
         // reset intro animation parameters
-        timePassed = 0;
-        brickSecsOff = [];
+        this._timePassed = 0;
+        this._brickMillisOffset = [];
 
-        if (skipIntro === true) {
+        if (skipIntro) {
             this.render = renderPlaying;
             this.update = updatePrePlaying;
         } else {
             this.render = renderIntro;
             this.update = updateIntro;
         }
-        this.releaseBalls = false;
 
         this.balls = [];
         this.balls.push(new Ball(new Vector2(400, 600 - 50 - 7), 7, 0, new Vector2(0, -1), constants.ballColor));
@@ -23,7 +22,7 @@ var World = function() {
         for (var i = 0; i < 10; i++) {
             for (var j = 0; j < 8; j++) {
                 // randomize falling animation offset
-                brickSecsOff.push(randomInt(300));
+                this._brickMillisOffset.push(randomInt(300));
 
                 var blockCenter = new Vector2(
                     105 + blockHalfSize.x + i * (blockHalfSize.x * 2 + 10),
@@ -44,12 +43,10 @@ var World = function() {
     };
 
     var drawEmptyWorld = function() {
+        // WARNING don't use save and restore here
+
         // render borders (as background)
-        if (settings.colors) {
-            g.fillStyle = this.bordersColor;
-        } else {
-            g.fillStyle = '#fff';
-        }
+        g.fillStyle = settings.colors ? this.bordersColor : '#FFFFFF';
         g.fillRect(0, 60, this.containerSize.x + constants.bordersRelativeThickness * 2, this.containerSize.y + constants.bordersRelativeThickness);
 
         // translate to render the world area
@@ -61,25 +58,18 @@ var World = function() {
         g.clip();
 
         // render background
-        if (settings.colors) {
-            g.fillStyle = this.backgroundColor;
-        } else {
-            g.fillStyle = '#000';
-        }
+        g.fillStyle = settings.colors ? this.backgroundColor : '#000000';
         g.fillRect(0, 0, this.containerSize.x, this.containerSize.y);
     };
 
-    // INTRO STATE ////////////////////////////////////////////////////////////
+    ///////// initial state
 
-    var timePassed = 0;
-    var brickSecsOff;
     var renderIntro = function() {
         g.save();
 
         var tx = this.containerSize.x / 2 + this.containerOffset.x;
         var ty = (this.containerSize.y + this.containerOffset.y) / 2;
-        var animScale = easing.easeOutBack(clamp(0, timePassed, 1000), 0, 1, 1000);
-
+        var animScale = easing.easeOutBack(clamp(0, this._timePassed, 1000), 0, 1, 1000);
         g.translate(tx, ty);
         g.scale(animScale, animScale);
         g.rotate(animScale * Math.PI * 2);
@@ -95,18 +85,18 @@ var World = function() {
 
         drawEmptyWorld.call(this);
 
-
         this.bricks.forEach(function(brick, i) {
             g.save();
 
-            var offy = easing.easeOutBack(clamp(0, -brickSecsOff[i] + timePassed - 1000, 1000), -1, 1, 1000);
+            var offy = easing.easeOutBack(clamp(0, -this._brickMillisOffset[i] + this._timePassed - 1000, 1000), -1, 1, 1000);
             g.translate(0, 500 * offy);
 
             brick.render();
-            g.restore();
-        });
 
-        g.globalAlpha = easing.easeInQuad(clamp(0, timePassed - 2300, 700), 0, 1, 700);
+            g.restore();
+        }, this);
+
+        g.globalAlpha = easing.easeInQuad(clamp(0, this._timePassed - 2300, 700), 0, 1, 700);
 
         // render balls and paddle
         this.balls.forEach(function(ball) {
@@ -119,14 +109,14 @@ var World = function() {
     };
 
     var updateIntro = function(delta) {
-        timePassed += delta;
+        this._timePassed += delta;
 
-        if (timePassed < 1000) {
+        if (this._timePassed < 1000) {
             // [0, 1000) zoom in with rotation
-        } else if (timePassed < 2300) {
+        } else if (this._timePassed < 2300) {
             // [1000, 2300) falling bricks
             this.render = renderIntroFalling;
-        } else if (timePassed < 3000) {
+        } else if (this._timePassed < 3000) {
             // [2300, 3000) paddle and balls fade in
         } else {
             // >3000 end of animation, transition to next state
@@ -143,7 +133,7 @@ var World = function() {
         }, this);
     };
 
-    // PLAYING STATE //////////////////////////////////////////////////////////
+    ///////// playing state
 
     var renderPlaying = function() {
         g.save();
@@ -170,16 +160,18 @@ var World = function() {
     };
 
     var updatePrePlaying = function(delta) {
+        this._canReleaseBalls = true;
+
         // update single components
         this.balls.forEach(function(ball) {
             ball.update(delta);
         });
+
         this.bricks.forEach(function(brick) {
             brick.update(delta);
         });
-        this.paddle.update(delta);
 
-        // compute interaction between components
+        this.paddle.update(delta);
 
         // update paddle position (clamped)
         this.paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, 0 + this.paddle.halfSize.x), constants.worldRelativeWidth - this.paddle.halfSize.x);
@@ -188,15 +180,6 @@ var World = function() {
         this.balls.forEach(function(ball) {
             ball.center.x = this.paddle.center.x;
         }, this);
-
-        if (this.releaseBalls) {
-            this.balls.forEach(function(ball) {
-                ball.direction = new Vector2(randomFloat(-1, 1), -1);
-                ball.speed = 300;
-            }, this);
-            this.releaseBalls = false;
-            this.update = updatePlaying;
-        }
     };
 
     var updatePlaying = function(delta) {
@@ -208,12 +191,12 @@ var World = function() {
         this.balls.forEach(function(ball) {
             ball.update(delta);
         });
+
         this.bricks.forEach(function(brick) {
             brick.update(delta);
         });
-        this.paddle.update(delta);
 
-        // compute interaction between components
+        this.paddle.update(delta);
 
         // update paddle position (clamped)
         this.paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, 0 + this.paddle.halfSize.x), constants.worldRelativeWidth - this.paddle.halfSize.x);
@@ -237,7 +220,19 @@ var World = function() {
         }
     };
 
-    // COLLISIONS /////////////////////////////////////////////////////////////
+    var releaseBalls = function() {
+        if (this._canReleaseBalls) {
+            this.balls.forEach(function(ball) {
+                ball.direction = new Vector2(randomFloat(-1, 1), -1);
+                ball.speed = 300;
+            }, this);
+
+            this.update = updatePlaying;
+            this._canReleaseBalls = false;
+        }
+    };
+
+    ///////// collisions
 
     var handleBallBordersCollisions = function() {
         this.balls.forEach(function(ball) {
@@ -291,7 +286,7 @@ var World = function() {
 
         for (var i = deadBalls.length - 1; i >= 0; i--) {
             var index = deadBalls[i];
-            // ball.die();
+            // TODO ball.die();
             this.balls.splice(index, 1);
         }
     };
@@ -353,17 +348,20 @@ var World = function() {
         }, this);
     };
 
+
     var constructor = function World(containerOffset, containerSize) {
         this.containerOffset = containerOffset;
         this.containerSize = containerSize;
-        // TODO this.levelConf = levelConf;
         this.backgroundColor = constants.worldBackgroundColor;
         this.bordersColor = constants.bordersColor;
-        this.releaseBalls = false;
+        this._canReleaseBalls = false;
+        this._timePassed = 0;
+        this._brickMillisOffset = 0;
 
         this.reset = reset;
         this.render = renderIntro;
         this.update = updateIntro;
+        this.releaseBalls = releaseBalls;
 
         // initialize all game objects
         this.reset();
@@ -384,7 +382,7 @@ var World = function() {
         },
         get containerSize() {
             return this._containerSize;
-        }
+        },
     };
 
     return constructor;

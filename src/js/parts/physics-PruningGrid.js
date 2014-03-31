@@ -88,13 +88,15 @@ var PruningGrid = function() {
 }();
 
 function testPruningGrid() {
-    var asd = new PruningGrid(new Vector2(10, 10), new Vector2(100, 100), new Vector2(500, 500), 50);
+    var pruningGrid1 = new PruningGrid(new Vector2(10, 10), new Vector2(100, 100), new Vector2(500, 500), 50);
 
     var AABB1 = {
         center: new Vector2(175, 175),
         halfSize: new Vector2(50, 20)
     };
 
-    asd.addAABB(AABB1);
-    // console.log(JSON.stringify(asd.getNearby(new Vector2(255, 175))));
+    pruningGrid1.addAABB(AABB1);
+    // console.log(JSON.stringify(pruningGrid1.getNearby(new Vector2(255, 175))));
+
+    console.log('testPruningGrid OK');
 }

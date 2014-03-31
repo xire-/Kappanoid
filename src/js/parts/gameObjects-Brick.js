@@ -1,30 +1,25 @@
 var Brick = function() {
+    var hit = function() {
+        this.life -= 1;
+    };
+
     var render = function() {
         g.save();
 
-        if (settings.colors) {
-            g.fillStyle = this.color;
-        } else {
-            g.fillStyle = '#fff';
-        }
-
         g.beginPath();
         g.rect(this.center.x - this.halfSize.x, this.center.y - this.halfSize.y, this.halfSize.x * 2, this.halfSize.y * 2);
+        g.fillStyle = settings.colors ? this.color : '#FFFFFF';
         g.fill();
 
-        g.fillStyle = '#000';
         g.textAlign = 'center';
         g.textBaseline = 'middle';
+        g.fillStyle = '#000000';
         g.fillText(this.life, this.center.x, this.center.y);
 
         g.restore();
     };
 
     var update = function( /*delta*/ ) {};
-
-    var hit = function() {
-        this.life -= 1;
-    };
 
 
     var constructor = function Brick(center, halfSize, life, color) {

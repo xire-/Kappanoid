@@ -1,20 +1,37 @@
 var IntroState = function() {
-    var renderIntroIdle = function( /*delta*/ ) {
+    var keyPress = function(e) {
+        switch (e.keyCode) {
+            case 32: // SPACE
+                if (this.update === updateIdle) {
+                    this.update = updateOutro;
+                    this.render = renderOutro;
+                    this._timePassed = 0;
+                }
+                // prevent space from scrolling the page
+                return false;
+            default:
+                // alert(e.keyCode);
+                break;
+        }
+    };
+
+    ///////// idle state
+
+    var renderIdle = function( /*delta*/ ) {
         g.save();
 
         // clear the previous frame
-        g.fillStyle = '#000';
+        g.fillStyle = '#000000';
         g.fillRect(0, 0, constants.canvasRelativeWidth, constants.canvasRelativeHeight);
 
         var titlePosX = constants.bordersRelativeThickness + constants.worldRelativeWidth / 2;
-        var titlePosY = easing.easeOutBounce(clamp(0, this.timePassed, 1000), 0, constants.canvasRelativeHeight / 2, 1000);
-
+        var titlePosY = easing.easeOutBounce(clamp(0, this._timePassed, 1000), 0, constants.canvasRelativeHeight / 2, 1000);
         g.translate(titlePosX, titlePosY);
 
-        g.fillStyle = '#fff';
         g.textAlign = 'center';
         g.textBaseline = 'middle';
         g.font = '15px monospace';
+        g.fillStyle = '#FFFFFF';
 
         var lineHeightLogo = 15;
         var lineHeightText = 20;
@@ -22,88 +39,33 @@ var IntroState = function() {
         var imageTextDistance = 220;
 
         // calculate starting position
-        var y = -((lineHeightLogo * this.selectedLogo.length + this.insertCoinImage.height + lineHeightText * this.text.length) + logoImageDistance + imageTextDistance) / 2;
+        var y = -((lineHeightLogo * this._selectedLogo.length + this._insertCoinImage.height + lineHeightText * this._text.length) + logoImageDistance + imageTextDistance) / 2;
 
         // draw previously randomly selected logo
-        for (var i = 0; i < this.selectedLogo.length; i++) {
-            g.fillText(this.selectedLogo[i], 0, y);
+        for (var i = 0; i < this._selectedLogo.length; i++) {
+            g.fillText(this._selectedLogo[i], 0, y);
             y += lineHeightLogo;
         }
 
         // draw insert coin image
         y += logoImageDistance;
-        if (this.timePassed % 2000 < 1500) {
-            this.drawInsertCoinImage = true;
-            g.drawImage(this.insertCoinImage, -this.insertCoinImage.width / 2, y);
+        if (this._timePassed % 2000 < 1500) {
+            this._drawInsertCoinImage = true;
+            g.drawImage(this._insertCoinImage, -this._insertCoinImage.width / 2, y);
         } else {
-            this.drawInsertCoinImage = false;
+            this._drawInsertCoinImage = false;
         }
-        y += this.insertCoinImage.height;
+        y += this._insertCoinImage.height;
 
         // draw text
         y += imageTextDistance;
         g.fillStyle = getColorString({
-            h: (this.timePassed / 3),
+            h: (this._timePassed / 3),
             s: 100,
             l: 50
         });
-        for (var j = 0; j < this.text.length; j++) {
-            g.fillText(this.text[j], 0, y);
-            y += lineHeightText;
-        }
-
-        g.restore();
-    };
-
-    var renderOutro = function( /*delta*/ ) {
-        g.save();
-
-        // clear the previous frame
-        g.fillStyle = '#000';
-        g.fillRect(0, 0, constants.canvasRelativeWidth, constants.canvasRelativeHeight);
-
-        var titleScale = easing.easeInBack(clamp(0, this.timePassed, 1000), 1, -1, 1000);
-        var titleRotation = easing.easeInBack(clamp(0, this.timePassed, 1000), 0, Math.PI * 2, 1000);
-
-        g.translate(constants.bordersRelativeThickness + constants.worldRelativeWidth / 2, constants.canvasRelativeHeight / 2);
-        g.scale(titleScale, titleScale);
-        g.rotate(titleRotation);
-
-        g.fillStyle = '#fff';
-        g.textAlign = 'center';
-        g.textBaseline = 'middle';
-        g.font = '15px monospace';
-
-        var lineHeightLogo = 15;
-        var lineHeightText = 20;
-        var logoImageDistance = 40;
-        var imageTextDistance = 220;
-
-        // calculate starting position
-        var y = -((lineHeightLogo * this.selectedLogo.length + this.insertCoinImage.height + lineHeightText * this.text.length) + logoImageDistance + imageTextDistance) / 2;
-
-        // draw previously randomly selected logo
-        for (var i = 0; i < this.selectedLogo.length; i++) {
-            g.fillText(this.selectedLogo[i], 0, y);
-            y += lineHeightLogo;
-        }
-
-        // draw insert coin image
-        y += logoImageDistance;
-        if (this.drawInsertCoinImage) {
-            g.drawImage(this.insertCoinImage, -this.insertCoinImage.width / 2, y);
-        }
-        y += this.insertCoinImage.height;
-
-        // draw text
-        y += imageTextDistance;
-        g.fillStyle = getColorString({
-            h: (this.timePassed / 3),
-            s: 100,
-            l: 50
-        });
-        for (var j = 0; j < this.text.length; j++) {
-            g.fillText(this.text[j], 0, y);
+        for (var j = 0; j < this._text.length; j++) {
+            g.fillText(this._text[j], 0, y);
             y += lineHeightText;
         }
 
@@ -111,29 +73,70 @@ var IntroState = function() {
     };
 
     var updateIdle = function(delta) {
-        this.timePassed += delta;
+        this._timePassed += delta;
+    };
+
+    ///////// outro state
+
+    var renderOutro = function( /*delta*/ ) {
+        g.save();
+
+        // clear the previous frame
+        g.fillStyle = '#000000';
+        g.fillRect(0, 0, constants.canvasRelativeWidth, constants.canvasRelativeHeight);
+
+        var titleScale = easing.easeInBack(clamp(0, this._timePassed, 1000), 1, -1, 1000);
+        var titleRotation = easing.easeInBack(clamp(0, this._timePassed, 1000), 0, Math.PI * 2, 1000);
+
+        g.translate(constants.bordersRelativeThickness + constants.worldRelativeWidth / 2, constants.canvasRelativeHeight / 2);
+        g.scale(titleScale, titleScale);
+        g.rotate(titleRotation);
+
+        g.textAlign = 'center';
+        g.textBaseline = 'middle';
+        g.font = '15px monospace';
+        g.fillStyle = '#FFFFFF';
+
+        var lineHeightLogo = 15;
+        var lineHeightText = 20;
+        var logoImageDistance = 40;
+        var imageTextDistance = 220;
+
+        // calculate starting position
+        var y = -((lineHeightLogo * this._selectedLogo.length + this._insertCoinImage.height + lineHeightText * this._text.length) + logoImageDistance + imageTextDistance) / 2;
+
+        // draw previously randomly selected logo
+        for (var i = 0; i < this._selectedLogo.length; i++) {
+            g.fillText(this._selectedLogo[i], 0, y);
+            y += lineHeightLogo;
+        }
+
+        // draw insert coin image
+        y += logoImageDistance;
+        if (this._drawInsertCoinImage) {
+            g.drawImage(this._insertCoinImage, -this._insertCoinImage.width / 2, y);
+        }
+        y += this._insertCoinImage.height;
+
+        // draw text
+        y += imageTextDistance;
+        g.fillStyle = getColorString({
+            h: (this._timePassed / 3),
+            s: 100,
+            l: 50
+        });
+        for (var j = 0; j < this._text.length; j++) {
+            g.fillText(this._text[j], 0, y);
+            y += lineHeightText;
+        }
+
+        g.restore();
     };
 
     var updateOutro = function(delta) {
-        this.timePassed += delta;
-        if (this.timePassed > 1000) {
+        this._timePassed += delta;
+        if (this._timePassed > 1000) {
             currState = states.playing;
-        }
-    };
-
-    var keyPress = function(e) {
-        switch (e.keyCode) {
-            case 32: // SPACE
-                if (this.update === updateIdle) {
-                    this.update = updateOutro;
-                    this.render = renderOutro;
-                    this.timePassed = 0;
-                }
-                // prevent space from scrolling the page
-                return false;
-            default:
-                // alert(e.keyCode);
-                break;
         }
     };
 
@@ -271,18 +274,17 @@ var IntroState = function() {
                 '          |    |                         '
             ]
         ];
-        this.selectedLogo = this.logos[randomInt(this.logos.length)];
-        this.insertCoinImage = new Image();
-        this.insertCoinImage.src = 'img/insert_coin.png';
-        this.drawInsertCoinImage = true;
-        this.text = [
+        this._selectedLogo = this.logos[randomInt(this.logos.length)];
+        this._insertCoinImage = new Image();
+        this._insertCoinImage.src = 'img/insert_coin.png';
+        this._drawInsertCoinImage = true;
+        this._text = [
             'Francesco Cagnin and Marco Gasparini',
             '© 2014'
         ];
+        this._timePassed = 0;
 
-        this.timePassed = 0;
-
-        this.render = renderIntroIdle;
+        this.render = renderIdle;
         this.update = updateIdle;
         this.keyPress = keyPress;
     };

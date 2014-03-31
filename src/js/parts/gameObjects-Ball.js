@@ -1,15 +1,10 @@
 var Ball = function() {
     var render = function() {
         g.save();
-
-        if (settings.colors) {
-            g.fillStyle = this.color;
-        } else {
-            g.fillStyle = '#fff';
-        }
-
         g.translate(this.center.x, this.center.y);
         g.rotate(-Math.atan2(this.direction.x, this.direction.y));
+
+        g.fillStyle = settings.colors ? this.color : '#FFFFFF';
         g.fillRect(-this.radius, -this.radius, this.radius * 2, this.radius * 2);
 
         g.restore();

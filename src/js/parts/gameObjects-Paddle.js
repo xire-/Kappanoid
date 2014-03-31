@@ -1,26 +1,19 @@
 var Paddle = function() {
-    var oldPosX = 200;
     var render = function() {
-        // even if it may seem this belong to the update method, it must stay here
-        // since it is dependant on the frame rate
-        var speedScale = clamp(0.5, 1 - (Math.abs(mousePos.x - oldPosX) - 20) / 60, 1);
-        oldPosX = mousePos.x;
-
         g.save();
-
-        if (settings.colors) {
-            g.fillStyle = this.color;
-        } else {
-            g.fillStyle = '#fff';
-        }
-
         g.translate(this.center.x, this.center.y);
         if (settings.paddleSpeedDistortion) {
+            // even if it may seem this belong to the update method, it must stay here
+            // since it is dependant on the frame rate
+            var speedScale = clamp(0.5, 1 - (Math.abs(mousePos.x - this._oldPosX) - 20) / 60, 1);
+            this._oldPosX = mousePos.x;
+
             g.scale(1 / speedScale, speedScale);
         }
 
         g.beginPath();
         g.rect(-this.halfSize.x, -this.halfSize.y, this.halfSize.x * 2, this.halfSize.y * 2);
+        g.fillStyle = settings.colors ? this.color : '#FFFFFF';
         g.fill();
 
         g.restore();
@@ -34,6 +27,7 @@ var Paddle = function() {
         this.halfSize = halfSize;
         this.life = life;
         this.color = color;
+        this._oldPosX = 200;
 
         this.render = render;
         this.update = update;

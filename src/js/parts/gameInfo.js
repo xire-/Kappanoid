@@ -13,9 +13,9 @@ var GameInfo = function() {
         g.fillRect(0, 0, this.containerSize.x, this.containerSize.y);
 
         // render some debug info
-        g.fillStyle = '#fff';
         g.textAlign = 'left';
         g.textBaseline = 'top';
+        g.fillStyle = '#FFFFFF';
         g.fillText('FPS: ' + currentFPS, 5, 5);
         g.fillText('DELTA: ' + delta, 5, 15);
         g.fillText('LOOP: ' + loopTime, 5, 25);

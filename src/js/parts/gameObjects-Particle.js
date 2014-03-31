@@ -2,11 +2,17 @@ var Particle = function() {
     var shapes = {
         SMALL_RECTANGLE: {
             render: function() {
+                g.globalAlpha = this.life / this._initialLife;
+
+                g.fillStyle = settings.colors ? this.color : '#FFFFFF';
                 g.fillRect(this.position.x - 2, this.position.y - 2, 4, 4);
             }
         },
         MEDIUM_RECTANGLE: {
             render: function() {
+                g.globalAlpha = this.life / this._initialLife;
+
+                g.fillStyle = settings.colors ? this.color : '#FFFFFF';
                 g.fillRect(this.position.x - 4, this.position.y - 4, 8, 8);
             }
         },
@@ -30,14 +36,6 @@ var Particle = function() {
     var render = function() {
         g.save();
 
-        g.globalAlpha = this.life / this.initialLife;
-
-        if (settings.colors) {
-            g.fillStyle = this.color;
-        } else {
-            g.fillStyle = '#fff';
-        }
-
         this.shape.render.call(this);
 
         g.restore();
@@ -46,11 +44,11 @@ var Particle = function() {
     var update = function(delta) {
         this.life -= delta;
 
-        this.tmpVector2.set(this.acceleration);
-        this.velocity.add(this.tmpVector2.mul(delta / 1000));
+        this._tmpVector.set(this.acceleration);
+        this.velocity.add(this._tmpVector.mul(delta / 1000));
 
-        this.tmpVector2.set(this.velocity);
-        this.position.add(this.tmpVector2.mul(delta / 1000));
+        this._tmpVector.set(this.velocity);
+        this.position.add(this._tmpVector.mul(delta / 1000));
     };
 
 
@@ -59,10 +57,10 @@ var Particle = function() {
         this.velocity = velocity;
         this.acceleration = acceleration;
         this.life = life;
+        this._initialLife = life;
         this.shape = shape;
-        this.initialLife = life;
         this.color = color;
-        this.tmpVector2 = new Vector2(0, 0);
+        this._tmpVector = new Vector2(0, 0);
 
         this.render = render;
         this.update = update;
@@ -93,20 +91,28 @@ var Particle = function() {
             return this._acceleration;
         },
 
-        set color(value) {
-            console.assert(value !== undefined && typeof value == 'string', JSON.stringify(value));
-            this._color = value;
-        },
-        get color() {
-            return this._color;
-        },
-
         set life(value) {
             console.assert(value !== undefined && typeof value == 'number', JSON.stringify(value));
             this._life = value;
         },
         get life() {
             return this._life;
+        },
+
+        set shape(value) {
+            console.assert(value !== undefined && value.render !== undefined, JSON.stringify(value));
+            this._shape = value;
+        },
+        get shape() {
+            return this._shape;
+        },
+
+        set color(value) {
+            console.assert(value !== undefined && typeof value == 'string', JSON.stringify(value));
+            this._color = value;
+        },
+        get color() {
+            return this._color;
         },
     };
 
