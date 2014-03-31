@@ -298,7 +298,6 @@ var World = function() {
             var tmpVec = new Vector2(0, 0);
 
             closerBricks.forEach(function(brick) {
-                brick.color = '#f00';
                 var collisionPoint = collisionDetection.testSphereAABB(ball, brick);
                 if (collisionPoint !== null) {
                     var xColl = collisionPoint.x == brick.center.x - brick.halfSize.x || collisionPoint.x == brick.center.x + brick.halfSize.x;
