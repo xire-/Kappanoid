@@ -49,7 +49,7 @@ var World = function() {
         } else {
             g.fillStyle = '#fff';
         }
-        g.fillRect(0, 0, this.containerSize.x + this.containerOffset.x * 2, this.containerSize.y + this.containerOffset.y);
+        g.fillRect(0, 60, this.containerSize.x + settings.worldBorderThickness * 2, this.containerSize.y + settings.worldBorderThickness);
 
         // translate to render the world area
         g.translate(this.containerOffset.x, this.containerOffset.y);

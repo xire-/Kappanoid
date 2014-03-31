@@ -10,8 +10,8 @@ var kappanoid = (function() {
     'use strict';
 
     // default relative dimensions
-    var defaultWidth = 1140;
-    var defaultHeight = 620;
+    var defaultWidth = 840;
+    var defaultHeight = 680;
 
     // graphic context, used by the rendering process
     var g;
@@ -86,9 +86,9 @@ var kappanoid = (function() {
 
         initSettings();
 
-        world = new World(new Vector2(settings.worldBorderThickness, settings.worldBorderThickness), new Vector2(800, 600));
+        world = new World(new Vector2(settings.worldBorderThickness, 60 + settings.worldBorderThickness), new Vector2(800, 600));
 
-        gameInfo = new GameInfo(new Vector2(800 + settings.worldBorderThickness * 2, 0), new Vector2(300, 600 + settings.worldBorderThickness));
+        gameInfo = new GameInfo(new Vector2(0, 0), new Vector2(800 + settings.worldBorderThickness * 2, 60));
 
         mainLoop(0);
     };
