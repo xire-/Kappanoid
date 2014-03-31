@@ -13,8 +13,8 @@ TODO
 
 **settings**
 - toggle colors
-- toglle particles
-- taggle animazione paddle
+- toggle particles
+- toggle animazione paddle
 - toggle faccina
 - toggle scia palline
 - toggle scuotere campo
