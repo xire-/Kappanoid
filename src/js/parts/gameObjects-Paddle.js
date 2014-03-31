@@ -16,6 +16,9 @@ var Paddle = function() {
         g.fillStyle = settings.colors ? this.color : '#FFFFFF';
         g.fill();
 
+        g.fillStyle = '#000';
+        g.fillText(this.life, 0, 0);
+
         g.restore();
     };
 

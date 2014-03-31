@@ -37,7 +37,7 @@ var World = function() {
         }
 
         var paddleHalfSize = new Vector2(50, 15);
-        this.paddle = new Paddle(new Vector2(800 / 2, 600 + paddleHalfSize.y - 50), paddleHalfSize, 1, constants.paddleColor);
+        this.paddle = new Paddle(new Vector2(800 / 2, 600 + paddleHalfSize.y - 50), paddleHalfSize, 3, constants.paddleColor);
 
         this.particles = [];
     };
@@ -180,6 +180,67 @@ var World = function() {
         this.balls.forEach(function(ball) {
             ball.center.x = this.paddle.center.x;
         }, this);
+
+        // update particles
+        updateParticles.call(this, delta);
+    };
+
+
+    var renderRespawn = function() {
+        g.save();
+
+        drawEmptyWorld.call(this);
+
+        // render balls, bricks and paddle
+        if (clamp(0, this._timePassed - 2000, 2000) % 500 > 250) {
+            this.balls.forEach(function(ball) {
+                ball.render();
+            });
+        }
+
+        this.bricks.forEach(function(brick) {
+            brick.render();
+        });
+
+        this.paddle.render();
+
+        // render particles
+        this.particles.forEach(function(particle) {
+            particle.render(g);
+        });
+
+        g.restore();
+    };
+
+    var updateRespawn = function(delta) {
+        this._timePassed += delta;
+
+        // update single components
+        this.balls.forEach(function(ball) {
+            ball.update(delta);
+        });
+
+        this.bricks.forEach(function(brick) {
+            brick.update(delta);
+        });
+
+        this.paddle.update(delta);
+
+        // update paddle position (clamped)
+        this.paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, 0 + this.paddle.halfSize.x), constants.worldRelativeWidth - this.paddle.halfSize.x);
+
+        // bring balls along
+        this.balls.forEach(function(ball) {
+            ball.center.x = this.paddle.center.x;
+        }, this);
+
+        // update particles
+        updateParticles.call(this, delta);
+
+        if (this._timePassed > 4000) {
+            this.update = updatePrePlaying;
+            this.render = renderPlaying;
+        }
     };
 
     var updatePlaying = function(delta) {
@@ -206,18 +267,7 @@ var World = function() {
         handleBallBrickCollisions.call(this);
 
         // update particles
-        var deadParticles = [];
-        this.particles.forEach(function(particle, i) {
-            particle.update(delta);
-            if (particle.life <= 0) {
-                deadParticles.push(i);
-            }
-        }, this);
-
-        for (var i = deadParticles.length - 1; i >= 0; i--) {
-            var index = deadParticles[i];
-            this.particles.splice(index, 1);
-        }
+        updateParticles.call(this, delta);
     };
 
     var releaseBalls = function() {
@@ -232,6 +282,22 @@ var World = function() {
         }
     };
 
+    ///////// particles
+
+    var updateParticles = function(delta) {
+        var deadParticles = [];
+        this.particles.forEach(function(particle, i) {
+            particle.update(delta);
+            if (particle.life <= 0) {
+                deadParticles.push(i);
+            }
+        }, this);
+
+        for (var i = deadParticles.length - 1; i >= 0; i--) {
+            var index = deadParticles[i];
+            this.particles.splice(index, 1);
+        }
+    }
     ///////// collisions
 
     var handleBallBordersCollisions = function() {
@@ -288,6 +354,19 @@ var World = function() {
             var index = deadBalls[i];
             // TODO ball.die();
             this.balls.splice(index, 1);
+        }
+        if (this.balls.length === 0) {
+            // all balls are dead
+            //add new ball if it has lives remaining
+            if (this.paddle.life > 0) {
+                this.paddle.life -= 1;
+                this.balls.push(new Ball(new Vector2(400, 600 - 50 - 7), 7, 0, new Vector2(0, -1), constants.ballColor));
+                this.update = updateRespawn;
+                this.render = renderRespawn;
+                this._timePassed = 0;
+            } else {
+                // TODO game over!
+            }
         }
     };
 
