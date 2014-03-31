@@ -57,7 +57,7 @@ var kappanoid = (function() {
         particles: true,
 
         // colors
-        colors: false,
+        colors: true,
         backgroundDefaultColor: '#F8F2B3',
         bordersDefaultColor: '#88D1A3',
         ballDefaultColor: '#d26635',

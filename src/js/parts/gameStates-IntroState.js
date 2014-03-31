@@ -97,6 +97,11 @@ var IntroState = function() {
 
         // draw text
         y += imageTextDistance;
+        g.fillStyle = getColorString({
+            h: (this.timePassed / 3),
+            s: 100,
+            l: 50
+        });
         for (var j = 0; j < this.text.length; j++) {
             g.fillText(this.text[j], 0, y);
             y += lineHeightText;
