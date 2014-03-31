@@ -9,10 +9,6 @@
 var kappanoid = (function() {
     'use strict';
 
-    // default relative dimensions
-    var defaultWidth = 840;
-    var defaultHeight = 680;
-
     // graphic context, used by the rendering process
     var g;
 
@@ -42,28 +38,32 @@ var kappanoid = (function() {
 
     // store all the configurable settings
     var settings = {
-        worldBackgroundColor: '#000',
-        worldBorderBackgroundColor: '#fff',
-        worldBorderThickness: 20,
-
-        gameInfoBackgroundColor: '#222',
-
+        colors: true,
+        particles: true,
+        sounds: true,
+        music: true,
         timeScale: 1,
 
+        ballTrail: true,
         paddleSpeedDistortion: true,
-        ballFaceDirection: true,
+        paddleFace: true,
+        worldShake: true,
+    };
+    var constants = {
+        bordersRelativeThickness: 20,
+        worldRelativeWidth: 800,
+        worldRelativeHeight: 600,
+        gameInfoRelativeWidth: 800 + 20 * 2,
+        gameInfoRelativeHeight: 60,
+        canvasRelativeWidth: 800 + 20 * 2,
+        canvasRelativeHeight: 60 + 20 + 600,
 
-        // particles
-        particles: true,
-
-        // colors
-        colors: true,
-        backgroundDefaultColor: '#F8F2B3',
-        bordersDefaultColor: '#88D1A3',
-        ballDefaultColor: '#d26635',
-        brickDefaultColor: '#62bd84',
-        paddleDefaultColor: '#CF3746',
-        particleDefaultColor: '#d26635'
+        bordersColor: '#88D1A3',
+        ballColor: '#d26635',
+        brickColor: '#62bd84',
+        paddleColor: '#CF3746',
+        particleColor: '#d26635',
+        worldBackgroundColor: '#F8F2B3',
     };
 
 
@@ -73,42 +73,34 @@ var kappanoid = (function() {
             testGameObjects();
         }
 
-        // TODO bind keys to actions
-        // TODO generate settings interface
         states = {
             intro: new IntroState(),
-            playing: new PlayingState()
+            playing: new PlayingState(),
         };
-
         currState = states.intro;
 
         initCanvas(width, height);
 
-        initSettings();
-
-        world = new World(new Vector2(settings.worldBorderThickness, 60 + settings.worldBorderThickness), new Vector2(800, 600));
-
-        gameInfo = new GameInfo(new Vector2(0, 0), new Vector2(800 + settings.worldBorderThickness * 2, 60));
+        gameInfo = new GameInfo(new Vector2(0, 0), new Vector2(constants.gameInfoRelativeWidth, constants.gameInfoRelativeHeight));
+        world = new World(new Vector2(constants.bordersRelativeThickness, constants.gameInfoRelativeHeight + constants.bordersRelativeThickness), new Vector2(constants.worldRelativeWidth, constants.worldRelativeHeight));
 
         mainLoop(0);
     };
 
     var initCanvas = function(width, height) {
-        if (width === undefined || height === undefined) {
-            width = defaultWidth;
-            height = defaultHeight;
-        }
+        width = width || constants.canvasRelativeWidth;
+        height = height || constants.canvasRelativeHeight;
 
         var canvas = $('#gameCanvas')[0];
-        var scaleFactor = Math.min(width / defaultWidth, height / defaultHeight);
+        var scaleFactor = Math.min(width / constants.canvasRelativeWidth, height / constants.canvasRelativeHeight);
 
-        canvas.width = defaultWidth * scaleFactor;
-        canvas.height = defaultHeight * scaleFactor;
+        canvas.width = constants.canvasRelativeWidth * scaleFactor;
+        canvas.height = constants.canvasRelativeHeight * scaleFactor;
 
         g = canvas.getContext('2d');
         g.scale(scaleFactor, scaleFactor);
 
-        mousePos = new Vector2(settings.worldBorderThickness + 400, 0);
+        mousePos = new Vector2(constants.bordersRelativeThickness + constants.worldRelativeWidth / 2, 0);
         // receive mouse movement update
         window.onmousemove = function(e) {
             var x;
@@ -137,13 +129,6 @@ var kappanoid = (function() {
         };
     };
 
-    var initSettings = function() {
-        var domColor = $('#colors');
-        domColor.prop('checked', settings.colors);
-        domColor.change(function() {
-            settings.colors = $(this).prop('checked') === true;
-        });
-    };
 
     var mainLoop = function(timestamp) {
         var elapsed = timestamp - lastTime;

@@ -2,9 +2,9 @@ var PlayingState = function() {
     var render = function( /*delta*/ ) {
         g.save();
 
-        // clear the previous frame (render world borders)
-        g.fillStyle = settings.worldBackgroundColor;
-        g.fillRect(0, 0, defaultWidth, defaultHeight);
+        // clear the previous frame
+        g.fillStyle = '#000000';
+        g.fillRect(0, 0, constants.canvasRelativeWidth, constants.canvasRelativeHeight);
 
         // render the game world
         world.render();

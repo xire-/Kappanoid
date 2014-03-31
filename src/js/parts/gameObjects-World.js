@@ -14,9 +14,10 @@ var World = function() {
         this.releaseBalls = false;
 
         this.balls = [];
-        this.balls.push(new Ball(new Vector2(400, 600 - 50 - 7), 7, 0, new Vector2(0, -1), settings.ballDefaultColor));
+        this.balls.push(new Ball(new Vector2(400, 600 - 50 - 7), 7, 0, new Vector2(0, -1), constants.ballColor));
 
         this.pruningGrid = new PruningGrid(new Vector2(20, 15), new Vector2(0, 0), new Vector2(800, 600), 7);
+
         this.bricks = [];
         var blockHalfSize = new Vector2(25, 10);
         for (var i = 0; i < 10; i++) {
@@ -30,14 +31,14 @@ var World = function() {
                 );
                 var life = randomInt(1, 5);
 
-                var newBrick = new Brick(blockCenter, blockHalfSize, life, settings.brickDefaultColor);
+                var newBrick = new Brick(blockCenter, blockHalfSize, life, constants.brickColor);
                 this.bricks.push(newBrick);
                 this.pruningGrid.addAABB(newBrick);
             }
         }
 
         var paddleHalfSize = new Vector2(50, 15);
-        this.paddle = new Paddle(new Vector2(800 / 2, 600 + paddleHalfSize.y - 50), paddleHalfSize, 1, settings.paddleDefaultColor);
+        this.paddle = new Paddle(new Vector2(800 / 2, 600 + paddleHalfSize.y - 50), paddleHalfSize, 1, constants.paddleColor);
 
         this.particles = [];
     };
@@ -49,7 +50,7 @@ var World = function() {
         } else {
             g.fillStyle = '#fff';
         }
-        g.fillRect(0, 60, this.containerSize.x + settings.worldBorderThickness * 2, this.containerSize.y + settings.worldBorderThickness);
+        g.fillRect(0, 60, this.containerSize.x + constants.bordersRelativeThickness * 2, this.containerSize.y + constants.bordersRelativeThickness);
 
         // translate to render the world area
         g.translate(this.containerOffset.x, this.containerOffset.y);
@@ -181,7 +182,7 @@ var World = function() {
         // compute interaction between components
 
         // update paddle position (clamped)
-        this.paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, 0 + this.paddle.halfSize.x), 800 - this.paddle.halfSize.x);
+        this.paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, 0 + this.paddle.halfSize.x), constants.worldRelativeWidth - this.paddle.halfSize.x);
 
         // bring balls along
         this.balls.forEach(function(ball) {
@@ -215,7 +216,7 @@ var World = function() {
         // compute interaction between components
 
         // update paddle position (clamped)
-        this.paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, 0 + this.paddle.halfSize.x), 800 - this.paddle.halfSize.x);
+        this.paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, 0 + this.paddle.halfSize.x), constants.worldRelativeWidth - this.paddle.halfSize.x);
 
         handleBallBordersCollisions.call(this);
         handleBallPaddleCollisions.call(this);
@@ -253,8 +254,8 @@ var World = function() {
 
                 Particle.spawn(this.particles, new Vector2(ball.center.x, 0), -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, Particle.shapes.SMALL_RECTANGLE, this.bordersColor);
             }
-            if (ball.center.x + ball.radius >= 800) {
-                ball.center.x = 800 - ((ball.center.x + ball.radius) - 800) - ball.radius;
+            if (ball.center.x + ball.radius >= constants.worldRelativeWidth) {
+                ball.center.x = constants.worldRelativeWidth - ((ball.center.x + ball.radius) - constants.worldRelativeWidth) - ball.radius;
                 ball.direction.x *= -1;
 
                 Particle.spawn(this.particles, ball.center, -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, Particle.shapes.SMALL_RECTANGLE, this.bordersColor);
@@ -356,8 +357,8 @@ var World = function() {
         this.containerOffset = containerOffset;
         this.containerSize = containerSize;
         // TODO this.levelConf = levelConf;
-        this.backgroundColor = settings.backgroundDefaultColor;
-        this.bordersColor = settings.bordersDefaultColor;
+        this.backgroundColor = constants.worldBackgroundColor;
+        this.bordersColor = constants.bordersColor;
         this.releaseBalls = false;
 
         this.reset = reset;

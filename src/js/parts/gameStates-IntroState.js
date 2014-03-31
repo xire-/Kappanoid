@@ -4,10 +4,10 @@ var IntroState = function() {
 
         // clear the previous frame
         g.fillStyle = '#000';
-        g.fillRect(0, 0, defaultWidth, defaultHeight);
+        g.fillRect(0, 0, constants.canvasRelativeWidth, constants.canvasRelativeHeight);
 
-        var titlePosX = settings.worldBorderThickness + 400;
-        var titlePosY = easing.easeOutBounce(clamp(0, this.timePassed, 1000), 0, defaultHeight / 2, 1000);
+        var titlePosX = constants.bordersRelativeThickness + constants.worldRelativeWidth / 2;
+        var titlePosY = easing.easeOutBounce(clamp(0, this.timePassed, 1000), 0, constants.canvasRelativeHeight / 2, 1000);
 
         g.translate(titlePosX, titlePosY);
 
@@ -60,12 +60,12 @@ var IntroState = function() {
 
         // clear the previous frame
         g.fillStyle = '#000';
-        g.fillRect(0, 0, defaultWidth, defaultHeight);
+        g.fillRect(0, 0, constants.canvasRelativeWidth, constants.canvasRelativeHeight);
 
         var titleScale = easing.easeInBack(clamp(0, this.timePassed, 1000), 1, -1, 1000);
         var titleRotation = easing.easeInBack(clamp(0, this.timePassed, 1000), 0, Math.PI * 2, 1000);
 
-        g.translate(settings.worldBorderThickness + 400, defaultHeight / 2);
+        g.translate(constants.bordersRelativeThickness + constants.worldRelativeWidth / 2, constants.canvasRelativeHeight / 2);
         g.scale(titleScale, titleScale);
         g.rotate(titleRotation);
 

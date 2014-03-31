@@ -9,7 +9,7 @@ var GameInfo = function() {
         g.clip();
 
         // render background
-        g.fillStyle = settings.gameInfoBackgroundColor;
+        g.fillStyle = '#222222';
         g.fillRect(0, 0, this.containerSize.x, this.containerSize.y);
 
         // render some debug info
