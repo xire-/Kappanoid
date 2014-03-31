@@ -297,7 +297,7 @@ var World = function() {
             var index = deadParticles[i];
             this.particles.splice(index, 1);
         }
-    }
+    };
     ///////// collisions
 
     var handleBallBordersCollisions = function() {
