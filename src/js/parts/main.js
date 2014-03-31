@@ -84,6 +84,8 @@ var kappanoid = (function() {
 
         initCanvas(width, height);
 
+        initSettings();
+
         world = new World(new Vector2(settings.worldBorderThickness, settings.worldBorderThickness), new Vector2(800, 600));
 
         gameInfo = new GameInfo(new Vector2(800 + settings.worldBorderThickness * 2, 0), new Vector2(300, 600 + settings.worldBorderThickness));
@@ -133,6 +135,14 @@ var kappanoid = (function() {
                 return ret;
             }
         };
+    };
+
+    var initSettings = function() {
+        var domColor = $('#colors');
+        domColor.prop('checked', settings.colors);
+        domColor.change(function() {
+            settings.colors = $(this).prop('checked') === true;
+        });
     };
 
     var mainLoop = function(timestamp) {
