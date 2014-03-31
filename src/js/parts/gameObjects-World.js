@@ -1,11 +1,16 @@
 var World = function() {
-    var reset = function() {
+    var reset = function(skipIntro) {
         // reset intro animation parameters
         timePassed = 0;
         brickSecsOff = [];
 
-        this.render = renderIntro;
-        this.update = updateIntro;
+        if (skipIntro === true) {
+            this.render = renderPlaying;
+            this.update = updatePrePlaying;
+        } else {
+            this.render = renderIntro;
+            this.update = updateIntro;
+        }
         this.releaseBalls = false;
 
         this.balls = [];

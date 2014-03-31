@@ -84,18 +84,6 @@ var PruningGrid = function() {
         this.grid = grid;
     };
 
-    constructor.prototype = {
-        /*
-        set containerOffset(value) {
-            console.assert(value !== undefined && value instanceof Vector2, JSON.stringify(value));
-            this._containerOffset = value;
-        },
-        get containerOffset() {
-            return this._containerOffset;
-        }
-        */
-    };
-
     return constructor;
 }();
 
@@ -108,5 +96,5 @@ function testPruningGrid() {
     };
 
     asd.addAABB(AABB1);
-    console.log(JSON.stringify(asd.getNearby(new Vector2(255, 175))));
+    // console.log(JSON.stringify(asd.getNearby(new Vector2(255, 175))));
 }

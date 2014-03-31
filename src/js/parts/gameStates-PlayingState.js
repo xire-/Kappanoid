@@ -34,7 +34,7 @@ var PlayingState = function() {
                 settings.timeScale = 0;
                 break;
             case 114: // R
-                world.reset();
+                world.reset(true);
                 break;
             case 32: // SPACE
                 world.releaseBalls = true;
