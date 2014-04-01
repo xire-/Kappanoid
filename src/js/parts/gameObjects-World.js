@@ -277,7 +277,7 @@ var World = function() {
                 });
 
                 // to slow or not to slow
-                settings.timeScale = ballNear ? clamp(0.15, (distance-30) / 20, 1) : 1;
+                settings.timeScale = ballNear ? clamp(0.15, (distance - 30) / 20, 1) : 1;
             }
         }
 
