@@ -72,7 +72,7 @@ var World = function() {
         g.clip();
 
         // render background
-        g.fillStyle = settings.colors ? this.backgroundColor : '#000000';
+        g.fillStyle = settings.colors ? this._backgroundColor : '#000000';
         g.fillRect(0, 0, this.containerSize.x, this.containerSize.y);
     };
 
@@ -514,6 +514,7 @@ var World = function() {
                         if (hitbrick.life <= 0) {
                             this.bricks.splice(j, 1);
                             this.pruningGrid.removeAABB(hitbrick);
+                            this.score += hitbrick.value;
 
                             Particle.spawn(this.particles, hitbrick.center, 0, 2 * Math.PI, 30, Particle.shapes.MEDIUM_RECTANGLE, hitbrick.color);
                         }
@@ -527,13 +528,14 @@ var World = function() {
     var constructor = function World(containerOffset, containerSize) {
         this.containerOffset = containerOffset;
         this.containerSize = containerSize;
-        this.backgroundColor = constants.worldBackgroundColor;
+        this._backgroundColor = constants.worldBackgroundColor;
         this.bordersColor = constants.bordersColor;
         this._canReleaseBalls = false;
         this._timePassed = 0;
         this._brickMillisOffset = 0;
         this._currentLevel = 0;
         this._unbreakableBricksCount = 0;
+        this.score = 0;
 
         this.reset = reset;
         this.render = renderIntro;

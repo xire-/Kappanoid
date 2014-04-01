@@ -22,10 +22,16 @@ var GameInfo = function() {
 
         g.font = '16px emulogic';
         g.fillStyle = '#FF0000';
-        g.fillText('1 UP', 250, 5);
+
+        var hearts = '';
+        for (var i = 0; i < world.paddle.life; i++) {
+            hearts += '❤';
+        }
+        g.fillText(hearts, 250, 5);
         g.fillText('HIGH SCORE', 480, 5);
 
         g.fillStyle = '#FFFFFF';
+        g.fillText(world.score, 250, 30);
         g.fillText('123456', 510, 30);
 
         g.restore();
