@@ -345,10 +345,15 @@ var World = function() {
             particle.render(g);
         });
 
+
+        g.lineWidth = 2;
         g.font = '30px emulogic';
         g.fillStyle = '#FFFFFF';
         g.fillText('LEVEL ' + (this._currentLevel + 1), 290, 250);
         g.fillText('COMPLETE!', 290, 280);
+        g.strokeStyle = '#000000';
+        g.strokeText('LEVEL ' + (this._currentLevel + 1), 290, 250);
+        g.strokeText('COMPLETE!', 290, 280);
 
         g.restore();
     };
