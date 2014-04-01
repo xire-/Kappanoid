@@ -296,6 +296,7 @@ var World = function() {
             settings.timeScale = 1;
 
             this.render = renderLevelCompleted;
+            this.update = updateLevelCompleted;
         }
 
         // update particles
@@ -340,6 +341,18 @@ var World = function() {
         g.fillText('COMPLETE!', 290, 280);
 
         g.restore();
+    };
+
+    var updateLevelCompleted = function(delta) {
+        this.balls.forEach(function(ball) {
+            ball.update(delta);
+        });
+
+        this.paddle.update(delta);
+
+        // update paddle position (clamped)
+        this.paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, 0 + this.paddle.halfSize.x), constants.worldRelativeWidth - this.paddle.halfSize.x);
+
     };
 
     ///////// particles
