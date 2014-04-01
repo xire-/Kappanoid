@@ -268,13 +268,16 @@ var World = function() {
         if (settings.lastBrickSlowMo) {
             if (this.bricks.length === 1) {
                 var lastBrick = this.bricks[0];
+                var distance;
                 var ballNear = this.balls.some(function(ball) {
                     // check if ball is near the last brick
-                    return lastBrick.center.distance(ball.center) <= 50;
+                    var brickPoint = collisionDetection.closestPtPointAABB(ball.center, lastBrick);
+                    distance = ball.center.distance(brickPoint);
+                    return distance <= 50;
                 });
 
                 // to slow or not to slow
-                settings.timeScale = ballNear ? 0.15 : 1;
+                settings.timeScale = ballNear ? clamp(0.15, (distance-30) / 20, 1) : 1;
             }
         }
 
