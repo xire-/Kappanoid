@@ -19,6 +19,7 @@ var GameInfo = function() {
         g.fillText('FPS: ' + currentFPS, 5, 5);
         g.fillText('DELTA: ' + delta, 5, 15);
         g.fillText('LOOP: ' + loopTime, 5, 25);
+        g.fillText('NUM PARTICLES: ' + world.particles.length, 5, 35);
 
         g.font = '16px emulogic';
         g.fillStyle = '#FF0000';
