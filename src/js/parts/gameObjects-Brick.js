@@ -48,10 +48,7 @@ var Brick = function() {
     };
 
     var hit = function() {
-        // decrement life if it is not null
-        if (this.life !== null) {
-            this.life -= 1;
-        }
+        this.life -= 1;
     };
 
     var render = function() {
