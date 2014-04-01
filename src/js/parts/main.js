@@ -38,8 +38,8 @@ var kappanoid = (function() {
 
     // store all the configurable settings
     var settings = {
-        colors: true,
-        particles: true,
+        colors: false,
+        particles: false,
         sounds: true,
         music: true,
         timeScale: 1,

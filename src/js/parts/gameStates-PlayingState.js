@@ -4,6 +4,9 @@ var PlayingState = function() {
             case 49: // 1
                 settings.colors = !settings.colors;
                 break;
+            case 50: // 2
+                settings.particles = !settings.particles;
+                break;
             case 117: // U
                 settings.timeScale = 1;
                 break;
