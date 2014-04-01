@@ -17,9 +17,8 @@ var World = function() {
 
         this.pruningGrid = new PruningGrid(new Vector2(20, 15), new Vector2(0, 0), new Vector2(800, 600), 7);
 
-        this.bricks = [];
-        levels[0].bricks.forEach(function(brick) {
-            this.bricks.push(brick);
+        this.bricks = levels[0].bricks();
+        this.bricks.forEach(function(brick) {
             this.pruningGrid.addAABB(brick);
         }, this);
 
