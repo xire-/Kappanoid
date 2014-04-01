@@ -45,6 +45,7 @@ var kappanoid = (function() {
         timeScale: 1,
 
         ballTrail: true,
+        lastBrickSlowMo: true,
         paddleSpeedDistortion: true,
         paddleFace: true,
         worldShake: true,

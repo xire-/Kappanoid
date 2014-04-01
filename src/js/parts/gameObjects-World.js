@@ -18,6 +18,12 @@ var World = function() {
         this.pruningGrid = new PruningGrid(new Vector2(20, 15), new Vector2(0, 0), new Vector2(800, 600), 7);
 
         this.bricks = [];
+        levels[0].bricks.forEach(function(brick) {
+            this.bricks.push(brick);
+            this.pruningGrid.addAABB(brick);
+        }, this);
+
+        /*
         var blockHalfSize = new Vector2(25, 10);
         for (var i = 0; i < 10; i++) {
             for (var j = 0; j < 8; j++) {
@@ -35,6 +41,7 @@ var World = function() {
                 this.pruningGrid.addAABB(newBrick);
             }
         }
+        */
 
         var paddleHalfSize = new Vector2(50, 15);
         this.paddle = new Paddle(new Vector2(800 / 2, 600 + paddleHalfSize.y - 50), paddleHalfSize, 3, constants.paddleColor);
@@ -257,6 +264,20 @@ var World = function() {
             brick.update(delta);
         });
 
+        // peggle effect
+        if (settings.lastBrickSlowMo) {
+            if (this.bricks.length === 1) {
+                var lastBrick = this.bricks[0];
+                var ballNear = this.balls.some(function(ball) {
+                    // check if ball is near the last brick
+                    return lastBrick.center.distance(ball.center) <= 50;
+                });
+
+                // to slow or not to slow
+                settings.timeScale = ballNear ? 0.15 : 1;
+            }
+        }
+
         this.paddle.update(delta);
 
         // update paddle position (clamped)
@@ -265,6 +286,12 @@ var World = function() {
         handleBallBordersCollisions.call(this);
         handleBallPaddleCollisions.call(this);
         handleBallBrickCollisions.call(this);
+
+        // level finished?
+        if (this.bricks.length === 0) {
+            // turn off peggle effect
+            settings.timeScale = 1;
+        }
 
         // update particles
         updateParticles.call(this, delta);
