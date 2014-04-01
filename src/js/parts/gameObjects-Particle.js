@@ -16,17 +16,23 @@ var Particle = function() {
                 g.fillRect(this.position.x - 4, this.position.y - 4, 8, 8);
             }
         },
+        FIREWORK: {
+            render: function() {
+                g.fillStyle = settings.colors ? this.color : '#FFFFFF';
+                g.fillRect(this.position.x - 2, this.position.y - 2, 4, 4);
+            }
+        },
     };
 
-    var spawn = function(container, position, speed, baseAngle, spreadAngle, count, shape, color) {
+    var spawn = function(container, position, speed, baseAngle, spreadAngle, count, life, shape, color, callback) {
         if (settings.particles) {
             for (var i = 0; i < count; i++) {
                 var angle = randomFloat(baseAngle - spreadAngle / 2, baseAngle + spreadAngle / 2);
                 var particleVelocity = new Vector2(speed.x * Math.cos(angle), speed.y * Math.sin(angle));
                 var particleAcceleration = new Vector2(0, 110);
-                var particleLife = 3000;
+                var particleLife = life;
                 var particleColor = (i % 2 === 0) ? shadeColor(color, 5 * i) : shadeColor(color, -5 * i);
-                var particle = new Particle(new Vector2(position.x, position.y), particleVelocity, particleAcceleration, particleLife, shape, particleColor);
+                var particle = new Particle(new Vector2(position.x, position.y), particleVelocity, particleAcceleration, particleLife, shape, particleColor, callback);
                 container.push(particle);
             }
         }
@@ -41,7 +47,14 @@ var Particle = function() {
     };
 
     var update = function(delta) {
-        this.life -= delta;
+        if (this.life > 0) {
+            this.life -= delta;
+            if (this.life <= 0) {
+                if (this._callback !== undefined) {
+                    this._callback(this);
+                }
+            }
+        }
 
         this._tmpVector.set(this.acceleration);
         this.velocity.add(this._tmpVector.mul(delta / 1000));
@@ -51,7 +64,7 @@ var Particle = function() {
     };
 
 
-    var constructor = function Particle(position, velocity, acceleration, life, shape, color) {
+    var constructor = function Particle(position, velocity, acceleration, life, shape, color, callback) {
         this.position = position;
         this.velocity = velocity;
         this.acceleration = acceleration;
@@ -59,6 +72,7 @@ var Particle = function() {
         this._initialLife = life;
         this.shape = shape;
         this.color = color;
+        this._callback = callback;
         this._tmpVector = new Vector2(0, 0);
 
         this.render = render;

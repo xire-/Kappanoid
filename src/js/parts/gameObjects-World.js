@@ -297,6 +297,9 @@ var World = function() {
         handleBallBrickCollisions.call(this);
         handleBallPaddleCollisions.call(this);
 
+        // update particles
+        updateParticles.call(this, delta);
+
         // level finished?
         if (this._breakableBricks.length === 0) {
             // turn off peggle effect
@@ -308,9 +311,6 @@ var World = function() {
             this.render = renderLevelCompleted;
             this.update = updateLevelCompleted;
         }
-
-        // update particles
-        updateParticles.call(this, delta);
     };
 
 
@@ -361,13 +361,25 @@ var World = function() {
     var updateLevelCompleted = function(delta) {
         this._timePassed += delta;
 
+        // fireworks
+        this._fireworksTime += delta;
+        if (this._fireworksTime > 500) {
+            this._fireworksTime = 0;
+
+            var p = this.particles;
+            var callback = function(parent) {
+                Particle.spawn(p, parent.position, new Vector2(-randomInt(60, 110), -randomInt(80, 110)), 0, 2 * Math.PI, 30, 3000, Particle.shapes.MEDIUM_RECTANGLE, parent.color);
+            };
+            Particle.spawn(this.particles, new Vector2(0, constants.worldRelativeHeight), new Vector2(randomInt(20, 500), -randomInt(300, 700)), Math.PI / 4, 0.3, 1, 1000, Particle.shapes.FIREWORK, '#00FF00', callback);
+            Particle.spawn(this.particles, new Vector2(constants.worldRelativeWidth, constants.worldRelativeHeight), new Vector2(-randomInt(20, 500), -randomInt(300, 700)), Math.PI / 4, 0.3, 1, 1000, Particle.shapes.FIREWORK, '#00FF00', callback);
+        }
+
         if (this._timePassed < 1000) {
             // [0, 1000)
         } else if (this._timePassed < 2300) {
             // [1000, 2300)
-
-        } else if (this._timePassed < 3000) {
-            // [2300, 3000)
+        } else if (this._timePassed < 5000) {
+            // [2300, 5000)
         } else {
             // >3000 end of animation, enter the next level
             this._currentLevel = (this._currentLevel + 1) % levels.length;
@@ -382,6 +394,9 @@ var World = function() {
 
         // update paddle position (clamped)
         this.paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, 0 + this.paddle.halfSize.x), constants.worldRelativeWidth - this.paddle.halfSize.x);
+
+        // update particles
+        updateParticles.call(this, delta);
     };
 
     ///////// particles
@@ -410,19 +425,19 @@ var World = function() {
                 ball.center.x = -ball.center.x + ball.radius * 2;
                 ball.direction.x *= -1;
 
-                Particle.spawn(this.particles, new Vector2(0, ball.center.y), new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, Particle.shapes.SMALL_RECTANGLE, this.bordersColor);
+                Particle.spawn(this.particles, new Vector2(0, ball.center.y), new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, 3000, Particle.shapes.SMALL_RECTANGLE, this.bordersColor);
             }
             if (ball.center.y - ball.radius < 0) {
                 ball.center.y = -ball.center.y + ball.radius * 2;
                 ball.direction.y *= -1;
 
-                Particle.spawn(this.particles, new Vector2(ball.center.x, 0), new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, Particle.shapes.SMALL_RECTANGLE, this.bordersColor);
+                Particle.spawn(this.particles, new Vector2(ball.center.x, 0), new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, 3000, Particle.shapes.SMALL_RECTANGLE, this.bordersColor);
             }
             if (ball.center.x + ball.radius >= constants.worldRelativeWidth) {
                 ball.center.x = constants.worldRelativeWidth - ((ball.center.x + ball.radius) - constants.worldRelativeWidth) - ball.radius;
                 ball.direction.x *= -1;
 
-                Particle.spawn(this.particles, ball.center, new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, Particle.shapes.SMALL_RECTANGLE, this.bordersColor);
+                Particle.spawn(this.particles, ball.center, new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, 3000, Particle.shapes.SMALL_RECTANGLE, this.bordersColor);
             }
         }, this);
     };
@@ -447,19 +462,19 @@ var World = function() {
 
                         if (xDir) {
                             ball.direction.x = -ball.direction.x;
-                            Particle.spawn(this.particles, collisionPoint, new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, Particle.shapes.SMALL_RECTANGLE, brick.color);
+                            Particle.spawn(this.particles, collisionPoint, new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, 3000, Particle.shapes.SMALL_RECTANGLE, brick.color);
                         }
                         if (yDir) {
                             ball.direction.y = -ball.direction.y;
-                            Particle.spawn(this.particles, collisionPoint, new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, Particle.shapes.SMALL_RECTANGLE, brick.color);
+                            Particle.spawn(this.particles, collisionPoint, new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, 3000, Particle.shapes.SMALL_RECTANGLE, brick.color);
                         }
                     } else {
                         if (xColl) {
                             ball.direction.x = -ball.direction.x;
-                            Particle.spawn(this.particles, collisionPoint, new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, Particle.shapes.SMALL_RECTANGLE, brick.color);
+                            Particle.spawn(this.particles, collisionPoint, new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, 3000, Particle.shapes.SMALL_RECTANGLE, brick.color);
                         } else if (yColl) {
                             ball.direction.y = -ball.direction.y;
-                            Particle.spawn(this.particles, collisionPoint, new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, Particle.shapes.SMALL_RECTANGLE, brick.color);
+                            Particle.spawn(this.particles, collisionPoint, new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, 3000, Particle.shapes.SMALL_RECTANGLE, brick.color);
                         }
                     }
 
@@ -480,7 +495,7 @@ var World = function() {
 
                     this.score += hitbrick.value;
 
-                    Particle.spawn(this.particles, hitbrick.center, new Vector2(-randomInt(60, 110), -randomInt(80, 110)), 0, 2 * Math.PI, 30, Particle.shapes.MEDIUM_RECTANGLE, hitbrick.color);
+                    Particle.spawn(this.particles, hitbrick.center, new Vector2(-randomInt(60, 110), -randomInt(80, 110)), 0, 2 * Math.PI, 30, 3000, Particle.shapes.MEDIUM_RECTANGLE, hitbrick.color);
                 }
             }
         }, this);
@@ -500,7 +515,7 @@ var World = function() {
                         ball.direction.x = Math.sin(angle);
                         ball.direction.y = -Math.cos(angle);
 
-                        Particle.spawn(this.particles, collisionPoint, new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, Particle.shapes.SMALL_RECTANGLE, this.paddle.color);
+                        Particle.spawn(this.particles, collisionPoint, new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, 3000, Particle.shapes.SMALL_RECTANGLE, this.paddle.color);
                     }
                 }
 
@@ -544,6 +559,7 @@ var World = function() {
         this._currentLevel = 0;
         this._breakableBricks = [];
         this.score = 0;
+        this._fireworksTime = 0;
 
         this.reset = reset;
         this.render = renderIntro;
