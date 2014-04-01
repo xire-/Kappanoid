@@ -345,7 +345,7 @@ var World = function() {
 
         g.font = '30px emulogic';
         g.fillStyle = '#FFFFFF';
-        g.fillText('LEVEL 1', 290, 250);
+        g.fillText('LEVEL ' + (this._currentLevel + 1), 290, 250);
         g.fillText('COMPLETE!', 290, 280);
 
         g.restore();
