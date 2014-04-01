@@ -15,6 +15,40 @@ var IntroState = function() {
         }
     };
 
+    var drawCreditText = function(timePassed, text, lineHeight, y) {
+        var offs = (timePassed / 3) % 500;
+        var grd = g.createLinearGradient(-offs, 0, 1000 - offs, 0);
+        grd.addColorStop(0 / 12, '#f00');
+        grd.addColorStop(1 / 12, '#ff0');
+        grd.addColorStop(2 / 12, '#0f0');
+        grd.addColorStop(3 / 12, '#0ff');
+        grd.addColorStop(4 / 12, '#00f');
+        grd.addColorStop(5 / 12, '#f0f');
+        grd.addColorStop(6 / 12, '#f00');
+        grd.addColorStop(7 / 12, '#ff0');
+        grd.addColorStop(8 / 12, '#0f0');
+        grd.addColorStop(9 / 12, '#0ff');
+        grd.addColorStop(10 / 12, '#00f');
+        grd.addColorStop(11 / 12, '#f0f');
+        grd.addColorStop(12 / 12, '#f00');
+
+        g.fillStyle = grd;
+        for (var j = 0; j < text.length; j++) {
+            g.fillText(text[j], 0, y);
+            y += lineHeight;
+        }
+        return y;
+    };
+
+    var drawLogo = function(selectedLogo, logoHeight, y) {
+        // draw previously randomly selected logo
+        for (var i = 0; i < selectedLogo.length; i++) {
+            g.fillText(selectedLogo[i], 0, y);
+            y += logoHeight;
+        }
+        return y;
+    };
+
     ///////// idle state
 
     var renderIdle = function() {
@@ -42,10 +76,7 @@ var IntroState = function() {
         var y = -((lineHeightLogo * this._selectedLogo.length + this._insertCoinImage.height + lineHeightText * this._text.length) + logoImageDistance + imageTextDistance) / 2;
 
         // draw previously randomly selected logo
-        for (var i = 0; i < this._selectedLogo.length; i++) {
-            g.fillText(this._selectedLogo[i], 0, y);
-            y += lineHeightLogo;
-        }
+        y = drawLogo(this._selectedLogo, lineHeightLogo, y);
 
         // draw insert coin image
         y += logoImageDistance;
@@ -59,15 +90,7 @@ var IntroState = function() {
 
         // draw text
         y += imageTextDistance;
-        g.fillStyle = getColorString({
-            h: (this._timePassed / 3),
-            s: 100,
-            l: 50
-        });
-        for (var j = 0; j < this._text.length; j++) {
-            g.fillText(this._text[j], 0, y);
-            y += lineHeightText;
-        }
+        y = drawCreditText(this._timePassed, this._text, lineHeightText, y);
 
         g.restore();
     };
@@ -106,10 +129,7 @@ var IntroState = function() {
         var y = -((lineHeightLogo * this._selectedLogo.length + this._insertCoinImage.height + lineHeightText * this._text.length) + logoImageDistance + imageTextDistance) / 2;
 
         // draw previously randomly selected logo
-        for (var i = 0; i < this._selectedLogo.length; i++) {
-            g.fillText(this._selectedLogo[i], 0, y);
-            y += lineHeightLogo;
-        }
+        y = drawLogo(this._selectedLogo, lineHeightLogo, y);
 
         // draw insert coin image
         y += logoImageDistance;
@@ -120,15 +140,7 @@ var IntroState = function() {
 
         // draw text
         y += imageTextDistance;
-        g.fillStyle = getColorString({
-            h: (this._timePassed / 3),
-            s: 100,
-            l: 50
-        });
-        for (var j = 0; j < this._text.length; j++) {
-            g.fillText(this._text[j], 0, y);
-            y += lineHeightText;
-        }
+        y = drawCreditText(this._timePassed, this._text, lineHeightText, y);
 
         g.restore();
     };
