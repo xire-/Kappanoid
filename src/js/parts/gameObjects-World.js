@@ -291,11 +291,14 @@ var World = function() {
         if (this.bricks.length === 0) {
             // turn off peggle effect
             settings.timeScale = 1;
+
+            this.render = renderLevelCompleted;
         }
 
         // update particles
         updateParticles.call(this, delta);
     };
+
 
     var releaseBalls = function() {
         if (this._canReleaseBalls) {
@@ -307,6 +310,33 @@ var World = function() {
             this.update = updatePlaying;
             this._canReleaseBalls = false;
         }
+    };
+
+    ///////// level completed state
+
+    var renderLevelCompleted = function() {
+        g.save();
+
+        drawEmptyWorld.call(this);
+
+        // render balls, bricks and paddle
+        this.balls.forEach(function(ball) {
+            ball.render();
+        });
+
+        this.paddle.render();
+
+        // render particles
+        this.particles.forEach(function(particle) {
+            particle.render(g);
+        });
+
+        g.font = '30px emulogic';
+        g.fillStyle = '#FFFFFF';
+        g.fillText('LEVEL 1', 290, 250);
+        g.fillText('COMPLETE!', 290, 280);
+
+        g.restore();
     };
 
     ///////// particles
@@ -325,6 +355,7 @@ var World = function() {
             this.particles.splice(index, 1);
         }
     };
+
     ///////// collisions
 
     var handleBallBordersCollisions = function() {
