@@ -17,7 +17,7 @@ var IntroState = function() {
 
     ///////// idle state
 
-    var renderIdle = function( /*delta*/ ) {
+    var renderIdle = function() {
         g.save();
 
         // clear the previous frame
@@ -78,7 +78,7 @@ var IntroState = function() {
 
     ///////// outro state
 
-    var renderOutro = function( /*delta*/ ) {
+    var renderOutro = function() {
         g.save();
 
         // clear the previous frame

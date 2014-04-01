@@ -167,7 +167,7 @@ var World = function() {
 
         // render particles
         this.particles.forEach(function(particle) {
-            particle.render(g);
+            particle.render();
         });
 
         g.restore();
@@ -220,7 +220,7 @@ var World = function() {
 
         // render particles
         this.particles.forEach(function(particle) {
-            particle.render(g);
+            particle.render();
         });
 
         g.restore();
@@ -342,7 +342,7 @@ var World = function() {
 
         // render particles
         this.particles.forEach(function(particle) {
-            particle.render(g);
+            particle.render();
         });
 
 

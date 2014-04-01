@@ -32,7 +32,7 @@ var PlayingState = function() {
         }
     };
 
-    var render = function( /*delta*/ ) {
+    var render = function() {
         g.save();
 
         // clear the previous frame

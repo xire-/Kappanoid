@@ -11,7 +11,7 @@ var GameOverState = function() {
         }
     };
 
-    var renderDestroyEverything = function( /*delta*/ ) {
+    var renderDestroyEverything = function() {
         g.save();
 
         // clear the previous frame
@@ -26,7 +26,7 @@ var GameOverState = function() {
         g.restore();
     };
 
-    var updateDestroyEverything = function(delta) {
+    var updateDestroyEverything = function( /*delta*/ ) {
         ///world.update(delta);
     };
 

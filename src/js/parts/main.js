@@ -160,7 +160,7 @@ var kappanoid = (function() {
             steps -= 1;
         }
 
-        currState.render(elapsed);
+        currState.render();
 
         // render game info
         gameInfo.render(elapsed);
