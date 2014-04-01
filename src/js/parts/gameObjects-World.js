@@ -17,8 +17,11 @@ var World = function() {
 
         this.pruningGrid = new PruningGrid(new Vector2(20, 15), new Vector2(0, 0), new Vector2(800, 600), 7);
 
-        this.bricks = levels[0].bricks();
+        this.bricks = levels[this._currentLevel].bricks();
         this.bricks.forEach(function(brick) {
+            // randomize falling animation offset
+            this._brickMillisOffset.push(randomInt(300));
+
             this.pruningGrid.addAABB(brick);
         }, this);
 
@@ -294,6 +297,7 @@ var World = function() {
             // turn off peggle effect
             settings.timeScale = 1;
 
+            this._timePassed = 0;
             this.render = renderLevelCompleted;
             this.update = updateLevelCompleted;
         }
@@ -343,15 +347,29 @@ var World = function() {
     };
 
     var updateLevelCompleted = function(delta) {
-        this.balls.forEach(function(ball) {
-            ball.update(delta);
-        });
+        this._timePassed += delta;
+
+        if (this._timePassed < 1000) {
+            // [0, 1000)
+        } else if (this._timePassed < 2300) {
+            // [1000, 2300)
+
+        } else if (this._timePassed < 3000) {
+            // [2300, 3000)
+        } else {
+            // >3000 end of animation, enter the next level
+            this._currentLevel += 1;
+            this.reset(false);
+
+            this._timePassed = 1000;
+            this.render = renderIntroFalling;
+            this.update = updateIntro;
+        }
 
         this.paddle.update(delta);
 
         // update paddle position (clamped)
         this.paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, 0 + this.paddle.halfSize.x), constants.worldRelativeWidth - this.paddle.halfSize.x);
-
     };
 
     ///////// particles
@@ -509,6 +527,7 @@ var World = function() {
         this._canReleaseBalls = false;
         this._timePassed = 0;
         this._brickMillisOffset = 0;
+        this._currentLevel = 0;
 
         this.reset = reset;
         this.render = renderIntro;

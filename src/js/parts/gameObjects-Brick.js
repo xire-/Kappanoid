@@ -43,7 +43,7 @@ var Brick = function() {
         GOLD: {
             life: Number.POSITIVE_INFINITY,
             color: '#FFD700',
-            value: null
+            value: 1337
         },
     };
 
