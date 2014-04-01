@@ -302,6 +302,8 @@ var World = function() {
             // turn off peggle effect
             settings.timeScale = 1;
 
+            new Audio("sound/levelCompletedFanfare.mp3").play();
+
             this._timePassed = 0;
             this.render = renderLevelCompleted;
             this.update = updateLevelCompleted;
