@@ -18,9 +18,14 @@ var World = function() {
         this.pruningGrid = new PruningGrid(new Vector2(20, 15), new Vector2(0, 0), new Vector2(800, 600), 7);
 
         this.bricks = levels[this._currentLevel].bricks();
+        this._unbreakableBricksCount = 0;
         this.bricks.forEach(function(brick) {
             // randomize falling animation offset
             this._brickMillisOffset.push(randomInt(300));
+
+            if (brick.life === Number.POSITIVE_INFINITY) {
+                this._unbreakableBricksCount += 1;
+            }
 
             this.pruningGrid.addAABB(brick);
         }, this);
@@ -268,7 +273,7 @@ var World = function() {
 
         // peggle effect
         if (settings.lastBrickSlowMo) {
-            if (this.bricks.length === 1) {
+            if (this.bricks.length === this._unbreakableBricksCount + 1) {
                 var lastBrick = this.bricks[0];
                 var distance;
                 var ballNear = this.balls.some(function(ball) {
@@ -293,7 +298,7 @@ var World = function() {
         handleBallBrickCollisions.call(this);
 
         // level finished?
-        if (this.bricks.length === 0) {
+        if (this.bricks.length === this._unbreakableBricksCount) {
             // turn off peggle effect
             settings.timeScale = 1;
 
@@ -358,7 +363,7 @@ var World = function() {
             // [2300, 3000)
         } else {
             // >3000 end of animation, enter the next level
-            this._currentLevel += 1;
+            this._currentLevel = (this._currentLevel + 1) % levels.length;
             this.reset(false);
 
             this._timePassed = 1000;
@@ -528,6 +533,7 @@ var World = function() {
         this._timePassed = 0;
         this._brickMillisOffset = 0;
         this._currentLevel = 0;
+        this._unbreakableBricksCount = 0;
 
         this.reset = reset;
         this.render = renderIntro;
