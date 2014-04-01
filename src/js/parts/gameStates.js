@@ -3,3 +3,6 @@
 
 ///////////////// PlayingState
 // __import__ gameStates-PlayingState.js
+
+///////////////// GameOverState
+// __import__ gameStates-GameOverState.js

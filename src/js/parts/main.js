@@ -77,6 +77,7 @@ var kappanoid = (function() {
         states = {
             intro: new IntroState(),
             playing: new PlayingState(),
+            gameover: new GameOverState(),
         };
         currState = states.intro;
 

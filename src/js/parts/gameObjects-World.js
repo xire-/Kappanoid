@@ -44,7 +44,7 @@ var World = function() {
         */
 
         var paddleHalfSize = new Vector2(50, 15);
-        this.paddle = new Paddle(new Vector2(800 / 2, 600 + paddleHalfSize.y - 50), paddleHalfSize, 3, constants.paddleColor);
+        this.paddle = new Paddle(new Vector2(800 / 2, 600 + paddleHalfSize.y - 50), paddleHalfSize, 2, constants.paddleColor);
 
         this.particles = [];
     };
@@ -277,7 +277,7 @@ var World = function() {
                 });
 
                 // to slow or not to slow
-                settings.timeScale = ballNear ? clamp(0.15, (distance-30) / 20, 1) : 1;
+                settings.timeScale = ballNear ? clamp(0.15, (distance - 30) / 20, 1) : 1;
             }
         }
 
@@ -419,14 +419,14 @@ var World = function() {
         if (this.balls.length === 0) {
             // all balls are dead
             //add new ball if it has lives remaining
+            this.paddle.life -= 1;
             if (this.paddle.life > 0) {
-                this.paddle.life -= 1;
                 this.balls.push(new Ball(new Vector2(400, 600 - 50 - 7), 7, 0, new Vector2(0, -1), constants.ballColor));
                 this.update = updateRespawn;
                 this.render = renderRespawn;
                 this._timePassed = 0;
             } else {
-                // TODO game over!
+                currState = states.gameover;
             }
         }
     };
