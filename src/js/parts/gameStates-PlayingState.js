@@ -24,7 +24,7 @@ var PlayingState = function() {
                 break;
             case 108: // L
                 for (var i = 0; i < 50; i++) {
-                    var angle = randomFloat(Math.PI*2);
+                    var angle = randomFloat(Math.PI * 2);
                     var particleVelocity = new Vector2(randomFloat(200) * Math.cos(angle), randomFloat(200) * Math.sin(angle));
                     var particleAcceleration = new Vector2(0, 110);
                     var particleLife = randomInt(800, 1200);

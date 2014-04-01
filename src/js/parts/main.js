@@ -152,13 +152,7 @@ var kappanoid = (function() {
             count = 0;
         }
 
-        var steps = 10;
-        var ministep = elapsed / steps;
-
-        while (steps > 0) {
-            currState.update(ministep * settings.timeScale);
-            steps -= 1;
-        }
+        currState.update(elapsed * settings.timeScale);
 
         currState.render();
 

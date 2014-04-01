@@ -262,14 +262,24 @@ var World = function() {
             return;
         }
 
-        // update single components
-        this.balls.forEach(function(ball) {
-            ball.update(delta);
-        });
-
         this.bricks.forEach(function(brick) {
             brick.update(delta);
         });
+
+        this.paddle.update(delta);
+        // update paddle position (clamped)
+        this.paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, 0 + this.paddle.halfSize.x), constants.worldRelativeWidth - this.paddle.halfSize.x);
+
+        var steps = 10;
+        for (var i = 0; i < steps; i++) {
+            for (var j = this.balls.length - 1; j >= 0; j--) {
+                this.balls[j].update(delta / steps);
+            }
+
+            handleBallBordersCollisions.call(this);
+            handleBallBrickCollisions.call(this);
+            handleBallPaddleCollisions.call(this);
+        }
 
         // peggle effect
         if (settings.lastBrickSlowMo) {
@@ -287,15 +297,6 @@ var World = function() {
                 settings.timeScale = ballNear ? clamp(0.15, (distance - 30) / 20, 1) : 1;
             }
         }
-
-        this.paddle.update(delta);
-
-        // update paddle position (clamped)
-        this.paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, 0 + this.paddle.halfSize.x), constants.worldRelativeWidth - this.paddle.halfSize.x);
-
-        handleBallBordersCollisions.call(this);
-        handleBallBrickCollisions.call(this);
-        handleBallPaddleCollisions.call(this);
 
         // update particles
         updateParticles.call(this, delta);
