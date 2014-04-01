@@ -294,8 +294,8 @@ var World = function() {
         this.paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, 0 + this.paddle.halfSize.x), constants.worldRelativeWidth - this.paddle.halfSize.x);
 
         handleBallBordersCollisions.call(this);
-        handleBallPaddleCollisions.call(this);
         handleBallBrickCollisions.call(this);
+        handleBallPaddleCollisions.call(this);
 
         // level finished?
         if (this._breakableBricks.length === 0) {
@@ -410,19 +410,78 @@ var World = function() {
                 ball.center.x = -ball.center.x + ball.radius * 2;
                 ball.direction.x *= -1;
 
-                Particle.spawn(this.particles, new Vector2(0, ball.center.y), -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, Particle.shapes.SMALL_RECTANGLE, this.bordersColor);
+                Particle.spawn(this.particles, new Vector2(0, ball.center.y), new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, Particle.shapes.SMALL_RECTANGLE, this.bordersColor);
             }
             if (ball.center.y - ball.radius < 0) {
                 ball.center.y = -ball.center.y + ball.radius * 2;
                 ball.direction.y *= -1;
 
-                Particle.spawn(this.particles, new Vector2(ball.center.x, 0), -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, Particle.shapes.SMALL_RECTANGLE, this.bordersColor);
+                Particle.spawn(this.particles, new Vector2(ball.center.x, 0), new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, Particle.shapes.SMALL_RECTANGLE, this.bordersColor);
             }
             if (ball.center.x + ball.radius >= constants.worldRelativeWidth) {
                 ball.center.x = constants.worldRelativeWidth - ((ball.center.x + ball.radius) - constants.worldRelativeWidth) - ball.radius;
                 ball.direction.x *= -1;
 
-                Particle.spawn(this.particles, ball.center, -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, Particle.shapes.SMALL_RECTANGLE, this.bordersColor);
+                Particle.spawn(this.particles, ball.center, new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, Particle.shapes.SMALL_RECTANGLE, this.bordersColor);
+            }
+        }, this);
+    };
+
+    var handleBallBrickCollisions = function() {
+        this.balls.forEach(function(ball) {
+            // get closer bricks from pruning structure
+            var closerBricks = this.pruningGrid.getNearby(ball.center);
+            var hitBricks = [];
+            var tmpVec = new Vector2(0, 0);
+
+            closerBricks.forEach(function(brick) {
+                var collisionPoint = collisionDetection.testSphereAABB(ball, brick);
+                if (collisionPoint !== null) {
+                    var xColl = collisionPoint.x == brick.center.x - brick.halfSize.x || collisionPoint.x == brick.center.x + brick.halfSize.x;
+                    var yColl = collisionPoint.y == brick.center.y - brick.halfSize.y || collisionPoint.y == brick.center.y + brick.halfSize.y;
+
+                    if (xColl && yColl) {
+                        tmpVec.set(brick.center).sub(collisionPoint);
+                        var xDir = ball.direction.x * tmpVec.x > 0;
+                        var yDir = ball.direction.y * tmpVec.y > 0;
+
+                        if (xDir) {
+                            ball.direction.x = -ball.direction.x;
+                            Particle.spawn(this.particles, collisionPoint, new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, Particle.shapes.SMALL_RECTANGLE, brick.color);
+                        }
+                        if (yDir) {
+                            ball.direction.y = -ball.direction.y;
+                            Particle.spawn(this.particles, collisionPoint, new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, Particle.shapes.SMALL_RECTANGLE, brick.color);
+                        }
+                    } else {
+                        if (xColl) {
+                            ball.direction.x = -ball.direction.x;
+                            Particle.spawn(this.particles, collisionPoint, new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, Particle.shapes.SMALL_RECTANGLE, brick.color);
+                        } else if (yColl) {
+                            ball.direction.y = -ball.direction.y;
+                            Particle.spawn(this.particles, collisionPoint, new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, Particle.shapes.SMALL_RECTANGLE, brick.color);
+                        }
+                    }
+
+                    hitBricks.push(brick);
+                }
+            }, this);
+
+            for (var i = hitBricks.length - 1; i >= 0; i--) {
+                var hitbrick = hitBricks[i];
+                hitbrick.hit();
+                if (hitbrick.life <= 0) {
+                    // remove hitbrick from all bricks
+                    this.bricks.splice(this.bricks.indexOf(hitbrick), 1);
+                    // remove hitbrick from breakable bricks
+                    this._breakableBricks.splice(this._breakableBricks.indexOf(hitbrick), 1);
+                    // remove hitbrick from pruning grid
+                    this.pruningGrid.removeAABB(hitbrick);
+
+                    this.score += hitbrick.value;
+
+                    Particle.spawn(this.particles, hitbrick.center, new Vector2(-randomInt(60, 110), -randomInt(80, 110)), 0, 2 * Math.PI, 30, Particle.shapes.MEDIUM_RECTANGLE, hitbrick.color);
+                }
             }
         }, this);
     };
@@ -441,7 +500,7 @@ var World = function() {
                         ball.direction.x = Math.sin(angle);
                         ball.direction.y = -Math.cos(angle);
 
-                        Particle.spawn(this.particles, collisionPoint, -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, Particle.shapes.SMALL_RECTANGLE, this.paddle.color);
+                        Particle.spawn(this.particles, collisionPoint, new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, Particle.shapes.SMALL_RECTANGLE, this.paddle.color);
                     }
                 }
 
@@ -471,65 +530,6 @@ var World = function() {
                 currState = states.gameover;
             }
         }
-    };
-
-    var handleBallBrickCollisions = function() {
-        this.balls.forEach(function(ball) {
-            // get closer bricks from pruning structure
-            var closerBricks = this.pruningGrid.getNearby(ball.center);
-            var hitBricks = [];
-            var tmpVec = new Vector2(0, 0);
-
-            closerBricks.forEach(function(brick) {
-                var collisionPoint = collisionDetection.testSphereAABB(ball, brick);
-                if (collisionPoint !== null) {
-                    var xColl = collisionPoint.x == brick.center.x - brick.halfSize.x || collisionPoint.x == brick.center.x + brick.halfSize.x;
-                    var yColl = collisionPoint.y == brick.center.y - brick.halfSize.y || collisionPoint.y == brick.center.y + brick.halfSize.y;
-
-                    if (xColl && yColl) {
-                        tmpVec.set(brick.center).sub(collisionPoint);
-                        var xDir = ball.direction.x * tmpVec.x > 0;
-                        var yDir = ball.direction.y * tmpVec.y > 0;
-
-                        if (xDir) {
-                            ball.direction.x = -ball.direction.x;
-                            Particle.spawn(this.particles, collisionPoint, -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, Particle.shapes.SMALL_RECTANGLE, brick.color);
-                        }
-                        if (yDir) {
-                            ball.direction.y = -ball.direction.y;
-                            Particle.spawn(this.particles, collisionPoint, -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, Particle.shapes.SMALL_RECTANGLE, brick.color);
-                        }
-                    } else {
-                        if (xColl) {
-                            ball.direction.x = -ball.direction.x;
-                            Particle.spawn(this.particles, collisionPoint, -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, Particle.shapes.SMALL_RECTANGLE, brick.color);
-                        } else if (yColl) {
-                            ball.direction.y = -ball.direction.y;
-                            Particle.spawn(this.particles, collisionPoint, -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, Particle.shapes.SMALL_RECTANGLE, brick.color);
-                        }
-                    }
-
-                    hitBricks.push(brick);
-                }
-            }, this);
-
-            for (var i = hitBricks.length - 1; i >= 0; i--) {
-                var hitbrick = hitBricks[i];
-                hitbrick.hit();
-                if (hitbrick.life <= 0) {
-                    // remove hitbrick from all bricks
-                    this.bricks.splice(this.bricks.indexOf(hitbrick), 1);
-                    // remove hitbrick from breakable bricks
-                    this._breakableBricks.splice(this._breakableBricks.indexOf(hitbrick), 1);
-                    // remove hitbrick from pruning grid
-                    this.pruningGrid.removeAABB(hitbrick);
-
-                    this.score += hitbrick.value;
-
-                    Particle.spawn(this.particles, hitbrick.center, 0, 2 * Math.PI, 30, Particle.shapes.MEDIUM_RECTANGLE, hitbrick.color);
-                }
-            }
-        }, this);
     };
 
 
