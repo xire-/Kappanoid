@@ -79,14 +79,14 @@ var kappanoid = (function() {
             playing: new PlayingState(),
             gameover: new GameOverState(),
         };
-        currState = states.playing;
+        currState = states.intro;
 
         initCanvas(width, height);
 
         gameInfo = new GameInfo(new Vector2(0, 0), new Vector2(constants.gameInfoRelativeWidth, constants.gameInfoRelativeHeight));
         world = new World(new Vector2(constants.bordersRelativeThickness, constants.gameInfoRelativeHeight + constants.bordersRelativeThickness), new Vector2(constants.worldRelativeWidth, constants.worldRelativeHeight));
 
-        mainLoop(0);
+        mainLoop();
     };
 
     var initCanvas = function(width, height) {
@@ -133,6 +133,7 @@ var kappanoid = (function() {
 
 
     var mainLoop = function(timestamp) {
+        timestamp = (timestamp !== undefined) ? timestamp : lastTime;
         var elapsed = timestamp - lastTime;
         lastTime = timestamp;
         var startLoopTime = Date.now();
