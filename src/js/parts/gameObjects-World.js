@@ -18,13 +18,13 @@ var World = function() {
         this.pruningGrid = new PruningGrid(new Vector2(20, 15), new Vector2(0, 0), new Vector2(800, 600), 7);
 
         this.bricks = levels[this._currentLevel].bricks();
-        this._unbreakableBricksCount = 0;
+        this._breakableBricks = [];
         this.bricks.forEach(function(brick) {
             // randomize falling animation offset
             this._brickMillisOffset.push(randomInt(300));
 
-            if (brick.life === Number.POSITIVE_INFINITY) {
-                this._unbreakableBricksCount += 1;
+            if (brick.life !== Number.POSITIVE_INFINITY) {
+                this._breakableBricks.push(brick);
             }
 
             this.pruningGrid.addAABB(brick);
@@ -273,8 +273,8 @@ var World = function() {
 
         // peggle effect
         if (settings.lastBrickSlowMo) {
-            if (this.bricks.length === this._unbreakableBricksCount + 1) {
-                var lastBrick = this.bricks[0];
+            if (this._breakableBricks.length === 1 && this._breakableBricks[0].life === 1) {
+                var lastBrick = this._breakableBricks[0];
                 var distance;
                 var ballNear = this.balls.some(function(ball) {
                     // check if ball is near the last brick
@@ -298,11 +298,11 @@ var World = function() {
         handleBallBrickCollisions.call(this);
 
         // level finished?
-        if (this.bricks.length === this._unbreakableBricksCount) {
+        if (this._breakableBricks.length === 0) {
             // turn off peggle effect
             settings.timeScale = 1;
 
-            new Audio("sound/levelCompletedFanfare.mp3").play();
+            new Audio('sound/levelCompletedFanfare.mp3').play();
 
             this._timePassed = 0;
             this.render = renderLevelCompleted;
@@ -510,17 +510,18 @@ var World = function() {
 
             for (var i = hitBricks.length - 1; i >= 0; i--) {
                 var hitbrick = hitBricks[i];
-                for (var j = this.bricks.length - 1; j >= 0; j--) {
-                    if (this.bricks[j] === hitbrick) {
-                        hitbrick.hit();
-                        if (hitbrick.life <= 0) {
-                            this.bricks.splice(j, 1);
-                            this.pruningGrid.removeAABB(hitbrick);
-                            this.score += hitbrick.value;
+                hitbrick.hit();
+                if (hitbrick.life <= 0) {
+                    // remove hitbrick from all bricks
+                    this.bricks.splice(this.bricks.indexOf(hitbrick), 1);
+                    // remove hitbrick from breakable bricks
+                    this._breakableBricks.splice(this._breakableBricks.indexOf(hitbrick), 1);
+                    // remove hitbrick from pruning grid
+                    this.pruningGrid.removeAABB(hitbrick);
 
-                            Particle.spawn(this.particles, hitbrick.center, 0, 2 * Math.PI, 30, Particle.shapes.MEDIUM_RECTANGLE, hitbrick.color);
-                        }
-                    }
+                    this.score += hitbrick.value;
+
+                    Particle.spawn(this.particles, hitbrick.center, 0, 2 * Math.PI, 30, Particle.shapes.MEDIUM_RECTANGLE, hitbrick.color);
                 }
             }
         }, this);
@@ -536,7 +537,7 @@ var World = function() {
         this._timePassed = 0;
         this._brickMillisOffset = 0;
         this._currentLevel = 0;
-        this._unbreakableBricksCount = 0;
+        this._breakableBricks = [];
         this.score = 0;
 
         this.reset = reset;
