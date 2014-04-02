@@ -12,6 +12,8 @@ var World = function() {
             this.update = updateIntro;
         }
 
+        this.powerups = [];
+
         this.balls = [];
         this.balls.push(new Ball(new Vector2(400, 600 - 50 - 7), 7, 0, new Vector2(0, -1), constants.ballColor));
 
@@ -165,6 +167,11 @@ var World = function() {
 
         this.paddle.render();
 
+        // render powerups
+        this.powerups.forEach(function(powerUp) {
+            powerUp.render();
+        });
+
         // render particles
         this.particles.forEach(function(particle) {
             particle.render();
@@ -266,6 +273,11 @@ var World = function() {
             brick.update(delta);
         });
 
+        // update powerups
+        this.powerups.forEach(function(powerUp) {
+            powerUp.update(delta);
+        });
+
         this.paddle.update(delta);
         // update paddle position (clamped)
         this.paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, 0 + this.paddle.halfSize.x), constants.worldRelativeWidth - this.paddle.halfSize.x);
@@ -279,6 +291,7 @@ var World = function() {
             handleBallBordersCollisions.call(this);
             handleBallBrickCollisions.call(this);
             handleBallPaddleCollisions.call(this);
+            handlePowerUpPaddleCollisions.call(this);
         }
 
         // peggle effect
@@ -340,6 +353,11 @@ var World = function() {
         });
 
         this.paddle.render();
+
+        // render powerups
+        this.powerups.forEach(function(powerUp) {
+            powerUp.render();
+        });
 
         // render particles
         this.particles.forEach(function(particle) {
@@ -498,6 +516,12 @@ var World = function() {
 
                     this.score += hitbrick.value;
 
+                    // maybe spawn powerup (not silver and 1 in 10 chance)
+                    if (hitbrick.type !== Brick.types.SILVER && randomFloat(2) < 1) {
+                        var pType = PowerUp.types[Object.keys(PowerUp.types)[randomInt(Object.keys(PowerUp.types).length)]];
+                        this.powerups.push(new PowerUp(hitbrick.center.clone(), hitbrick.halfSize.clone(), pType));
+                    }
+
                     Particle.spawn(this.particles, hitbrick.center, new Vector2(-randomInt(60, 110), -randomInt(80, 110)), 0, 2 * Math.PI, 30, 3000, Particle.shapes.MEDIUM_RECTANGLE, hitbrick.color);
                 }
             }
@@ -540,6 +564,9 @@ var World = function() {
             //add new ball if it has lives remaining
             this.paddle.life -= 1;
             if (this.paddle.life > 0) {
+                //delete all falling powerup
+                this.powerups = [];
+
                 this.balls.push(new Ball(new Vector2(400, 600 - 50 - 7), 7, 0, new Vector2(0, -1), constants.ballColor));
                 this.update = updateRespawn;
                 this.render = renderRespawn;
@@ -547,6 +574,35 @@ var World = function() {
             } else {
                 currState = states.gameover;
             }
+        }
+    };
+
+    var handlePowerUpPaddleCollisions = function() {
+        var deadPowerUps = [];
+        this.powerups.forEach(function(powerUp, i) {
+            // check powerUp vs bottom and paddle
+            if (powerUp.center.y + powerUp.halfSize.y >= this.paddle.center.y - this.paddle.halfSize.y) {
+                // if they are intersecting
+                if (Math.abs(powerUp.center.x - this.paddle.center.x) < powerUp.halfSize.x + this.paddle.halfSize.x) {
+                    // remove powerup
+                    deadPowerUps.push(i);
+                    // activate powerup
+                    powerUp.onActivate();
+                }
+
+
+                // check if powerUp is dead
+                if (powerUp.center.y - powerUp.halfSize.y >= this.paddle.center.y + this.paddle.halfSize.y) {
+                    // powerUp is under the paddle and can be removed
+                    deadPowerUps.push(i);
+                }
+            }
+        }, this);
+
+        for (var i = deadPowerUps.length - 1; i >= 0; i--) {
+            var index = deadPowerUps[i];
+            // TODO ball.die();
+            this.powerups.splice(index, 1);
         }
     };
 

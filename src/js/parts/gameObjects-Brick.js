@@ -76,6 +76,7 @@ var Brick = function() {
         this.life = type.life;
         this.color = type.color;
         this.value = type.value;
+        this.type = type;
 
         this.hit = hit;
         this.render = render;

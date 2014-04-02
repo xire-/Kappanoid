@@ -10,6 +10,9 @@
 ///////////////// Particle
 // __import__ gameObjects-Particle.js
 
+///////////////// PowerUp
+// __import__ gameObjects-PowerUp.js
+
 ///////////////// Levels
 // __import__ levels.js
 
