@@ -428,17 +428,23 @@ var World = function() {
                 ball.center.x = -ball.center.x + ball.radius * 2;
                 ball.direction.x *= -1;
 
+                ball.addTrailVertex(ball.center);
+
                 Particle.spawn(this.particles, new Vector2(0, ball.center.y), new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, 3000, Particle.shapes.SMALL_RECTANGLE, this.bordersColor);
             }
             if (ball.center.y - ball.radius < 0) {
                 ball.center.y = -ball.center.y + ball.radius * 2;
                 ball.direction.y *= -1;
 
+                ball.addTrailVertex(ball.center);
+
                 Particle.spawn(this.particles, new Vector2(ball.center.x, 0), new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, 3000, Particle.shapes.SMALL_RECTANGLE, this.bordersColor);
             }
             if (ball.center.x + ball.radius >= constants.worldRelativeWidth) {
                 ball.center.x = constants.worldRelativeWidth - ((ball.center.x + ball.radius) - constants.worldRelativeWidth) - ball.radius;
                 ball.direction.x *= -1;
+
+                ball.addTrailVertex(ball.center);
 
                 Particle.spawn(this.particles, ball.center, new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, 3000, Particle.shapes.SMALL_RECTANGLE, this.bordersColor);
             }
@@ -481,6 +487,8 @@ var World = function() {
                         }
                     }
 
+                    ball.addTrailVertex(ball.center);
+
                     hitBricks.push(brick);
                 }
             }, this);
@@ -517,6 +525,8 @@ var World = function() {
                         var angle = (collisionPoint.x - this.paddle.center.x) / this.paddle.halfSize.x;
                         ball.direction.x = Math.sin(angle);
                         ball.direction.y = -Math.cos(angle);
+
+                        ball.addTrailVertex(ball.center);
 
                         Particle.spawn(this.particles, collisionPoint, new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, 3000, Particle.shapes.SMALL_RECTANGLE, this.paddle.color);
                     }

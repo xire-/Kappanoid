@@ -1,11 +1,37 @@
 var Ball = function() {
+    var addTrailVertex = function(vertex) {
+        this._trailVertices.push(new Vector2(vertex.x, vertex.y));
+    };
+
     var render = function() {
         g.save();
+
+        g.save();
+
         g.translate(this.center.x, this.center.y);
         g.rotate(-Math.atan2(this.direction.x, this.direction.y));
 
         g.fillStyle = settings.colors ? this.color : '#FFFFFF';
         g.fillRect(-this.radius, -this.radius, this.radius * 2, this.radius * 2);
+
+        g.restore();
+
+        // draw ball trail
+        g.lineWidth = 4;
+        g.strokeStyle = '#FFFFFF';
+        g.beginPath();
+        g.moveTo(this.center.x, this.center.y);
+        var vertex = this._trailVertices[this._trailVertices.length - 1]; // length should be always > 0
+        var distance = 0;
+        for (var i = this._trailVertices.length - 2; i >= 0; i--) {
+            distance += vertex.distance(this._trailVertices[i]);
+            if (distance > 1000) {
+                break;
+            }
+            g.lineTo(vertex.x, vertex.y);
+            vertex = this._trailVertices[i];
+        }
+        g.stroke();
 
         g.restore();
     };
@@ -21,7 +47,10 @@ var Ball = function() {
         this.speed = speed;
         this.direction = direction;
         this.color = color;
+        this._trailVertices = [];
+        this._trailVertices.push(this.center);
 
+        this.addTrailVertex = addTrailVertex;
         this.render = render;
         this.update = update;
     };
