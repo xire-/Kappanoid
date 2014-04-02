@@ -25,4 +25,5 @@ function testGameObjects() {
     testBrick();
     testPaddle();
     testParticle();
+    testPowerUp();
 }
