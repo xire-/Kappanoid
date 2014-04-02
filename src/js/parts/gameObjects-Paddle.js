@@ -55,7 +55,7 @@ var Paddle = function() {
 
         set life(value) {
             console.assert(value !== undefined && typeof value == 'number', JSON.stringify(value));
-            this._life = value;
+            this._life = Math.min(value, 10);
         },
         get life() {
             return this._life;

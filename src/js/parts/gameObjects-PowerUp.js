@@ -25,21 +25,29 @@ var PowerUp = function() {
             character: 'S',
             color: 'orange',
             onActivate: function() {
-
+                world.balls.forEach(function(ball) {
+                    ball.speed = ball.speed * 0.75;
+                });
             }
         },
         DISRUPTION: {
             character: 'D',
             color: 'cyan',
             onActivate: function() {
+                var ball = world.balls[0];
+                var rand;
+                rand = randomFloat(-0.1, 0.1);
+                world.balls.push(new Ball(ball.center.clone(), ball.radius, ball.speed, new Vector2(-1 + rand, -1), constants.ballColor));
 
+                rand = randomFloat(-0.1, 0.1);
+                world.balls.push(new Ball(ball.center.clone(), ball.radius, ball.speed, new Vector2(1 + rand, -1), constants.ballColor));
             }
         },
         PLAYER: {
             character: 'P',
             color: 'gray',
             onActivate: function() {
-
+                world.paddle.life += 1;
             }
         },
     };

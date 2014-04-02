@@ -32,26 +32,6 @@ var World = function() {
             this.pruningGrid.addAABB(brick);
         }, this);
 
-        /*
-        var blockHalfSize = new Vector2(25, 10);
-        for (var i = 0; i < 10; i++) {
-            for (var j = 0; j < 8; j++) {
-                // randomize falling animation offset
-                this._brickMillisOffset.push(randomInt(300));
-
-                var blockCenter = new Vector2(
-                    105 + blockHalfSize.x + i * (blockHalfSize.x * 2 + 10),
-                    30 + 47 + j * (blockHalfSize.y * 2 + 10)
-                );
-                var life = randomInt(1, 5);
-
-                var newBrick = new Brick(blockCenter, blockHalfSize, life, constants.brickColor);
-                this.bricks.push(newBrick);
-                this.pruningGrid.addAABB(newBrick);
-            }
-        }
-        */
-
         var paddleHalfSize = new Vector2(50, 15);
         this.paddle = new Paddle(new Vector2(800 / 2, 600 + paddleHalfSize.y - 50), paddleHalfSize, 2, constants.paddleColor);
 
@@ -525,8 +505,9 @@ var World = function() {
                     this.score += hitbrick.value;
 
                     // TODO maybe spawn powerup (not silver and 1 in 10 chance)
-                    if (this.fallingPowerup === null && hitbrick.type !== Brick.types.SILVER && randomFloat(1) < 1) {
+                    if (this.fallingPowerup === null && this.balls.length === 1 && hitbrick.type !== Brick.types.SILVER && randomFloat(1) < 1) {
                         var pType = PowerUp.types[Object.keys(PowerUp.types)[randomInt(Object.keys(PowerUp.types).length)]];
+                        var pType = PowerUp.types.PLAYER;
                         this.fallingPowerup = new PowerUp(hitbrick.center.clone(), hitbrick.halfSize.clone(), pType);
                     }
 
