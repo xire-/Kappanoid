@@ -12,7 +12,7 @@ var World = function() {
             this.update = updateIntro;
         }
 
-        this.powerup = null;
+        this.fallingPowerup = null;
 
         this.balls = [];
         this.balls.push(new Ball(new Vector2(400, 600 - 50 - 7), 7, 0, new Vector2(0, -1), constants.ballColor));
@@ -168,8 +168,8 @@ var World = function() {
         this.paddle.render();
 
         // render powerup
-        if (this.powerup !== null) {
-            this.powerup.render();
+        if (this.fallingPowerup !== null) {
+            this.fallingPowerup.render();
         }
 
         // render particles
@@ -274,8 +274,8 @@ var World = function() {
         });
 
         // update powerup
-        if (this.powerup !== null) {
-            this.powerup.update(delta);
+        if (this.fallingPowerup !== null) {
+            this.fallingPowerup.update(delta);
         }
 
         this.paddle.update(delta);
@@ -355,8 +355,8 @@ var World = function() {
         this.paddle.render();
 
         // render powerup
-        if (this.powerup !== null) {
-            this.powerup.render();
+        if (this.fallingPowerup !== null) {
+            this.fallingPowerup.render();
         }
 
         // render particles
@@ -525,9 +525,9 @@ var World = function() {
                     this.score += hitbrick.value;
 
                     // TODO maybe spawn powerup (not silver and 1 in 10 chance)
-                    if (this.powerup === null && hitbrick.type !== Brick.types.SILVER && randomFloat(1) < 1) {
+                    if (this.fallingPowerup === null && hitbrick.type !== Brick.types.SILVER && randomFloat(1) < 1) {
                         var pType = PowerUp.types[Object.keys(PowerUp.types)[randomInt(Object.keys(PowerUp.types).length)]];
-                        this.powerup = new PowerUp(hitbrick.center.clone(), hitbrick.halfSize.clone(), pType);
+                        this.fallingPowerup = new PowerUp(hitbrick.center.clone(), hitbrick.halfSize.clone(), pType);
                     }
 
                     Particle.spawn(this.particles, hitbrick.center, new Vector2(-randomInt(60, 110), -randomInt(80, 110)), 0, 2 * Math.PI, 30, 3000, Particle.shapes.MEDIUM_RECTANGLE, hitbrick.color);
@@ -575,7 +575,7 @@ var World = function() {
             this.paddle.life -= 1;
             if (this.paddle.life > 0) {
                 //delete all falling powerup
-                this.powerup = null;
+                this.fallingPowerup = null;
 
                 this.balls.push(new Ball(new Vector2(400, 600 - 50 - 7), 7, 0, new Vector2(0, -1), constants.ballColor));
                 this.update = updateRespawn;
@@ -588,21 +588,21 @@ var World = function() {
     };
 
     var handlePowerUpPaddleCollisions = function() {
-        if (this.powerup === null) return;
+        if (this.fallingPowerup === null) return;
         // check powerUp vs bottom and paddle
-        if (this.powerup.center.y + this.powerup.halfSize.y >= this.paddle.center.y - this.paddle.halfSize.y) {
+        if (this.fallingPowerup.center.y + this.fallingPowerup.halfSize.y >= this.paddle.center.y - this.paddle.halfSize.y) {
             // if they are intersecting
-            if (Math.abs(this.powerup.center.x - this.paddle.center.x) < this.powerup.halfSize.x + this.paddle.halfSize.x) {
+            if (Math.abs(this.fallingPowerup.center.x - this.paddle.center.x) < this.fallingPowerup.halfSize.x + this.paddle.halfSize.x) {
                 // activate powerup
-                this.powerup.onActivate();
+                this.fallingPowerup.onActivate();
                 // remove powerup
-                this.powerup = null;
+                this.fallingPowerup = null;
                 return;
             }
 
-            if (this.powerup.center.y - this.powerup.halfSize.y >= this.paddle.center.y + this.paddle.halfSize.y) {
+            if (this.fallingPowerup.center.y - this.fallingPowerup.halfSize.y >= this.paddle.center.y + this.paddle.halfSize.y) {
                 // powerUp is under the paddle and can be removed
-                this.powerup = null;
+                this.fallingPowerup = null;
             }
         }
     };
