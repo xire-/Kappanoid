@@ -21,12 +21,15 @@ var World = function() {
 
         this.bricks = levels[this._currentLevel].bricks();
         this._breakableBricks = [];
+        this._unbreakableBricks = [];
         this.bricks.forEach(function(brick) {
             // randomize falling animation offset
             this._brickMillisOffset.push(randomInt(300));
 
             if (brick.life !== Number.POSITIVE_INFINITY) {
                 this._breakableBricks.push(brick);
+            } else {
+                this._unbreakableBricks.push(brick);
             }
 
             this.pruningGrid.addAABB(brick);
@@ -313,6 +316,7 @@ var World = function() {
             this.balls.forEach(function(ball) {
                 ball.direction = new Vector2(randomFloat(-1, 1), -1);
                 ball.speed = 300;
+                ball.addTrailVertex(ball.center);
             }, this);
 
             this.update = updatePlaying;
@@ -332,12 +336,11 @@ var World = function() {
             ball.render();
         });
 
-        this.paddle.render();
+        this._unbreakableBricks.forEach(function(brick) {
+            brick.render();
+        });
 
-        // render powerup
-        if (this.fallingPowerup !== null) {
-            this.fallingPowerup.render();
-        }
+        this.paddle.render();
 
         // render particles
         this.particles.forEach(function(particle) {
@@ -599,6 +602,7 @@ var World = function() {
         this._brickMillisOffset = 0;
         this._currentLevel = 0;
         this._breakableBricks = [];
+        this._unbreakableBricks = [];
         this.score = 0;
         this._fireworksTime = 0;
 

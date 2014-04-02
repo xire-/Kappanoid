@@ -3,7 +3,7 @@ var levels = [{
     // backgroundColor: '#000000',
     bricks: function() {
         return [
-            new Brick(new Vector2(75, 400 / 2), new Vector2(25, 10), Brick.types.RED),
+            new Brick(new Vector2(75, 400 / 2), new Vector2(25, 10), Brick.types.GOLD),
             new Brick(new Vector2(125, 400 / 2), new Vector2(25, 10), Brick.types.BLUE),
             new Brick(new Vector2(175, 400 / 2), new Vector2(25, 10), Brick.types.YELLOW),
             new Brick(new Vector2(225, 400 / 2), new Vector2(25, 10), Brick.types.WHITE),

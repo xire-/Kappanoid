@@ -1,6 +1,6 @@
 var Ball = function() {
     var addTrailVertex = function(vertex) {
-        this._trailVertices.push(new Vector2(vertex.x, vertex.y));
+        this._trailVertices.push(vertex.clone());
     };
 
     var render = function() {
@@ -47,8 +47,7 @@ var Ball = function() {
         this.speed = speed;
         this.direction = direction;
         this.color = color;
-        this._trailVertices = [];
-        this._trailVertices.push(this.center);
+        this._trailVertices = [this.center];
 
         this.addTrailVertex = addTrailVertex;
         this.render = render;
