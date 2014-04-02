@@ -36,7 +36,8 @@ var World = function() {
         }, this);
 
         var paddleHalfSize = new Vector2(50, 15);
-        this.paddle = new Paddle(new Vector2(800 / 2, 600 + paddleHalfSize.y - 50), paddleHalfSize, 2, constants.paddleColor);
+        var oldLifes = this.paddle !== undefined ? this.paddle.life : 2;
+        this.paddle = new Paddle(new Vector2(800 / 2, 600 + paddleHalfSize.y - 50), paddleHalfSize, oldLifes, constants.paddleColor);
 
         this.particles = [];
     };
