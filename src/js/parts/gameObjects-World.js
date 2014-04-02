@@ -12,7 +12,7 @@ var World = function() {
             this.update = updateIntro;
         }
 
-        this.powerups = [];
+        this.powerup = null;
 
         this.balls = [];
         this.balls.push(new Ball(new Vector2(400, 600 - 50 - 7), 7, 0, new Vector2(0, -1), constants.ballColor));
@@ -167,10 +167,10 @@ var World = function() {
 
         this.paddle.render();
 
-        // render powerups
-        this.powerups.forEach(function(powerUp) {
-            powerUp.render();
-        });
+        // render powerup
+        if (this.powerup !== null) {
+            this.powerup.render();
+        }
 
         // render particles
         this.particles.forEach(function(particle) {
@@ -273,10 +273,10 @@ var World = function() {
             brick.update(delta);
         });
 
-        // update powerups
-        this.powerups.forEach(function(powerUp) {
-            powerUp.update(delta);
-        });
+        // update powerup
+        if (this.powerup !== null) {
+            this.powerup.update(delta);
+        }
 
         this.paddle.update(delta);
         // update paddle position (clamped)
@@ -354,10 +354,10 @@ var World = function() {
 
         this.paddle.render();
 
-        // render powerups
-        this.powerups.forEach(function(powerUp) {
-            powerUp.render();
-        });
+        // render powerup
+        if (this.powerup !== null) {
+            this.powerup.render();
+        }
 
         // render particles
         this.particles.forEach(function(particle) {
@@ -524,10 +524,10 @@ var World = function() {
 
                     this.score += hitbrick.value;
 
-                    // maybe spawn powerup (not silver and 1 in 10 chance)
-                    if (hitbrick.type !== Brick.types.SILVER && randomFloat(2) < 1) {
+                    // TODO maybe spawn powerup (not silver and 1 in 10 chance)
+                    if (this.powerup === null && hitbrick.type !== Brick.types.SILVER && randomFloat(1) < 1) {
                         var pType = PowerUp.types[Object.keys(PowerUp.types)[randomInt(Object.keys(PowerUp.types).length)]];
-                        this.powerups.push(new PowerUp(hitbrick.center.clone(), hitbrick.halfSize.clone(), pType));
+                        this.powerup = new PowerUp(hitbrick.center.clone(), hitbrick.halfSize.clone(), pType);
                     }
 
                     Particle.spawn(this.particles, hitbrick.center, new Vector2(-randomInt(60, 110), -randomInt(80, 110)), 0, 2 * Math.PI, 30, 3000, Particle.shapes.MEDIUM_RECTANGLE, hitbrick.color);
@@ -575,7 +575,7 @@ var World = function() {
             this.paddle.life -= 1;
             if (this.paddle.life > 0) {
                 //delete all falling powerup
-                this.powerups = [];
+                this.powerup = null;
 
                 this.balls.push(new Ball(new Vector2(400, 600 - 50 - 7), 7, 0, new Vector2(0, -1), constants.ballColor));
                 this.update = updateRespawn;
@@ -588,31 +588,22 @@ var World = function() {
     };
 
     var handlePowerUpPaddleCollisions = function() {
-        var deadPowerUps = [];
-        this.powerups.forEach(function(powerUp, i) {
-            // check powerUp vs bottom and paddle
-            if (powerUp.center.y + powerUp.halfSize.y >= this.paddle.center.y - this.paddle.halfSize.y) {
-                // if they are intersecting
-                if (Math.abs(powerUp.center.x - this.paddle.center.x) < powerUp.halfSize.x + this.paddle.halfSize.x) {
-                    // remove powerup
-                    deadPowerUps.push(i);
-                    // activate powerup
-                    powerUp.onActivate();
-                }
-
-
-                // check if powerUp is dead
-                if (powerUp.center.y - powerUp.halfSize.y >= this.paddle.center.y + this.paddle.halfSize.y) {
-                    // powerUp is under the paddle and can be removed
-                    deadPowerUps.push(i);
-                }
+        if (this.powerup === null) return;
+        // check powerUp vs bottom and paddle
+        if (this.powerup.center.y + this.powerup.halfSize.y >= this.paddle.center.y - this.paddle.halfSize.y) {
+            // if they are intersecting
+            if (Math.abs(this.powerup.center.x - this.paddle.center.x) < this.powerup.halfSize.x + this.paddle.halfSize.x) {
+                // activate powerup
+                this.powerup.onActivate();
+                // remove powerup
+                this.powerup = null;
+                return;
             }
-        }, this);
 
-        for (var i = deadPowerUps.length - 1; i >= 0; i--) {
-            var index = deadPowerUps[i];
-            // TODO ball.die();
-            this.powerups.splice(index, 1);
+            if (this.powerup.center.y - this.powerup.halfSize.y >= this.paddle.center.y + this.paddle.halfSize.y) {
+                // powerUp is under the paddle and can be removed
+                this.powerup = null;
+            }
         }
     };
 
