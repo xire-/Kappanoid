@@ -2,158 +2,114 @@ var IntroState = function() {
     var keyPress = function(e) {
         switch (e.keyCode) {
             case 32: // SPACE
-                if (this.update === updateIdle) {
-                    this.update = updateOutro;
-                    this.render = renderOutro;
+                if (this._intro) {
+                    this._intro = false;
                     this._timePassed = 0;
                 }
                 // prevent space from scrolling the page
                 return false;
             default:
-                // alert(e.keyCode);
                 break;
         }
     };
 
-    var drawCreditText = function(timePassed, text, lineHeight, y) {
-        var offs = (timePassed / 3) % 500;
-        var grd = g.createLinearGradient(-offs, 0, 1000 - offs, 0);
-        grd.addColorStop(0 / 12, '#f00');
-        grd.addColorStop(1 / 12, '#ff0');
-        grd.addColorStop(2 / 12, '#0f0');
-        grd.addColorStop(3 / 12, '#0ff');
-        grd.addColorStop(4 / 12, '#00f');
-        grd.addColorStop(5 / 12, '#f0f');
-        grd.addColorStop(6 / 12, '#f00');
-        grd.addColorStop(7 / 12, '#ff0');
-        grd.addColorStop(8 / 12, '#0f0');
-        grd.addColorStop(9 / 12, '#0ff');
-        grd.addColorStop(10 / 12, '#00f');
-        grd.addColorStop(11 / 12, '#f0f');
-        grd.addColorStop(12 / 12, '#f00');
+    var drawCredits = function(timePassed, lineHeight, y) {
+        var offset = (timePassed / 3) % 500;
+        var gradient = g.createLinearGradient(-offset, 0, 1000 - offset, 0);
+        gradient.addColorStop(0 / 12, '#f00');
+        gradient.addColorStop(1 / 12, '#ff0');
+        gradient.addColorStop(2 / 12, '#0f0');
+        gradient.addColorStop(3 / 12, '#0ff');
+        gradient.addColorStop(4 / 12, '#00f');
+        gradient.addColorStop(5 / 12, '#f0f');
+        gradient.addColorStop(6 / 12, '#f00');
+        gradient.addColorStop(7 / 12, '#ff0');
+        gradient.addColorStop(8 / 12, '#0f0');
+        gradient.addColorStop(9 / 12, '#0ff');
+        gradient.addColorStop(10 / 12, '#00f');
+        gradient.addColorStop(11 / 12, '#f0f');
+        gradient.addColorStop(12 / 12, '#f00');
 
-        g.fillStyle = grd;
-        for (var j = 0; j < text.length; j++) {
-            g.fillText(text[j], 0, y);
-            y += lineHeight;
-        }
+        g.font = '15px monospace';
+        g.fillStyle = gradient;
+        g.fillText('Francesco Cagnin and Marco Gasparini', 0, y);
+        y += lineHeight;
+        g.fillText('© 2014', 0, y);
+        y += lineHeight;
+
         return y;
     };
 
-    var drawLogo = function(selectedLogo, logoHeight, y) {
-        // draw previously randomly selected logo
-        for (var i = 0; i < selectedLogo.length; i++) {
-            g.fillText(selectedLogo[i], 0, y);
-            y += logoHeight;
-        }
-        return y;
-    };
-
-    ///////// idle state
-
-    var renderIdle = function() {
+    var render = function() {
         g.save();
 
         // clear the previous frame
         g.fillStyle = '#000000';
         g.fillRect(0, 0, constants.canvasRelativeWidth, constants.canvasRelativeHeight);
 
-        var titlePosX = constants.bordersRelativeThickness + constants.worldRelativeWidth / 2;
-        var titlePosY = easing.easeOutBounce(clamp(0, this._timePassed, 1000), 0, constants.canvasRelativeHeight / 2, 1000);
-        g.translate(titlePosX, titlePosY);
-
-        g.textAlign = 'center';
-        g.textBaseline = 'middle';
-        g.font = '15px monospace';
-        g.fillStyle = '#FFFFFF';
-
-        var lineHeightLogo = 15;
-        var lineHeightText = 20;
-        var logoImageDistance = 40;
-        var imageTextDistance = 220;
-
-        // calculate starting position
-        var y = -((lineHeightLogo * this._selectedLogo.length + this._insertCoinImage.height + lineHeightText * this._text.length) + logoImageDistance + imageTextDistance) / 2;
-
-        // draw previously randomly selected logo
-        y = drawLogo(this._selectedLogo, lineHeightLogo, y);
-
-        // draw insert coin image
-        y += logoImageDistance;
-        if (this._timePassed % 2000 < 1500) {
-            this._drawInsertCoinImage = true;
-            g.drawImage(this._insertCoinImage, -this._insertCoinImage.width / 2, y);
+        if (this._intro) {
+            // falling animation
+            var titlePosX = constants.bordersRelativeThickness + constants.worldRelativeWidth / 2;
+            var titlePosY = easing.easeOutBounce(clamp(0, this._timePassed, 1000), 0, constants.canvasRelativeHeight / 2, 1000);
+            g.translate(titlePosX, titlePosY);
         } else {
-            this._drawInsertCoinImage = false;
+            // rotating/shrinking animation
+            var titleScale = easing.easeInBack(clamp(0, this._timePassed, 1000), 1, -1, 1000);
+            var titleRotation = easing.easeInBack(clamp(0, this._timePassed, 1000), 0, Math.PI * 2, 1000);
+            g.translate(constants.bordersRelativeThickness + constants.worldRelativeWidth / 2, constants.canvasRelativeHeight / 2);
+            g.scale(titleScale, titleScale);
+            g.rotate(titleRotation);
         }
-        y += this._insertCoinImage.height;
 
-        // draw text
-        y += imageTextDistance;
-        y = drawCreditText(this._timePassed, this._text, lineHeightText, y);
+        var logoLineHeight = 15;
+        var insertCoinLineHeight = 20;
+        var creditsLineHeight = 20;
+        var logoToInsertCoinDistance = 60;
+        var insertCoinToCreditsDistance = 220;
 
-        g.restore();
-    };
+        // calculate starting position
+        var y = -((logoLineHeight * this._selectedLogo.length + insertCoinLineHeight + creditsLineHeight * 2) + logoToInsertCoinDistance + insertCoinToCreditsDistance) / 2;
 
-    var updateIdle = function(delta) {
-        this._timePassed += delta;
-    };
-
-    ///////// outro state
-
-    var renderOutro = function() {
-        g.save();
-
-        // clear the previous frame
-        g.fillStyle = '#000000';
-        g.fillRect(0, 0, constants.canvasRelativeWidth, constants.canvasRelativeHeight);
-
-        var titleScale = easing.easeInBack(clamp(0, this._timePassed, 1000), 1, -1, 1000);
-        var titleRotation = easing.easeInBack(clamp(0, this._timePassed, 1000), 0, Math.PI * 2, 1000);
-
-        g.translate(constants.bordersRelativeThickness + constants.worldRelativeWidth / 2, constants.canvasRelativeHeight / 2);
-        g.scale(titleScale, titleScale);
-        g.rotate(titleRotation);
-
+        // draw previously randomly selected logo
         g.textAlign = 'center';
         g.textBaseline = 'middle';
         g.font = '15px monospace';
         g.fillStyle = '#FFFFFF';
-
-        var lineHeightLogo = 15;
-        var lineHeightText = 20;
-        var logoImageDistance = 40;
-        var imageTextDistance = 220;
-
-        // calculate starting position
-        var y = -((lineHeightLogo * this._selectedLogo.length + this._insertCoinImage.height + lineHeightText * this._text.length) + logoImageDistance + imageTextDistance) / 2;
-
-        // draw previously randomly selected logo
-        y = drawLogo(this._selectedLogo, lineHeightLogo, y);
-
-        // draw insert coin image
-        y += logoImageDistance;
-        if (this._drawInsertCoinImage) {
-            g.drawImage(this._insertCoinImage, -this._insertCoinImage.width / 2, y);
+        for (var i = 0; i < this._selectedLogo.length; i++) {
+            g.fillText(this._selectedLogo[i], 0, y);
+            y += logoLineHeight;
         }
-        y += this._insertCoinImage.height;
 
-        // draw text
-        y += imageTextDistance;
-        y = drawCreditText(this._timePassed, this._text, lineHeightText, y);
+        // draw insert coin to continue
+        y += logoToInsertCoinDistance;
+        if (this._timePassed % 2000 < 1500) {
+            g.font = '10px emulogic';
+            g.fillStyle = '#FFFFFF';
+            g.fillText('INSERT COIN TO CONTINUE', 0, y);
+        }
+        y += insertCoinLineHeight;
+
+        // draw credits
+        y += insertCoinToCreditsDistance;
+        y = drawCredits(this._timePassed, creditsLineHeight, y);
 
         g.restore();
     };
 
-    var updateOutro = function(delta) {
+    var update = function(delta) {
         this._timePassed += delta;
-        if (this._timePassed > 1000) {
-            currState = states.playing;
+
+        if (!this._intro) {
+            if (this._timePassed > 1000) {
+                currState = states.playing;
+            }
         }
     };
 
 
     var constructor = function IntroState() {
+        this._intro = true;
+        this._timePassed = 0;
         this.logos = [
             [
                 ' _  __                                   _     _ ',
@@ -287,18 +243,10 @@ var IntroState = function() {
             ]
         ];
         this._selectedLogo = this.logos[randomInt(this.logos.length)];
-        this._insertCoinImage = new Image();
-        this._insertCoinImage.src = 'img/insert_coin.png';
-        this._drawInsertCoinImage = true;
-        this._text = [
-            'Francesco Cagnin and Marco Gasparini',
-            '© 2014'
-        ];
-        this._timePassed = 0;
 
-        this.render = renderIdle;
-        this.update = updateIdle;
         this.keyPress = keyPress;
+        this.render = render;
+        this.update = update;
     };
 
     return constructor;
