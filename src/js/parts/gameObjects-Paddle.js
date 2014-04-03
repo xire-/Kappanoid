@@ -24,7 +24,7 @@ var Paddle = function() {
     var update = function(delta) {
         // enlarge or not paddle
         var sign = this.enlarged ? 1 : -1;
-        this._timeElapsed = clamp(0, this._timeElapsed + sign * delta, 1000);
+        this._timeElapsed = clamp(250, this._timeElapsed + sign * delta, 750);
 
         this.halfSize.x = easing.easeInOutElastic(this._timeElapsed, this._origWidth, this._origWidth * 0.5, 1000);
 

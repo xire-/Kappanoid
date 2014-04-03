@@ -4,7 +4,7 @@ var PowerUp = function() {
             character: 'L',
             color: 'red',
             onActivate: function() {
-
+                world.activateTemporaryPowerup(PowerUp.types.LASER);
             }
         },
         ENLARGE: {
@@ -18,7 +18,7 @@ var PowerUp = function() {
             character: 'C',
             color: 'green',
             onActivate: function() {
-
+                world.activateTemporaryPowerup(PowerUp.types.CATCH);
             }
         },
         SLOW: {
@@ -60,7 +60,7 @@ var PowerUp = function() {
         g.fillStyle = settings.colors ? this.color : '#FFFFFF';
         g.fill();
 
-        g.font = '10px emulogic';
+        g.font = ((this.halfSize.y - 1) * 2) + 'px emulogic';
         g.textAlign = 'center';
         g.textBaseline = 'middle';
         var charcolor = this.character === 'P' ? 'cyan' : 'yellow';
