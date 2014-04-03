@@ -63,7 +63,7 @@ var kappanoid = (function() {
         ballColor: {
             r: 210,
             g: 102,
-            b: 53
+            b: 53,
         },
         brickColor: '#62bd84',
         paddleColor: '#CF3746',
@@ -71,8 +71,13 @@ var kappanoid = (function() {
         worldBackgroundColor: {
             r: 248,
             g: 242,
-            b: 179
+            b: 179,
         },
+        gameInfoBackgroundColor: {
+            r: 34,
+            g: 34,
+            b: 34,
+        }
     };
 
 

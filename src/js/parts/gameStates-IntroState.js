@@ -8,6 +8,11 @@ var IntroState = function() {
                 }
                 // prevent space from scrolling the page
                 return false;
+
+            case 100: // D
+                gameInfo.showDebugInfo = !gameInfo.showDebugInfo;
+                break;
+
             default:
                 break;
         }

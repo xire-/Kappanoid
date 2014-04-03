@@ -46,6 +46,10 @@ var PlayingState = function() {
             case 57: // 9
                 break;
 
+            case 100: // D
+                gameInfo.showDebugInfo = !gameInfo.showDebugInfo;
+                break;
+
             case 117: // U
                 settings.timeScale = 1;
                 break;
