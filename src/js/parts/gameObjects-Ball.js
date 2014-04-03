@@ -16,18 +16,20 @@ var Ball = function() {
         return color;
     };
 
-    var drawTrail = function(vertices, length, startColor, endColor, lineWidth) {
+    var drawTrail = function(vertices, maxLength, startColor, endColor, lineWidth) {
         console.assert(vertices.length > 0);
 
         var vertex;
-        var prevVertex = vertices[0];
+        var prevVertex = vertices[vertices.length - 1];
         var cumulativeLength = 0;
-        for (var i = 1; i < vertices.length; i++) {
-            var colorPrevVertex = lerpColor(startColor, endColor, 1 - (cumulativeLength / length));
-
+        // draw trail backwards
+        for (var i = vertices.length - 2; i >= 0; i--) {
             vertex = vertices[i];
-            cumulativeLength += vertex.distance(prevVertex);
-            var colorVertex = lerpColor(startColor, endColor, 1 - (cumulativeLength / length));
+            var vertexesDistance = vertex.distance(prevVertex);
+            cumulativeLength += vertexesDistance;
+
+            var colorPrevVertex = lerpColor(startColor, endColor, ((cumulativeLength - vertexesDistance) / maxLength));
+            var colorVertex = lerpColor(startColor, endColor, (cumulativeLength / maxLength));
 
             g.beginPath();
             g.lineWidth = lineWidth;
@@ -37,6 +39,7 @@ var Ball = function() {
             gradient.addColorStop(0, getColorString(colorPrevVertex));
             gradient.addColorStop(1, getColorString(colorVertex));
             g.strokeStyle = gradient;
+
             g.lineTo(vertex.x, vertex.y);
             g.stroke();
             g.closePath();
@@ -52,24 +55,24 @@ var Ball = function() {
 
         // draw ball trail
         if (settings.ballTrail) {
-            var trailLength = 200;
+            var trailMaxLength = 200;
             var trailVertexes = [this.center];
             var vertex;
             var prevVertex = trailVertexes[0];
             var cumulativeLength = 0;
 
-            // create an array of vertexes (computed from this._trailVertexes) with a total length of trailLength
+            // create an array of vertexes (computed from this._trailVertexes) with a total length of trailMaxLength
             for (var i = this._trailVertexes.length - 1; i >= 0; i--) {
                 vertex = this._trailVertexes[i];
                 var distanceFromPrevVertex = vertex.distance(prevVertex);
                 cumulativeLength += distanceFromPrevVertex;
 
                 // interpolate from prevVertex to vertex to compute the vertex of the trail
-                var percent = cumulativeLength <= trailLength ? 0 : (cumulativeLength - trailLength) / distanceFromPrevVertex;
+                var percent = cumulativeLength <= trailMaxLength ? 0 : (cumulativeLength - trailMaxLength) / distanceFromPrevVertex;
                 var midVertex = Vector2.lerp(vertex, prevVertex, percent);
                 trailVertexes.push(midVertex);
 
-                if (cumulativeLength > trailLength) {
+                if (cumulativeLength > trailMaxLength) {
                     // all trail vertexes are computed; remove unused vertexes from this._trailVertexes
                     for (i -= 1; i >= 0; i--) {
                         this._trailVertexes.splice(i, 1);
@@ -92,7 +95,7 @@ var Ball = function() {
                 b: settings.colors ? world._backgroundColor.b : 0
             };
 
-            drawTrail(trailVertexes, trailLength, trailStartColor, trailEndColor, 4);
+            drawTrail(trailVertexes, trailMaxLength, trailStartColor, trailEndColor, 4);
         }
 
         g.restore();
