@@ -31,6 +31,13 @@ var Paddle = function() {
         // update paddle position (clamped)
         this._oldPosX = this.center.x;
         this.center.x = clamp(this.halfSize.x, mousePos.x - world.containerOffset.x, 800 - this.halfSize.x);
+
+        if (this.sticky && this.ballIsStuck) {
+            // bring balls along
+            world.balls.forEach(function(ball) {
+                ball.center.x += this.center.x - this._oldPosX;
+            }, this);
+        }
     };
 
 
@@ -40,8 +47,12 @@ var Paddle = function() {
         this.life = life;
         this.color = color;
 
-        this._oldPosX = 200;
+        this.lazored = false;
         this.enlarged = false;
+        this.sticky = false;
+        this.ballIsStuck = false;
+
+        this._oldPosX = 200;
         this._timeElapsed = 0;
         this._origWidth = halfSize.x;
 

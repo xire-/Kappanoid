@@ -319,6 +319,10 @@ var World = function() {
             this.update = updatePlaying;
             this._canReleaseBalls = false;
         }
+        if (this.paddle.ballIsStuck) {
+            this.paddle.ballIsStuck = false;
+            this.balls[0].speed = this.balls[0].storedSpeed;
+        }
     };
 
     ///////// level completed state
@@ -378,6 +382,8 @@ var World = function() {
         if (this._timePassed < 1000) {
             // [0, 1000)
         } else if (this._timePassed < 2300) {
+            // remove all powerups before changing level
+            this.changeTemporaryPowerup(null);
             // [1000, 2300)
         } else if (this._timePassed < 5000) {
             // [2300, 5000)
@@ -504,7 +510,7 @@ var World = function() {
                     // TODO maybe spawn powerup (not silver and 1 in 10 chance)
                     if (this.fallingPowerup === null && this.balls.length === 1 && hitbrick.type !== Brick.types.SILVER && randomFloat(1) < 1) {
                         var pType = PowerUp.types[Object.keys(PowerUp.types)[randomInt(Object.keys(PowerUp.types).length)]];
-                        var pType = PowerUp.types.ENLARGE;
+                        var pType = PowerUp.types.CATCH;
                         this.fallingPowerup = new PowerUp(hitbrick.center.clone(), hitbrick.halfSize.clone(), pType);
                     }
 
@@ -528,9 +534,17 @@ var World = function() {
                         ball.direction.x = Math.sin(angle);
                         ball.direction.y = -Math.cos(angle);
 
-                        ball.addTrailVertex(ball.center);
+                        if (this.paddle.sticky) {
+                            ball.center.x = collisionPoint.x;
+                            ball.center.y = this.paddle.center.y - this.paddle.halfSize.y - ball.radius;
+                            ball.storedSpeed = ball.speed;
+                            ball.speed = 0;
+                            this.paddle.ballIsStuck = true;
+                        } else {
+                            ball.addTrailVertex(ball.center);
 
-                        Particle.spawn(this.particles, collisionPoint, new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, 3000, Particle.shapes.SMALL_RECTANGLE, this.paddle.color);
+                            Particle.spawn(this.particles, collisionPoint, new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, 3000, Particle.shapes.SMALL_RECTANGLE, this.paddle.color);
+                        }
                     }
                 }
 
@@ -558,6 +572,7 @@ var World = function() {
                 this.balls.push(new Ball(new Vector2(400, 600 - 50 - 7), 7, 0, new Vector2(0, -1), constants.ballColor));
                 this.update = updateRespawn;
                 this.render = renderRespawn;
+                this.changeTemporaryPowerup(null);
                 this._timePassed = 0;
             } else {
                 currState = states.gameover;
@@ -585,14 +600,28 @@ var World = function() {
         }
     };
 
-    var activateTemporaryPowerup = function(type) {
+    var changeTemporaryPowerup = function(type) {
         //remove all temporary powerups
         this.paddle.enlarged = false;
+        this.paddle.lazored = false;
+        this.paddle.sticky = false;
+        releaseBalls.call(this);
 
         //add current powerup
         if (type === PowerUp.types.ENLARGE) {
             this.paddle.enlarged = true;
+        } else if (type === PowerUp.types.LASER) {
+            this.paddle.lazored = true;
+        } else if (type === PowerUp.types.CATCH) {
+            this.paddle.sticky = true;
         }
+    };
+
+    var action = function() {
+        // if balls can be released, release them
+        releaseBalls.call(this);
+
+        //if lazors con be shooted, shoot them
     };
 
     var constructor = function World(containerOffset, containerSize) {
@@ -612,8 +641,8 @@ var World = function() {
         this.reset = reset;
         this.render = renderIntro;
         this.update = updateIntro;
-        this.releaseBalls = releaseBalls;
-        this.activateTemporaryPowerup = activateTemporaryPowerup;
+        this.action = action;
+        this.changeTemporaryPowerup = changeTemporaryPowerup;
 
         // initialize all game objects
         this.reset();

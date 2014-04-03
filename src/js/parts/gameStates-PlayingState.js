@@ -80,7 +80,7 @@ var PlayingState = function() {
                 break;
 
             case 32: // SPACE
-                world.releaseBalls();
+                world.action();
                 // prevent space from scrolling the page
                 return false;
 

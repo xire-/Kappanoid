@@ -4,21 +4,21 @@ var PowerUp = function() {
             character: 'L',
             color: 'red',
             onActivate: function() {
-                world.activateTemporaryPowerup(PowerUp.types.LASER);
+                world.changeTemporaryPowerup(PowerUp.types.LASER);
             }
         },
         ENLARGE: {
             character: 'E',
             color: 'blue',
             onActivate: function() {
-                world.activateTemporaryPowerup(PowerUp.types.ENLARGE);
+                world.changeTemporaryPowerup(PowerUp.types.ENLARGE);
             }
         },
         CATCH: {
             character: 'C',
             color: 'green',
             onActivate: function() {
-                world.activateTemporaryPowerup(PowerUp.types.CATCH);
+                world.changeTemporaryPowerup(PowerUp.types.CATCH);
             }
         },
         SLOW: {
@@ -34,6 +34,9 @@ var PowerUp = function() {
             character: 'D',
             color: 'cyan',
             onActivate: function() {
+                // remove other current powerup
+                world.changeTemporaryPowerup(null);
+
                 var ball = world.balls[0];
                 var rand;
                 rand = randomFloat(-0.1, 0.1);
