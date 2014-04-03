@@ -125,7 +125,7 @@ var World = function() {
         }
 
         // update paddle position (clamped)
-        this.paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, 0 + this.paddle.halfSize.x), 800 - this.paddle.halfSize.x);
+        this.paddle.update(delta);
 
         // bring balls along
         this.balls.forEach(function(ball) {
@@ -178,9 +178,6 @@ var World = function() {
 
         this.paddle.update(delta);
 
-        // update paddle position (clamped)
-        this.paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, 0 + this.paddle.halfSize.x), constants.worldRelativeWidth - this.paddle.halfSize.x);
-
         // bring balls along
         this.balls.forEach(function(ball) {
             ball.center.x = this.paddle.center.x;
@@ -231,9 +228,6 @@ var World = function() {
 
         this.paddle.update(delta);
 
-        // update paddle position (clamped)
-        this.paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, 0 + this.paddle.halfSize.x), constants.worldRelativeWidth - this.paddle.halfSize.x);
-
         // bring balls along
         this.balls.forEach(function(ball) {
             ball.center.x = this.paddle.center.x;
@@ -263,8 +257,6 @@ var World = function() {
         }
 
         this.paddle.update(delta);
-        // update paddle position (clamped)
-        this.paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, 0 + this.paddle.halfSize.x), constants.worldRelativeWidth - this.paddle.halfSize.x);
 
         var steps = 10;
         for (var i = 0; i < steps; i++) {
@@ -397,9 +389,6 @@ var World = function() {
 
         this.paddle.update(delta);
 
-        // update paddle position (clamped)
-        this.paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, 0 + this.paddle.halfSize.x), constants.worldRelativeWidth - this.paddle.halfSize.x);
-
         // update particles
         updateParticles.call(this, delta);
     };
@@ -511,7 +500,7 @@ var World = function() {
                     // TODO maybe spawn powerup (not silver and 1 in 10 chance)
                     if (this.fallingPowerup === null && this.balls.length === 1 && hitbrick.type !== Brick.types.SILVER && randomFloat(1) < 1) {
                         var pType = PowerUp.types[Object.keys(PowerUp.types)[randomInt(Object.keys(PowerUp.types).length)]];
-                        var pType = PowerUp.types.PLAYER;
+                        var pType = PowerUp.types.ENLARGE;
                         this.fallingPowerup = new PowerUp(hitbrick.center.clone(), hitbrick.halfSize.clone(), pType);
                     }
 
@@ -592,6 +581,15 @@ var World = function() {
         }
     };
 
+    var activateTemporaryPowerup = function(type) {
+        //remove all temporary powerups
+        this.paddle.enlarged = false;
+
+        //add current powerup
+        if (type === PowerUp.types.ENLARGE) {
+            this.paddle.enlarged = true;
+        }
+    };
 
     var constructor = function World(containerOffset, containerSize) {
         this.containerOffset = containerOffset;
@@ -611,6 +609,7 @@ var World = function() {
         this.render = renderIntro;
         this.update = updateIntro;
         this.releaseBalls = releaseBalls;
+        this.activateTemporaryPowerup = activateTemporaryPowerup;
 
         // initialize all game objects
         this.reset();

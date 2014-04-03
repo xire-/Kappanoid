@@ -11,7 +11,7 @@ var PowerUp = function() {
             character: 'E',
             color: 'blue',
             onActivate: function() {
-
+                world.activateTemporaryPowerup(PowerUp.types.ENLARGE);
             }
         },
         CATCH: {

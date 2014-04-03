@@ -5,8 +5,7 @@ var Paddle = function() {
         if (settings.paddleSpeedDistortion) {
             // even if it may seem this belong to the update method, it must stay here
             // since it is dependant on the frame rate
-            var speedScale = clamp(0.5, 1 - (Math.abs(mousePos.x - this._oldPosX) - 20) / 60, 1);
-            this._oldPosX = mousePos.x;
+            var speedScale = clamp(0.5, 1 - (Math.abs(this.center.x - this._oldPosX) - 20) / 60, 1);
 
             g.scale(1 / speedScale, speedScale);
         }
@@ -22,7 +21,17 @@ var Paddle = function() {
         g.restore();
     };
 
-    var update = function( /*delta*/ ) {};
+    var update = function(delta) {
+        // enlarge or not paddle
+        var sign = this.enlarged ? 1 : -1;
+        this._timeElapsed = clamp(0, this._timeElapsed + sign * delta, 1000);
+
+        this.halfSize.x = easing.easeInOutElastic(this._timeElapsed, this._origWidth, this._origWidth * 0.5, 1000);
+
+        // update paddle position (clamped)
+        this._oldPosX = this.center.x;
+        this.center.x = clamp(this.halfSize.x, mousePos.x - world.containerOffset.x, 800 - this.halfSize.x);
+    };
 
 
     var constructor = function Paddle(center, halfSize, life, color) {
@@ -30,7 +39,12 @@ var Paddle = function() {
         this.halfSize = halfSize;
         this.life = life;
         this.color = color;
+
         this._oldPosX = 200;
+        this.enlarged = false;
+        this._timeElapsed = 0;
+        this._origWidth = halfSize.x;
+
 
         this.render = render;
         this.update = update;
