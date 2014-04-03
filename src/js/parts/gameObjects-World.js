@@ -40,6 +40,8 @@ var World = function() {
         this.paddle = new Paddle(new Vector2(800 / 2, 600 + paddleHalfSize.y - 50), paddleHalfSize, oldLifes, constants.paddleColor);
 
         this.particles = [];
+
+        this.levelTime = null;
     };
 
     var drawEmptyWorld = function() {
@@ -64,6 +66,19 @@ var World = function() {
             b: 0
         });
         g.fillRect(0, 0, this.containerSize.x, this.containerSize.y);
+    };
+
+    var drawPaddleLifes = function() {
+        g.font = '18px emulogic';
+        g.textBaseline = 'top';
+        g.fillStyle = settings.colors ? this.paddle.color : getColorString({
+            r: 255,
+            g: 255,
+            b: 255
+        });
+        for (var i = 0; i < this.paddle.life - 1; i++) {
+            g.fillText('❤', 5 + 20 * i, 578);
+        }
     };
 
     ///////// initial state
@@ -154,6 +169,7 @@ var World = function() {
         });
 
         this.paddle.render();
+        drawPaddleLifes.call(this);
 
         // render powerup
         if (this.fallingPowerup !== null) {
@@ -316,6 +332,10 @@ var World = function() {
                 ball.resetTrail();
             }, this);
 
+            if (this.levelTime === null) {
+                this.levelTime = new Date();
+            }
+
             this.update = updatePlaying;
             this._canReleaseBalls = false;
         }
@@ -342,6 +362,7 @@ var World = function() {
         });
 
         this.paddle.render();
+        drawPaddleLifes.call(this);
 
         // render particles
         this.particles.forEach(function(particle) {
@@ -637,6 +658,7 @@ var World = function() {
         this._unbreakableBricks = [];
         this.score = 0;
         this._fireworksTime = 0;
+        this.levelTime = null;
 
         this.reset = reset;
         this.render = renderIntro;
