@@ -16,7 +16,7 @@ var Ball = function() {
         return color;
     };
 
-    var drawTrailSection = function(vertices, length, startColor, endColor, lineWidth) {
+    var drawTrail = function(vertices, length, startColor, endColor, lineWidth) {
         console.assert(vertices.length > 0);
 
         var vertex;
@@ -59,74 +59,48 @@ var Ball = function() {
         g.restore();
 
         if (settings.ballTrail) {
-            var trailSections = [{
-                length: 100,
-                startColor: {
-                    r: 255,
-                    g: 255,
-                    b: 255
-                },
-                endColor: {
-                    r: 255,
-                    g: 255,
-                    b: 255
-                },
-            }, {
-                length: 100,
-                startColor: {
-                    r: 255,
-                    g: 255,
-                    b: 255
-                },
-                endColor: {
-                    r: 0,
-                    g: 0,
-                    b: 0
-                },
-            }, ];
+            var trailLength = 200;
+            var trailVertexes = [this.center];
+            var vertex;
+            var prevVertex = trailVertexes[0];
+            var cumulativeLength = 0;
 
-            // start from the last vertex saved (which is last in term of time) and go backward
-            var i = this._trailVertexes.length - 1;
+            // create an array of vertexes (computed from this._trailVertexes) with a total length of trailLength
+            for (var i = this._trailVertexes.length - 1; i >= 0; i--) {
+                vertex = this._trailVertexes[i];
+                var distanceFromPrevVertex = vertex.distance(prevVertex);
+                cumulativeLength += distanceFromPrevVertex;
 
-            // for each trail section to draw
-            for (var k = 0; k < trailSections.length; k++) {
-                var trailSectionVertexes = (k === 0) ? [this.center] : [trailSectionVertexes[trailSectionVertexes.length - 1]];
-                var vertex;
-                var prevVertex = trailSectionVertexes[0];
-                var cumulativeLength = 0;
+                // interpolate from prevVertex to vertex to compute the vertex of the trail
+                var percent = cumulativeLength <= trailLength ? 0 : (cumulativeLength - trailLength) / distanceFromPrevVertex;
+                var midVertex = Vector2.lerp(vertex, prevVertex, percent);
+                trailVertexes.push(midVertex);
 
-                // create an array of vertexes (computed from this._trailVertexes) with a total length of this trail section length
-                for (; i >= 0; i--) {
-                    vertex = this._trailVertexes[i];
-                    var distanceFromPrevVertex = vertex.distance(prevVertex);
-                    cumulativeLength += distanceFromPrevVertex;
-                    if (cumulativeLength <= trailSections[k].length) {
-                        trailSectionVertexes.push(vertex);
-                    } else {
-                        // interpolate from prevVertex to vertex to compute the last vertex of this trail section
-                        if (cumulativeLength - distanceFromPrevVertex <= trailSections[k].length) {
-                            var midVertex = Vector2.lerp(vertex, prevVertex, (cumulativeLength - trailSections[k].length) / distanceFromPrevVertex);
-                            trailSectionVertexes.push(midVertex);
-                        }
-
-                        if (cumulativeLength > trailSections[k].length) {
-                            if (k === trailSections.length - 1) {
-                                // all trail sections are computed; remove unused vertexes from this._trailVertexes
-                                i -= 1;
-                                for (; i >= 0; i--) {
-                                    this._trailVertexes.splice(i, 1);
-                                }
-                            }
-                            break;
-                        }
+                if (cumulativeLength > trailLength) {
+                    // all trail vertexes are computed; remove unused vertexes from this._trailVertexes
+                    for (i -= 1; i >= 0; i--) {
+                        this._trailVertexes.splice(i, 1);
                     }
-
-                    prevVertex = vertex;
+                    break;
                 }
+                //}
 
-                // draw a line constructed using the created array of vertexes with the specified start color and end color
-                drawTrailSection(trailSectionVertexes, trailSections[k].length, trailSections[k].startColor, trailSections[k].endColor, 4);
+                prevVertex = vertex;
             }
+
+            // draw a line constructed using the created array of vertexes with the specified start color and end color
+            var trailStartColor = {
+                r: 255,
+                g: 255,
+                b: 255
+            };
+            var trailEndColor = {
+                r: 0,
+                g: 0,
+                b: 0
+            };
+
+            drawTrail(trailVertexes, trailLength, trailStartColor, trailEndColor, 4);
         }
 
         g.restore();
