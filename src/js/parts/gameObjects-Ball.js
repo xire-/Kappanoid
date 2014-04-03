@@ -29,7 +29,7 @@ var Ball = function() {
             vertex = vertices[i];
             cumulativeLength += vertex.distance(prevVertex);
             var colorVertex = lerpColor(startColor, endColor, 1 - (cumulativeLength / maxLength));
-            console.log(getColorString(colorPrevVertex));
+
             g.beginPath();
             g.lineWidth = lineWidth;
             g.moveTo(prevVertex.x, prevVertex.y);
