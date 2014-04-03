@@ -125,7 +125,7 @@ var World = function() {
         }
 
         // update paddle position (clamped)
-        this.paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, 0 + this.paddle.halfSize.x), 800 - this.paddle.halfSize.x);
+        this.paddle.update(delta);
 
         // bring balls along
         this.balls.forEach(function(ball) {
@@ -178,9 +178,6 @@ var World = function() {
 
         this.paddle.update(delta);
 
-        // update paddle position (clamped)
-        this.paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, 0 + this.paddle.halfSize.x), constants.worldRelativeWidth - this.paddle.halfSize.x);
-
         // bring balls along
         this.balls.forEach(function(ball) {
             ball.center.x = this.paddle.center.x;
@@ -231,9 +228,6 @@ var World = function() {
 
         this.paddle.update(delta);
 
-        // update paddle position (clamped)
-        this.paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, 0 + this.paddle.halfSize.x), constants.worldRelativeWidth - this.paddle.halfSize.x);
-
         // bring balls along
         this.balls.forEach(function(ball) {
             ball.center.x = this.paddle.center.x;
@@ -263,8 +257,6 @@ var World = function() {
         }
 
         this.paddle.update(delta);
-        // update paddle position (clamped)
-        this.paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, 0 + this.paddle.halfSize.x), constants.worldRelativeWidth - this.paddle.halfSize.x);
 
         var steps = 10;
         for (var i = 0; i < steps; i++) {
@@ -396,9 +388,6 @@ var World = function() {
         }
 
         this.paddle.update(delta);
-
-        // update paddle position (clamped)
-        this.paddle.center.x = Math.min(Math.max(mousePos.x - this.containerOffset.x, 0 + this.paddle.halfSize.x), constants.worldRelativeWidth - this.paddle.halfSize.x);
 
         // update particles
         updateParticles.call(this, delta);

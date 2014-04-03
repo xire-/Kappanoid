@@ -22,7 +22,10 @@ var Paddle = function() {
         g.restore();
     };
 
-    var update = function( /*delta*/ ) {};
+    var update = function( /*delta*/ ) {
+        // update paddle position (clamped)
+        this.center.x = clamp(this.halfSize.x, mousePos.x - world.containerOffset.x, 800 - this.halfSize.x);
+    };
 
 
     var constructor = function Paddle(center, halfSize, life, color) {
