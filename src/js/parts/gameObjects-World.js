@@ -317,7 +317,7 @@ var World = function() {
             this.balls.forEach(function(ball) {
                 ball.direction = new Vector2(randomFloat(-1, 1), -1);
                 ball.speed = 300;
-                ball.addTrailVertex(ball.center);
+                ball.resetTrail();
             }, this);
 
             this.update = updatePlaying;

@@ -7,6 +7,14 @@ var PlayingState = function() {
             case 50: // 2
                 settings.particles = !settings.particles;
                 break;
+            case 116: // T
+                if (!settings.ballTrail) {
+                    world.balls.forEach(function(ball) {
+                        ball.resetTrail();
+                    });
+                }
+                settings.ballTrail = !settings.ballTrail;
+                break;
             case 117: // U
                 settings.timeScale = 1;
                 break;
