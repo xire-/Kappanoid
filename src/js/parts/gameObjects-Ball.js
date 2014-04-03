@@ -50,19 +50,6 @@ var Ball = function() {
 
         g.save();
 
-        g.translate(this.center.x, this.center.y);
-        g.rotate(-Math.atan2(this.direction.x, this.direction.y));
-
-        // draw ball
-        g.fillStyle = settings.colors ? getColorString(this.color) : getColorString({
-            r: 255,
-            g: 255,
-            b: 255
-        });
-        g.fillRect(-this.radius, -this.radius, this.radius * 2, this.radius * 2);
-
-        g.restore();
-
         // draw ball trail
         if (settings.ballTrail) {
             var trailLength = 200;
@@ -107,6 +94,19 @@ var Ball = function() {
 
             drawTrail(trailVertexes, trailLength, trailStartColor, trailEndColor, 4);
         }
+
+        g.restore();
+
+        // draw ball
+        g.translate(this.center.x, this.center.y);
+        g.rotate(-Math.atan2(this.direction.x, this.direction.y));
+
+        g.fillStyle = settings.colors ? getColorString(this.color) : getColorString({
+            r: 255,
+            g: 255,
+            b: 255
+        });
+        g.fillRect(-this.radius, -this.radius, this.radius * 2, this.radius * 2);
 
         g.restore();
     };
