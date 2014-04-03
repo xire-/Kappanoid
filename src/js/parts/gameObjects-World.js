@@ -66,6 +66,19 @@ var World = function() {
         g.fillRect(0, 0, this.containerSize.x, this.containerSize.y);
     };
 
+    var drawPaddleLifes = function() {
+        g.font = '18px emulogic';
+        g.textBaseline = 'top';
+        g.fillStyle = settings.colors ? this.paddle.color : getColorString({
+            r: 255,
+            g: 255,
+            b: 255
+        });
+        for (var i = 0; i < this.paddle.life - 1; i++) {
+            g.fillText('❤', 5 + 20 * i, 578);
+        }
+    };
+
     ///////// initial state
 
     var renderIntro = function() {
@@ -154,6 +167,7 @@ var World = function() {
         });
 
         this.paddle.render();
+        drawPaddleLifes.call(this);
 
         // render powerup
         if (this.fallingPowerup !== null) {
@@ -338,6 +352,7 @@ var World = function() {
         });
 
         this.paddle.render();
+        drawPaddleLifes.call(this);
 
         // render particles
         this.particles.forEach(function(particle) {
