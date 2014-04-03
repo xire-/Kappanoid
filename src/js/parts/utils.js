@@ -36,7 +36,7 @@ var randomInt = function(min, max) {
 var getColorString = function(color) {
     console.assert(color !== undefined, 'color is undefined');
 
-    var a = (color.a !== undefined) ? clamp(0, color.a, 1) : 1;
+    var a = (color.a !== undefined) ? clamp(0, color.a, 1).toFixed(3) : 1;
 
     if (color.r !== undefined) {
         //it's rgb or rgba
