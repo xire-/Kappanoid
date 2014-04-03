@@ -5,8 +5,7 @@ var Paddle = function() {
         if (settings.paddleSpeedDistortion) {
             // even if it may seem this belong to the update method, it must stay here
             // since it is dependant on the frame rate
-            var speedScale = clamp(0.5, 1 - (Math.abs(mousePos.x - this._oldPosX) - 20) / 60, 1);
-            this._oldPosX = mousePos.x;
+            var speedScale = clamp(0.5, 1 - (Math.abs(this.center.x - this._oldPosX) - 20) / 60, 1);
 
             g.scale(1 / speedScale, speedScale);
         }
@@ -24,6 +23,7 @@ var Paddle = function() {
 
     var update = function( /*delta*/ ) {
         // update paddle position (clamped)
+        this._oldPosX = this.center.x;
         this.center.x = clamp(this.halfSize.x, mousePos.x - world.containerOffset.x, 800 - this.halfSize.x);
     };
 
