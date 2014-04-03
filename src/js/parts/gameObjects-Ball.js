@@ -53,11 +53,17 @@ var Ball = function() {
         g.translate(this.center.x, this.center.y);
         g.rotate(-Math.atan2(this.direction.x, this.direction.y));
 
-        g.fillStyle = settings.colors ? this.color : '#FFFFFF';
+        // draw ball
+        g.fillStyle = settings.colors ? getColorString(this.color) : getColorString({
+            r: 255,
+            g: 255,
+            b: 255
+        });
         g.fillRect(-this.radius, -this.radius, this.radius * 2, this.radius * 2);
 
         g.restore();
 
+        // draw ball trail
         if (settings.ballTrail) {
             var trailLength = 200;
             var trailVertexes = [this.center];
@@ -83,21 +89,20 @@ var Ball = function() {
                     }
                     break;
                 }
-                //}
 
                 prevVertex = vertex;
             }
 
             // draw a line constructed using the created array of vertexes with the specified start color and end color
             var trailStartColor = {
-                r: 255,
-                g: 255,
-                b: 255
+                r: settings.colors ? this.color.r : 255,
+                g: settings.colors ? this.color.g : 255,
+                b: settings.colors ? this.color.b : 255
             };
             var trailEndColor = {
-                r: 0,
-                g: 0,
-                b: 0
+                r: settings.colors ? world._backgroundColor.r : 0,
+                g: settings.colors ? world._backgroundColor.g : 0,
+                b: settings.colors ? world._backgroundColor.b : 0
             };
 
             drawTrail(trailVertexes, trailLength, trailStartColor, trailEndColor, 4);
@@ -159,7 +164,7 @@ var Ball = function() {
         },
 
         set color(value) {
-            console.assert(value !== undefined && typeof value == 'string', JSON.stringify(value));
+            console.assert(value !== undefined && value.r !== undefined && value.g !== undefined && value.b !== undefined, JSON.stringify(value));
             this._color = value;
         },
         get color() {
@@ -176,9 +181,13 @@ function testBall() {
     var velocity1 = new Vector2(20, 20);
     var speed1 = velocity1.length();
     var direction1 = velocity1.clone().normalize();
-    var color1 = '#abc';
+    var color1 = {
+        r: 234,
+        g: 245,
+        b: 23
+    };
     var ball1 = new Ball(center1, radius1, speed1, direction1, color1);
-    console.assert(JSON.stringify(ball1.center) === JSON.stringify(center1) && ball1.radius === radius1 && ball1.speed === speed1 && JSON.stringify(ball1.direction) === JSON.stringify(direction1) && ball1.color === color1, JSON.stringify(ball1));
+    console.assert(JSON.stringify(ball1.center) === JSON.stringify(center1) && ball1.radius === radius1 && ball1.speed === speed1 && JSON.stringify(ball1.direction) === JSON.stringify(direction1) && JSON.stringify(ball1.color) === JSON.stringify(color1), JSON.stringify(ball1));
 
     console.log('testBall OK');
 }

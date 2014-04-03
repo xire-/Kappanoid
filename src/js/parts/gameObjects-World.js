@@ -58,7 +58,11 @@ var World = function() {
         g.clip();
 
         // render background
-        g.fillStyle = settings.colors ? this._backgroundColor : '#000000';
+        g.fillStyle = settings.colors ? getColorString(this._backgroundColor) : getColorString({
+            r: 0,
+            g: 0,
+            b: 0
+        });
         g.fillRect(0, 0, this.containerSize.x, this.containerSize.y);
     };
 
