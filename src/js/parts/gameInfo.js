@@ -24,11 +24,22 @@ var GameInfo = function() {
         g.textBaseline = 'top';
 
         g.fillStyle = '#FF0000';
-        g.fillText('HIGH SCORE', 285, 10);
+        g.fillText('HIGH SCORE', 240, 10);
         g.fillText('CURRENT', 575, 10);
 
         g.fillStyle = '#FFFFFF';
-        g.fillText('1337', 285, 35);
+        g.fillText('1337', 240, 35);
+
+        var minutes = '00';
+        var seconds = '00';
+        if (world.levelTime !== null) {
+            var levelTime = new Date(new Date().getTime() - world.levelTime.getTime());
+            minutes = (levelTime.getMinutes() < 10 ? '0' : '') + levelTime.getMinutes();
+            seconds = (levelTime.getSeconds() < 10 ? '0' : '') + levelTime.getSeconds();
+        }
+        g.fillText(minutes + ':' + seconds, 420, 20);
+
+
         g.fillText(world.score, 575, 35);
     };
 
@@ -48,7 +59,8 @@ var GameInfo = function() {
 
         if (this.showDebugInfo) {
             drawDebugInfo(delta);
-            g.translate(200, 0);
+            g.scale(0.6, 0.6);
+            g.translate(700, 15);
         }
         drawGameInfo();
 

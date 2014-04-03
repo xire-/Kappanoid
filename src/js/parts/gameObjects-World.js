@@ -40,6 +40,8 @@ var World = function() {
         this.paddle = new Paddle(new Vector2(800 / 2, 600 + paddleHalfSize.y - 50), paddleHalfSize, oldLifes, constants.paddleColor);
 
         this.particles = [];
+
+        this.levelTime = null;
     };
 
     var drawEmptyWorld = function() {
@@ -330,6 +332,10 @@ var World = function() {
                 ball.resetTrail();
             }, this);
 
+            if (this.levelTime === null) {
+                this.levelTime = new Date();
+            }
+
             this.update = updatePlaying;
             this._canReleaseBalls = false;
         }
@@ -610,6 +616,7 @@ var World = function() {
         }
     };
 
+
     var constructor = function World(containerOffset, containerSize) {
         this.containerOffset = containerOffset;
         this.containerSize = containerSize;
@@ -623,6 +630,7 @@ var World = function() {
         this._unbreakableBricks = [];
         this.score = 0;
         this._fireworksTime = 0;
+        this.levelTime = null;
 
         this.reset = reset;
         this.render = renderIntro;
