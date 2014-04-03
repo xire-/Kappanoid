@@ -40,15 +40,15 @@ var kappanoid = (function() {
     var settings = {
         colors: false,
         particles: false,
-        sounds: true,
-        music: true,
+        sounds: false,
+        music: false,
         timeScale: 1,
 
         ballTrail: false,
-        lastBrickSlowMo: true,
-        paddleSpeedDistortion: true,
-        paddleFace: true,
-        worldShake: true,
+        lastBrickSlowMo: false,
+        paddleSpeedDistortion: false,
+        // paddleFace: false,
+        // worldShake: false,
     };
     var constants = {
         bordersRelativeThickness: 20,

@@ -1,13 +1,33 @@
 var PlayingState = function() {
     var keyPress = function(e) {
         switch (e.keyCode) {
+            case 48: // 0
+                settings.colors = true;
+                settings.particles = true;
+                settings.sounds = true;
+                settings.music = true;
+
+                world.balls.forEach(function(ball) {
+                    ball.resetTrail();
+                });
+                settings.ballTrail = true;
+
+                settings.lastBrickSlowMo = true;
+                settings.paddleSpeedDistortion = true;
+                break;
             case 49: // 1
                 settings.colors = !settings.colors;
                 break;
             case 50: // 2
                 settings.particles = !settings.particles;
                 break;
-            case 116: // T
+            case 51: // 3
+                settings.sounds = !settings.sounds;
+                break;
+            case 52: // 4
+                settings.music = !settings.music;
+                break;
+            case 53: // 5
                 if (!settings.ballTrail) {
                     world.balls.forEach(function(ball) {
                         ball.resetTrail();
@@ -15,6 +35,17 @@ var PlayingState = function() {
                 }
                 settings.ballTrail = !settings.ballTrail;
                 break;
+            case 54: // 6
+                settings.lastBrickSlowMo = !settings.lastBrickSlowMo;
+                break;
+            case 55: // 7
+                settings.paddleSpeedDistortion = !settings.paddleSpeedDistortion;
+                break;
+            case 56: // 8
+                break;
+            case 57: // 9
+                break;
+
             case 117: // U
                 settings.timeScale = 1;
                 break;
@@ -27,9 +58,11 @@ var PlayingState = function() {
             case 112: // P
                 settings.timeScale = 0;
                 break;
+
             case 114: // R
                 world.reset(true);
                 break;
+
             case 108: // L
                 for (var i = 0; i < 50; i++) {
                     var angle = randomFloat(Math.PI * 2);
@@ -45,10 +78,12 @@ var PlayingState = function() {
                     world.particles.push(particle);
                 }
                 break;
+
             case 32: // SPACE
                 world.releaseBalls();
                 // prevent space from scrolling the page
                 return false;
+
             default:
                 // alert(e.keyCode);
                 break;
