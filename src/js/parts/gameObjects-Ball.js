@@ -1,6 +1,48 @@
 var Ball = function() {
     var addTrailVertex = function(vertex) {
-        this._trailVertices.push(vertex.clone());
+        this._trailVertexes.push(vertex.clone());
+    };
+
+    var resetTrail = function() {
+        this._trailVertexes = [];
+        this.addTrailVertex(this.center);
+    };
+
+    var lerpColor = function(startColor, endColor, percent) {
+        var color = {};
+        color.r = startColor.r * percent + endColor.r * (1 - percent);
+        color.g = startColor.g * percent + endColor.g * (1 - percent);
+        color.b = startColor.b * percent + endColor.b * (1 - percent);
+        return color;
+    };
+
+    var drawTrailSection = function(vertices, length, startColor, endColor, lineWidth) {
+        console.assert(vertices.length > 0);
+
+        var vertex;
+        var prevVertex = vertices[0];
+        var cumulativeLength = 0;
+        for (var i = 1; i < vertices.length; i++) {
+            var colorPrevVertex = lerpColor(startColor, endColor, 1 - (cumulativeLength / length));
+
+            vertex = vertices[i];
+            cumulativeLength += vertex.distance(prevVertex);
+            var colorVertex = lerpColor(startColor, endColor, 1 - (cumulativeLength / length));
+
+            g.beginPath();
+            g.lineWidth = lineWidth;
+            g.moveTo(prevVertex.x, prevVertex.y);
+
+            var gradient = g.createLinearGradient(prevVertex.x, prevVertex.y, vertex.x, vertex.y);
+            gradient.addColorStop(0, getColorString(colorPrevVertex));
+            gradient.addColorStop(1, getColorString(colorVertex));
+            g.strokeStyle = gradient;
+            g.lineTo(vertex.x, vertex.y);
+            g.stroke();
+            g.closePath();
+
+            prevVertex = vertex;
+        }
     };
 
     var render = function() {
@@ -16,22 +58,76 @@ var Ball = function() {
 
         g.restore();
 
-        // draw ball trail
-        g.lineWidth = 4;
-        g.strokeStyle = '#FFFFFF';
-        g.beginPath();
-        g.moveTo(this.center.x, this.center.y);
-        var vertex = this._trailVertices[this._trailVertices.length - 1]; // length should be always > 0
-        var distance = 0;
-        for (var i = this._trailVertices.length - 2; i >= 0; i--) {
-            distance += vertex.distance(this._trailVertices[i]);
-            if (distance > 1000) {
-                break;
+        if (settings.ballTrail) {
+            var trailSections = [{
+                length: 100,
+                startColor: {
+                    r: 255,
+                    g: 255,
+                    b: 255
+                },
+                endColor: {
+                    r: 255,
+                    g: 255,
+                    b: 255
+                },
+            }, {
+                length: 100,
+                startColor: {
+                    r: 255,
+                    g: 255,
+                    b: 255
+                },
+                endColor: {
+                    r: 0,
+                    g: 0,
+                    b: 0
+                },
+            }, ];
+
+            // start from the last vertex saved (which is last in term of time) and go backward
+            var i = this._trailVertexes.length - 1;
+
+            // for each trail section to draw
+            for (var k = 0; k < trailSections.length; k++) {
+                var trailSectionVertexes = (k === 0) ? [this.center] : [trailSectionVertexes[trailSectionVertexes.length - 1]];
+                var vertex;
+                var prevVertex = trailSectionVertexes[0];
+                var cumulativeLength = 0;
+
+                // create an array of vertexes (computed from this._trailVertexes) with a total length of this trail section length
+                for (; i >= 0; i--) {
+                    vertex = this._trailVertexes[i];
+                    var distanceFromPrevVertex = vertex.distance(prevVertex);
+                    cumulativeLength += distanceFromPrevVertex;
+                    if (cumulativeLength <= trailSections[k].length) {
+                        trailSectionVertexes.push(vertex);
+                    } else {
+                        // interpolate from prevVertex to vertex to compute the last vertex of this trail section
+                        if (cumulativeLength - distanceFromPrevVertex <= trailSections[k].length) {
+                            var midVertex = Vector2.lerp(vertex, prevVertex, (cumulativeLength - trailSections[k].length) / distanceFromPrevVertex);
+                            trailSectionVertexes.push(midVertex);
+                        }
+
+                        if (cumulativeLength > trailSections[k].length) {
+                            if (k === trailSections.length - 1) {
+                                // all trail sections are computed; remove unused vertexes from this._trailVertexes
+                                i -= 1;
+                                for (; i >= 0; i--) {
+                                    this._trailVertexes.splice(i, 1);
+                                }
+                            }
+                            break;
+                        }
+                    }
+
+                    prevVertex = vertex;
+                }
+
+                // draw a line constructed using the created array of vertexes with the specified start color and end color
+                drawTrailSection(trailSectionVertexes, trailSections[k].length, trailSections[k].startColor, trailSections[k].endColor, 4);
             }
-            g.lineTo(vertex.x, vertex.y);
-            vertex = this._trailVertices[i];
         }
-        g.stroke();
 
         g.restore();
     };
@@ -47,9 +143,10 @@ var Ball = function() {
         this.speed = speed;
         this.direction = direction;
         this.color = color;
-        this._trailVertices = [this.center];
+        this._trailVertexes = [];
 
         this.addTrailVertex = addTrailVertex;
+        this.resetTrail = resetTrail;
         this.render = render;
         this.update = update;
     };

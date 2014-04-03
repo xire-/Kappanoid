@@ -69,6 +69,11 @@ var Vector2 = function() {
     };
 
 
+    var lerp = function(start, end, percent) {
+        return start.clone().add((end.clone().sub(start)).mul(percent));
+    };
+
+
     var constructor = function Vector2(x, y) {
         this.x = x;
         this.y = y;
@@ -104,6 +109,7 @@ var Vector2 = function() {
         },
     };
 
+    constructor.lerp = lerp;
     return constructor;
 }();
 
