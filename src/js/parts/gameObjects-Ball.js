@@ -9,28 +9,27 @@ var Ball = function() {
     };
 
     var lerpColor = function(startColor, endColor, percent) {
-        var color = {};
-        color.r = startColor.r * percent + endColor.r * (1 - percent);
-        color.g = startColor.g * percent + endColor.g * (1 - percent);
-        color.b = startColor.b * percent + endColor.b * (1 - percent);
-        return color;
+        return {
+            r: startColor.r * percent + endColor.r * (1 - percent),
+            g: startColor.g * percent + endColor.g * (1 - percent),
+            b: startColor.b * percent + endColor.b * (1 - percent),
+            a: startColor.a * percent + endColor.a * (1 - percent),
+        };
     };
 
     var drawTrail = function(vertices, maxLength, startColor, endColor, lineWidth) {
         console.assert(vertices.length > 0);
 
         var vertex;
-        var prevVertex = vertices[vertices.length - 1];
+        var prevVertex = vertices[0];
         var cumulativeLength = 0;
-        // draw trail backwards
-        for (var i = vertices.length - 2; i >= 0; i--) {
+        for (var i = 1; i < vertices.length; i++) {
+            var colorPrevVertex = lerpColor(startColor, endColor, 1 - (cumulativeLength / maxLength));
+
             vertex = vertices[i];
-            var vertexesDistance = vertex.distance(prevVertex);
-            cumulativeLength += vertexesDistance;
-
-            var colorPrevVertex = lerpColor(startColor, endColor, ((cumulativeLength - vertexesDistance) / maxLength));
-            var colorVertex = lerpColor(startColor, endColor, (cumulativeLength / maxLength));
-
+            cumulativeLength += vertex.distance(prevVertex);
+            var colorVertex = lerpColor(startColor, endColor, 1 - (cumulativeLength / maxLength));
+            console.log(getColorString(colorPrevVertex));
             g.beginPath();
             g.lineWidth = lineWidth;
             g.moveTo(prevVertex.x, prevVertex.y);
@@ -39,7 +38,6 @@ var Ball = function() {
             gradient.addColorStop(0, getColorString(colorPrevVertex));
             gradient.addColorStop(1, getColorString(colorVertex));
             g.strokeStyle = gradient;
-
             g.lineTo(vertex.x, vertex.y);
             g.stroke();
             g.closePath();
@@ -55,7 +53,7 @@ var Ball = function() {
 
         // draw ball trail
         if (settings.ballTrail) {
-            var trailMaxLength = 200;
+            var trailMaxLength = 150;
             var trailVertexes = [this.center];
             var vertex;
             var prevVertex = trailVertexes[0];
@@ -87,12 +85,14 @@ var Ball = function() {
             var trailStartColor = {
                 r: settings.colors ? this.color.r : 255,
                 g: settings.colors ? this.color.g : 255,
-                b: settings.colors ? this.color.b : 255
+                b: settings.colors ? this.color.b : 255,
+                a: 1,
             };
             var trailEndColor = {
-                r: settings.colors ? world._backgroundColor.r : 0,
-                g: settings.colors ? world._backgroundColor.g : 0,
-                b: settings.colors ? world._backgroundColor.b : 0
+                r: settings.colors ? this.color.r : 0,
+                g: settings.colors ? this.color.g : 0,
+                b: settings.colors ? this.color.b : 0,
+                a: 0,
             };
 
             drawTrail(trailVertexes, trailMaxLength, trailStartColor, trailEndColor, 4);
