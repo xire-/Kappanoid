@@ -99,14 +99,17 @@ var Brick = function() {
 
     var hit = function() {
         this.life -= 1;
+        this._blinkTimer = 0;
     };
 
 
     var render = function() {
         g.save();
 
-        g.beginPath();
+        g.translate(this.center.x, this.center.y);
 
+        g.save();
+        g.beginPath();
         g.shadowBlur = 5;
         g.shadowColor = getColorString({
             r: 0,
@@ -116,25 +119,30 @@ var Brick = function() {
         g.shadowOffsetX = 3;
         g.shadowOffsetY = 3;
 
-        g.rect(this.center.x - this.halfSize.x, this.center.y - this.halfSize.y, this.halfSize.x * 2, this.halfSize.y * 2);
+        g.rect(-this.halfSize.x, -this.halfSize.y, this.halfSize.x * 2, this.halfSize.y * 2);
         g.fillStyle = settings.colors ? getColorString(this.color) : getColorString({
             r: 255,
             g: 255,
             b: 255,
         });
         g.fill();
+        g.restore();
+        g.clip();
 
-        /*
-        g.textAlign = 'center';
-        g.textBaseline = 'middle';
-        g.fillStyle = '#000000';
-        g.fillText(this.life, this.center.x, this.center.y);
-        */
+        // draw blink
+        g.shadowBlur = 0;
+        g.fillStyle = 'rgba(255, 255, 255, 0.5)';
+        g.translate(-this.halfSize.x * 2 + (this.halfSize.x * 4 * this._blinkTimer / 500), 0);
+        g.rotate(-1); // rotate one radiant counter-clock wise
+        g.fillRect(-this.halfSize.x, -this.halfSize.y, this.halfSize.x * 2, this.halfSize.y * 2);
+
 
         g.restore();
     };
 
-    var update = function( /*delta*/ ) {};
+    var update = function(delta) {
+        this._blinkTimer = Math.min(500, this._blinkTimer + delta);
+    };
 
     ///////// constructor
 
@@ -145,6 +153,8 @@ var Brick = function() {
         this.color = type.color;
         this.value = type.value;
         this.type = type;
+
+        this._blinkTimer = 500;
 
         // public methods
         this.hit = hit;
