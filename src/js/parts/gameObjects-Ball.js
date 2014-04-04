@@ -1,4 +1,7 @@
 var Ball = function() {
+
+    ///////// public methods
+
     var addTrailVertex = function(vertex) {
         this._trailVertexes.push(vertex.clone());
     };
@@ -15,43 +18,6 @@ var Ball = function() {
         }
     };
 
-    var lerpColor = function(startColor, endColor, percent) {
-        return {
-            r: startColor.r * percent + endColor.r * (1 - percent),
-            g: startColor.g * percent + endColor.g * (1 - percent),
-            b: startColor.b * percent + endColor.b * (1 - percent),
-            a: startColor.a * percent + endColor.a * (1 - percent),
-        };
-    };
-
-    var drawTrail = function(vertices, maxLength, startColor, endColor, lineWidth) {
-        console.assert(vertices.length > 0);
-
-        var vertex;
-        var prevVertex = vertices[0];
-        var cumulativeLength = 0;
-        for (var i = 1; i < vertices.length; i++) {
-            var colorPrevVertex = lerpColor(startColor, endColor, 1 - (cumulativeLength / maxLength));
-
-            vertex = vertices[i];
-            cumulativeLength += vertex.distance(prevVertex);
-            var colorVertex = lerpColor(startColor, endColor, 1 - (cumulativeLength / maxLength));
-
-            g.beginPath();
-            g.lineWidth = lineWidth;
-            g.moveTo(prevVertex.x, prevVertex.y);
-
-            var gradient = g.createLinearGradient(prevVertex.x, prevVertex.y, vertex.x, vertex.y);
-            gradient.addColorStop(0, getColorString(colorPrevVertex));
-            gradient.addColorStop(1, getColorString(colorVertex));
-            g.strokeStyle = gradient;
-            g.lineTo(vertex.x, vertex.y);
-            g.stroke();
-            g.closePath();
-
-            prevVertex = vertex;
-        }
-    };
 
     var render = function() {
         g.save();
@@ -138,6 +104,47 @@ var Ball = function() {
         this.center.add(this.direction.clone().mul(this.speed * delta / 1000));
     };
 
+    ///////// private methods
+
+    var drawTrail = function(vertices, maxLength, startColor, endColor, lineWidth) {
+        console.assert(vertices.length > 0);
+
+        var vertex;
+        var prevVertex = vertices[0];
+        var cumulativeLength = 0;
+        for (var i = 1; i < vertices.length; i++) {
+            var colorPrevVertex = lerpColor(startColor, endColor, 1 - (cumulativeLength / maxLength));
+
+            vertex = vertices[i];
+            cumulativeLength += vertex.distance(prevVertex);
+            var colorVertex = lerpColor(startColor, endColor, 1 - (cumulativeLength / maxLength));
+
+            g.beginPath();
+            g.lineWidth = lineWidth;
+            g.moveTo(prevVertex.x, prevVertex.y);
+
+            var gradient = g.createLinearGradient(prevVertex.x, prevVertex.y, vertex.x, vertex.y);
+            gradient.addColorStop(0, getColorString(colorPrevVertex));
+            gradient.addColorStop(1, getColorString(colorVertex));
+            g.strokeStyle = gradient;
+            g.lineTo(vertex.x, vertex.y);
+            g.stroke();
+            g.closePath();
+
+            prevVertex = vertex;
+        }
+    };
+
+    var lerpColor = function(startColor, endColor, percent) {
+        return {
+            r: startColor.r * percent + endColor.r * (1 - percent),
+            g: startColor.g * percent + endColor.g * (1 - percent),
+            b: startColor.b * percent + endColor.b * (1 - percent),
+            a: startColor.a * percent + endColor.a * (1 - percent),
+        };
+    };
+
+    ///////// constructor
 
     var constructor = function Ball(center, radius, speed, direction, color) {
         this.center = center;
@@ -145,10 +152,13 @@ var Ball = function() {
         this.speed = speed;
         this.direction = direction;
         this.color = color;
+
+        // trail variables
         this._trailVertexes = [];
         this.stoppedMovingDate = new Date();
         this.stoppedMovingPosition = this.center;
 
+        // public methods
         this.addTrailVertex = addTrailVertex;
         this.resetTrail = resetTrail;
         this.fadeTrail = fadeTrail;
@@ -190,7 +200,7 @@ var Ball = function() {
         },
 
         set color(value) {
-            console.assert(value !== undefined && value.r !== undefined && value.g !== undefined && value.b !== undefined, JSON.stringify(value));
+            console.assert(isColor(value), JSON.stringify(value));
             this._color = value;
         },
         get color() {
