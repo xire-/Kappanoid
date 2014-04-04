@@ -1,4 +1,24 @@
 var PlayingState = function() {
+
+    ///////// public methods
+
+    var render = function() {
+        g.save();
+
+        // clear the previous frame
+        g.fillStyle = '#000000';
+        g.fillRect(0, 0, constants.canvasRelativeWidth, constants.canvasRelativeHeight);
+
+        // render the game world
+        world.render();
+
+        g.restore();
+    };
+
+    var update = function(delta) {
+        world.update(delta);
+    };
+
     var keyPress = function(e) {
         switch (e.keyCode) {
             case 48: // 0
@@ -94,25 +114,10 @@ var PlayingState = function() {
         }
     };
 
-    var render = function() {
-        g.save();
-
-        // clear the previous frame
-        g.fillStyle = '#000000';
-        g.fillRect(0, 0, constants.canvasRelativeWidth, constants.canvasRelativeHeight);
-
-        // render the game world
-        world.render();
-
-        g.restore();
-    };
-
-    var update = function(delta) {
-        world.update(delta);
-    };
-
+    ///////// constructor
 
     var constructor = function PlayingState() {
+        // public methods
         this.render = render;
         this.update = update;
         this.keyPress = keyPress;

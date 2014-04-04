@@ -1,49 +1,6 @@
 var IntroState = function() {
-    var keyPress = function(e) {
-        switch (e.keyCode) {
-            case 32: // SPACE
-                if (this._intro) {
-                    this._intro = false;
-                    this._timePassed = 0;
-                }
-                // prevent space from scrolling the page
-                return false;
 
-            case 100: // D
-                gameInfo.showDebugInfo = !gameInfo.showDebugInfo;
-                break;
-
-            default:
-                break;
-        }
-    };
-
-    var drawCredits = function(timePassed, lineHeight, y) {
-        var offset = (timePassed / 3) % 500;
-        var gradient = g.createLinearGradient(-offset, 0, 1000 - offset, 0);
-        gradient.addColorStop(0 / 12, '#f00');
-        gradient.addColorStop(1 / 12, '#ff0');
-        gradient.addColorStop(2 / 12, '#0f0');
-        gradient.addColorStop(3 / 12, '#0ff');
-        gradient.addColorStop(4 / 12, '#00f');
-        gradient.addColorStop(5 / 12, '#f0f');
-        gradient.addColorStop(6 / 12, '#f00');
-        gradient.addColorStop(7 / 12, '#ff0');
-        gradient.addColorStop(8 / 12, '#0f0');
-        gradient.addColorStop(9 / 12, '#0ff');
-        gradient.addColorStop(10 / 12, '#00f');
-        gradient.addColorStop(11 / 12, '#f0f');
-        gradient.addColorStop(12 / 12, '#f00');
-
-        g.font = '15px monospace';
-        g.fillStyle = gradient;
-        g.fillText('Francesco Cagnin and Marco Gasparini', 0, y);
-        y += lineHeight;
-        g.fillText('© 2014', 0, y);
-        y += lineHeight;
-
-        return y;
-    };
+    ///////// public methods
 
     var render = function() {
         g.save();
@@ -111,6 +68,55 @@ var IntroState = function() {
         }
     };
 
+    var keyPress = function(e) {
+        switch (e.keyCode) {
+            case 32: // SPACE
+                if (this._intro) {
+                    this._intro = false;
+                    this._timePassed = 0;
+                }
+                // prevent space from scrolling the page
+                return false;
+
+            case 100: // D
+                gameInfo.showDebugInfo = !gameInfo.showDebugInfo;
+                break;
+
+            default:
+                break;
+        }
+    };
+
+    ///////// private methods
+
+    var drawCredits = function(timePassed, lineHeight, y) {
+        var offset = (timePassed / 3) % 500;
+        var gradient = g.createLinearGradient(-offset, 0, 1000 - offset, 0);
+        gradient.addColorStop(0 / 12, '#f00');
+        gradient.addColorStop(1 / 12, '#ff0');
+        gradient.addColorStop(2 / 12, '#0f0');
+        gradient.addColorStop(3 / 12, '#0ff');
+        gradient.addColorStop(4 / 12, '#00f');
+        gradient.addColorStop(5 / 12, '#f0f');
+        gradient.addColorStop(6 / 12, '#f00');
+        gradient.addColorStop(7 / 12, '#ff0');
+        gradient.addColorStop(8 / 12, '#0f0');
+        gradient.addColorStop(9 / 12, '#0ff');
+        gradient.addColorStop(10 / 12, '#00f');
+        gradient.addColorStop(11 / 12, '#f0f');
+        gradient.addColorStop(12 / 12, '#f00');
+
+        g.font = '15px monospace';
+        g.fillStyle = gradient;
+        g.fillText('Francesco Cagnin and Marco Gasparini', 0, y);
+        y += lineHeight;
+        g.fillText('© 2014', 0, y);
+        y += lineHeight;
+
+        return y;
+    };
+
+    ///////// constructor
 
     var constructor = function IntroState() {
         this._intro = true;
@@ -249,9 +255,10 @@ var IntroState = function() {
         ];
         this._selectedLogo = this.logos[randomInt(this.logos.length)];
 
-        this.keyPress = keyPress;
+        // public methods
         this.render = render;
         this.update = update;
+        this.keyPress = keyPress;
     };
 
     return constructor;
