@@ -11,6 +11,16 @@ var Paddle = function() {
         }
 
         g.beginPath();
+
+        g.shadowBlur = 2;
+        g.shadowColor = getColorString({
+            r: 0,
+            g: 0,
+            b: 0,
+        });
+        g.shadowOffsetX = 1;
+        g.shadowOffsetY = 1;
+
         g.rect(-this.halfSize.x, -this.halfSize.y, this.halfSize.x * 2, this.halfSize.y * 2);
         g.fillStyle = settings.colors ? this.color : '#FFFFFF';
         g.fill();
@@ -36,6 +46,10 @@ var Paddle = function() {
             // bring balls along
             world.balls.forEach(function(ball) {
                 ball.center.x += this.center.x - this._oldPosX;
+                if (ball.stoppedMovingDate === null) {
+                    ball.stoppedMovingDate = new Date();
+                    ball.stoppedMovingPosition = ball.center.clone();
+                }
             }, this);
         }
     };

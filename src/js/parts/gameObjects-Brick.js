@@ -13,15 +13,15 @@ var Brick = function() {
             life: 1,
             color: {
                 r: 255,
-                g: 102,
-                b: 0,
+                g: 178,
+                b: 102,
             },
             value: 60,
         },
         CYAN: {
             life: 1,
             color: {
-                r: 0,
+                r: 102,
                 g: 255,
                 b: 255,
             },
@@ -30,9 +30,9 @@ var Brick = function() {
         GREEN: {
             life: 1,
             color: {
-                r: 0,
+                r: 102,
                 g: 255,
-                b: 0,
+                b: 102,
             },
             value: 80,
         },
@@ -40,16 +40,16 @@ var Brick = function() {
             life: 1,
             color: {
                 r: 255,
-                g: 0,
-                b: 0,
+                g: 102,
+                b: 102,
             },
             value: 90,
         },
         BLUE: {
             life: 1,
             color: {
-                r: 0,
-                g: 0,
+                r: 102,
+                g: 178,
                 b: 255,
             },
             value: 100,
@@ -57,9 +57,9 @@ var Brick = function() {
         VIOLET: {
             life: 1,
             color: {
-                r: 143,
-                g: 0,
-                b: 255,
+                r: 255,
+                g: 102,
+                b: 153,
             },
             value: 110,
         },
@@ -68,7 +68,7 @@ var Brick = function() {
             color: {
                 r: 255,
                 g: 255,
-                b: 0,
+                b: 102,
             },
             value: 120,
         },
@@ -100,6 +100,16 @@ var Brick = function() {
         g.save();
 
         g.beginPath();
+
+        g.shadowBlur = 2;
+        g.shadowColor = getColorString({
+            r: 0,
+            g: 0,
+            b: 0,
+        });
+        g.shadowOffsetX = 1;
+        g.shadowOffsetY = 1;
+
         g.rect(this.center.x - this.halfSize.x, this.center.y - this.halfSize.y, this.halfSize.x * 2, this.halfSize.y * 2);
         g.fillStyle = settings.colors ? getColorString(this.color) : getColorString({
             r: 255,
@@ -108,10 +118,12 @@ var Brick = function() {
         });
         g.fill();
 
+        /*
         g.textAlign = 'center';
         g.textBaseline = 'middle';
         g.fillStyle = '#000000';
         g.fillText(this.life, this.center.x, this.center.y);
+        */
 
         g.restore();
     };
@@ -158,7 +170,7 @@ var Brick = function() {
         },
 
         set color(value) {
-            console.assert(value !== undefined && typeof value == 'string', JSON.stringify(value));
+            console.assert(value !== undefined && value.r !== undefined && value.g !== undefined && value.b !== undefined, JSON.stringify(value));
             this._color = value;
         },
         get color() {

@@ -4,7 +4,11 @@ var Particle = function() {
             render: function() {
                 g.globalAlpha = this.life / this._initialLife;
 
-                g.fillStyle = settings.colors ? this.color : '#FFFFFF';
+                g.fillStyle = settings.colors ? getColorString(this.color) : getColorString({
+                    r: 255,
+                    g: 255,
+                    b: 255,
+                });
                 g.fillRect(this.position.x - 2, this.position.y - 2, 4, 4);
             }
         },
@@ -12,13 +16,21 @@ var Particle = function() {
             render: function() {
                 g.globalAlpha = this.life / this._initialLife;
 
-                g.fillStyle = settings.colors ? this.color : '#FFFFFF';
+                g.fillStyle = settings.colors ? getColorString(this.color) : getColorString({
+                    r: 255,
+                    g: 255,
+                    b: 255,
+                });
                 g.fillRect(this.position.x - 4, this.position.y - 4, 8, 8);
             }
         },
         FIREWORK: {
             render: function() {
-                g.fillStyle = settings.colors ? this.color : '#FFFFFF';
+                g.fillStyle = settings.colors ? getColorString(this.color) : getColorString({
+                    r: 255,
+                    g: 255,
+                    b: 255,
+                });
                 g.fillRect(this.position.x - 2, this.position.y - 2, 4, 4);
             }
         },
@@ -31,7 +43,8 @@ var Particle = function() {
                 var particleVelocity = new Vector2(speed.x * Math.cos(angle), speed.y * Math.sin(angle));
                 var particleAcceleration = new Vector2(0, 110);
                 var particleLife = life;
-                var particleColor = (i % 2 === 0) ? shadeColor(color, 5 * i) : shadeColor(color, -5 * i);
+                var particleColor = (i % 2 === 0) ? shadeColor(color, 30 * i / count) : shadeColor(color, -30 * i / count);
+                console.log(JSON.stringify(particleColor));
                 var particle = new Particle(new Vector2(position.x, position.y), particleVelocity, particleAcceleration, particleLife, shape, particleColor, callback);
                 container.push(particle);
             }
@@ -121,7 +134,7 @@ var Particle = function() {
         },
 
         set color(value) {
-            console.assert(value !== undefined && typeof value == 'string', JSON.stringify(value));
+            console.assert(value !== undefined && value.r !== undefined && value.g !== undefined && value.b !== undefined, JSON.stringify(value));
             this._color = value;
         },
         get color() {
@@ -140,9 +153,13 @@ function testParticle() {
     var acceleration1 = new Vector2(3, 4);
     var life1 = 4000;
     var shape1 = Particle.shapes.SMALL_RECTANGLE;
-    var color1 = '#abc';
+    var color1 = {
+        r: 1,
+        g: 43,
+        b: 32,
+    };
     var particle1 = new Particle(position1, velocity1, acceleration1, life1, shape1, color1);
-    console.assert(JSON.stringify(particle1.position) === JSON.stringify(position1) && JSON.stringify(particle1.velocity) === JSON.stringify(velocity1) && JSON.stringify(particle1.acceleration) === JSON.stringify(acceleration1) && particle1.life === life1 && JSON.stringify(particle1.shape) === JSON.stringify(shape1) && particle1.color === color1, JSON.stringify(particle1));
+    console.assert(JSON.stringify(particle1.position) === JSON.stringify(position1) && JSON.stringify(particle1.velocity) === JSON.stringify(velocity1) && JSON.stringify(particle1.acceleration) === JSON.stringify(acceleration1) && particle1.life === life1 && JSON.stringify(particle1.shape) === JSON.stringify(shape1) && JSON.stringify(particle1.color) === JSON.stringify(color1), JSON.stringify(particle1));
 
     console.log('testParticle OK');
 }

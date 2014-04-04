@@ -14,6 +14,9 @@ var World = function() {
 
         this.fallingPowerup = null;
 
+        this._backgroundColor = levels[this._currentLevel].backgroundColor;
+        this.bordersColor = levels[this._currentLevel].bordersColor;
+
         this.balls = [];
         this.balls.push(new Ball(new Vector2(400, 600 - 50 - 7), 7, 0, new Vector2(0, -1), constants.ballColor));
 
@@ -48,7 +51,7 @@ var World = function() {
         // WARNING don't use save and restore here
 
         // render borders (as background)
-        g.fillStyle = settings.colors ? this.bordersColor : '#FFFFFF';
+        g.fillStyle = settings.colors ? getColorString(this.bordersColor) : '#FFFFFF';
         g.fillRect(0, 60, this.containerSize.x + constants.bordersRelativeThickness * 2, this.containerSize.y + constants.bordersRelativeThickness);
 
         // translate to render the world area
@@ -330,6 +333,8 @@ var World = function() {
                 ball.direction = new Vector2(randomFloat(-1, 1), -1);
                 ball.speed = 300;
                 ball.resetTrail();
+                ball.stoppedMovingDate = null;
+                ball.stoppedMovingPosition = null;
             }, this);
 
             if (this.levelTime === null) {
@@ -342,6 +347,10 @@ var World = function() {
         if (this.paddle.ballIsStuck) {
             this.paddle.ballIsStuck = false;
             this.balls[0].speed = this.balls[0].storedSpeed;
+
+            this.balls[0].resetTrail();
+            this.balls[0].stoppedMovingDate = null;
+            this.balls[0].stoppedMovingPosition = null;
         }
     };
 
@@ -535,7 +544,7 @@ var World = function() {
                         this.fallingPowerup = new PowerUp(hitbrick.center.clone(), hitbrick.halfSize.clone(), pType);
                     }
 
-                    Particle.spawn(this.particles, hitbrick.center, new Vector2(-randomInt(60, 110), -randomInt(80, 110)), 0, 2 * Math.PI, 30, 3000, Particle.shapes.MEDIUM_RECTANGLE, hitbrick.color);
+                    Particle.spawn(this.particles, hitbrick.center, new Vector2(-randomInt(0, 110), -randomInt(0, 110)), 0, 2 * Math.PI, 30, 3000, Particle.shapes.MEDIUM_RECTANGLE, hitbrick.color);
                 }
             }
         }, this);

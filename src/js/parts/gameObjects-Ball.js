@@ -8,6 +8,13 @@ var Ball = function() {
         this.addTrailVertex(this.center);
     };
 
+    var fadeTrail = function() {
+        if (this.stoppedMovingDate === null && this.stoppedMovingPosition === null) {
+            this.stoppedMovingDate = new Date();
+            this.stoppedMovingPosition = this.center.clone();
+        }
+    };
+
     var lerpColor = function(startColor, endColor, percent) {
         return {
             r: startColor.r * percent + endColor.r * (1 - percent),
@@ -54,7 +61,7 @@ var Ball = function() {
         // draw ball trail
         if (settings.ballTrail) {
             var trailMaxLength = 150;
-            var trailVertexes = [this.center];
+            var trailVertexes = (this.stoppedMovingDate !== null) ? [this.stoppedMovingPosition] : [this.center];
             var vertex;
             var prevVertex = trailVertexes[0];
             var cumulativeLength = 0;
@@ -95,6 +102,12 @@ var Ball = function() {
                 a: 0,
             };
 
+            // winner of best trick contest
+            if (this.stoppedMovingDate !== null) {
+                trailStartColor.a = Math.max(0, 1 - (new Date().getTime() - this.stoppedMovingDate.getTime()) / 1000);
+                trailVertexes[0] = this.stoppedMovingPosition;
+            }
+
             drawTrail(trailVertexes, trailMaxLength, trailStartColor, trailEndColor, 4);
         }
 
@@ -103,6 +116,13 @@ var Ball = function() {
         // draw ball
         g.translate(this.center.x, this.center.y);
         g.rotate(-Math.atan2(this.direction.x, this.direction.y));
+
+        g.shadowBlur = 1;
+        g.shadowColor = getColorString({
+            r: 0,
+            g: 0,
+            b: 0,
+        });
 
         g.fillStyle = settings.colors ? getColorString(this.color) : getColorString({
             r: 255,
@@ -126,9 +146,12 @@ var Ball = function() {
         this.direction = direction;
         this.color = color;
         this._trailVertexes = [];
+        this.stoppedMovingDate = new Date();
+        this.stoppedMovingPosition = this.center;
 
         this.addTrailVertex = addTrailVertex;
         this.resetTrail = resetTrail;
+        this.fadeTrail = fadeTrail;
         this.render = render;
         this.update = update;
     };
