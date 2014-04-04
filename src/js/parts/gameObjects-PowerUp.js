@@ -25,7 +25,7 @@ var PowerUp = function() {
             character: 'S',
             color: 'orange',
             onActivate: function() {
-                world.ballSpeedMult = Math.max(0.75, world.ballSpeedMult - 0.25);
+                world.ballSpeedMult = Math.max(0.5, world.ballSpeedMult - 0.25);
             }
         },
         DISRUPTION: {
