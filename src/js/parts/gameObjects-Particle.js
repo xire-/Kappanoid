@@ -42,7 +42,7 @@ var Particle = function() {
 
             for (var i = 0; i < count; i++) {
                 var angle = randomFloat(baseAngle - spreadAngle / 2, baseAngle + spreadAngle / 2);
-                var particleVelocity = new Vector2(speed.x * Math.cos(angle), speed.y * Math.sin(angle));
+                var particleVelocity = new Vector2(randomFloat(speed.x) * Math.cos(angle), randomFloat(speed.y) * Math.sin(angle));
                 var particleAcceleration = new Vector2(0, 110);
                 var particleLife = life;
                 var particleColor = (i % 2 === 0) ? {
