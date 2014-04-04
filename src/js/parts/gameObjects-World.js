@@ -43,6 +43,7 @@ var World = function() {
         this.paddle = new Paddle(new Vector2(800 / 2, 600 + paddleHalfSize.y - 50), paddleHalfSize, oldLifes, constants.paddleColor);
 
         this.particles = [];
+        this.lazors = [];
 
         this.levelTime = null;
     };
@@ -172,6 +173,9 @@ var World = function() {
         });
 
         this.paddle.render();
+        this.lazors.forEach(function(lazor) {
+            lazor.render();
+        });
         drawPaddleLifes.call(this);
 
         // render powerup
@@ -286,7 +290,11 @@ var World = function() {
             for (var j = this.balls.length - 1; j >= 0; j--) {
                 this.balls[j].update(delta / steps);
             }
+            for (j = this.lazors.length - 1; j >= 0; j--) {
+                this.lazors[j].update(delta / steps);
+            }
 
+            handleLazorsCollisions.call(this);
             handleBallBordersCollisions.call(this);
             handleBallBrickCollisions.call(this);
             handleBallPaddleCollisions.call(this);
@@ -452,6 +460,58 @@ var World = function() {
 
     ///////// collisions
 
+    var handleLazorsCollisions = function() {
+        var deadLazors = [];
+        var hitBricks = [];
+        this.lazors.forEach(function(lazor) {
+            // check and handle collisions with top border
+            if (lazor.center.y < 0) {
+                Particle.spawn(this.particles, new Vector2(lazor.center.x, 0), new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.atan2(-1, 0), 0.7, 4, 3000, Particle.shapes.SMALL_RECTANGLE, this.bordersColor);
+                deadLazors.push(lazor);
+            }
+
+            // check and handle collisions with bricks
+            var closerBricks = this.pruningGrid.getNearby(lazor.center);
+
+            closerBricks.forEach(function(brick) {
+                var brickPoint = collisionDetection.closestPtPointAABB(lazor.center, brick);
+                if (brickPoint.x === lazor.center.x && brickPoint.y === lazor.center.y) {
+                    // collision collision collision collision
+                    hitBricks.push(brick);
+                    deadLazors.push(lazor);
+                    Particle.spawn(this.particles, new Vector2(lazor.center.x, 0), new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.atan2(-1, 0), 0.7, 4, 3000, Particle.shapes.SMALL_RECTANGLE, brick.color);
+                }
+            }, this);
+        }, this);
+
+        deadLazors.forEach(function(lazor) {
+            this.lazors.splice(this.lazors.indexOf(lazor), 1);
+        }, this);
+
+        hitBricks.forEach(function(brick) {
+            brick.hit();
+            if (brick.life <= 0) {
+                // remove brick from all bricks
+                this.bricks.splice(this.bricks.indexOf(brick), 1);
+                // remove brick from breakable bricks
+                this._breakableBricks.splice(this._breakableBricks.indexOf(brick), 1);
+                // remove brick from pruning grid
+                this.pruningGrid.removeAABB(brick);
+
+                this.score += brick.value;
+
+                // TODO maybe spawn powerup (not silver and 1 in 10 chance)
+                if (this.fallingPowerup === null && this.balls.length === 1 && brick.type !== Brick.types.SILVER && randomFloat(1) < 1) {
+                    var pType = PowerUp.types[Object.keys(PowerUp.types)[randomInt(Object.keys(PowerUp.types).length)]];
+                    var pType = PowerUp.types.LASER;
+                    this.fallingPowerup = new PowerUp(brick.center.clone(), brick.halfSize.clone(), pType);
+                }
+
+                Particle.spawn(this.particles, brick.center, new Vector2(-randomInt(0, 110), -randomInt(0, 110)), 0, 2 * Math.PI, 30, 3000, Particle.shapes.MEDIUM_RECTANGLE, brick.color);
+            }
+        }, this);
+    };
+
     var handleBallBordersCollisions = function() {
         this.balls.forEach(function(ball) {
             // check and handle collisions with borders
@@ -540,7 +600,7 @@ var World = function() {
                     // TODO maybe spawn powerup (not silver and 1 in 10 chance)
                     if (this.fallingPowerup === null && this.balls.length === 1 && hitbrick.type !== Brick.types.SILVER && randomFloat(1) < 1) {
                         var pType = PowerUp.types[Object.keys(PowerUp.types)[randomInt(Object.keys(PowerUp.types).length)]];
-                        var pType = PowerUp.types.CATCH;
+                        var pType = PowerUp.types.LASER;
                         this.fallingPowerup = new PowerUp(hitbrick.center.clone(), hitbrick.halfSize.clone(), pType);
                     }
 
@@ -654,6 +714,12 @@ var World = function() {
         releaseBalls.call(this);
 
         //if lazors con be shooted, shoot them
+        if (this.paddle.lazored) {
+            var lzr1 = new Lazor(new Vector2(this.paddle.center.x - this.paddle.halfSize.x * 0.75, this.paddle.center.y - this.paddle.halfSize.y));
+            var lzr2 = new Lazor(new Vector2(this.paddle.center.x + this.paddle.halfSize.x * 0.75, this.paddle.center.y - this.paddle.halfSize.y));
+            this.lazors.push(lzr1);
+            this.lazors.push(lzr2);
+        }
     };
 
     var constructor = function World(containerOffset, containerSize) {
@@ -667,6 +733,7 @@ var World = function() {
         this._currentLevel = 0;
         this._breakableBricks = [];
         this._unbreakableBricks = [];
+        this.lazors = [];
         this.score = 0;
         this._fireworksTime = 0;
         this.levelTime = null;

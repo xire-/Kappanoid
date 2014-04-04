@@ -13,6 +13,9 @@
 ///////////////// PowerUp
 // __import__ gameObjects-PowerUp.js
 
+///////////////// Lazor
+// __import__ gameObjects-Lazor.js
+
 ///////////////// Levels
 // __import__ levels.js
 
