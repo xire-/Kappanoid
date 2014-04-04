@@ -90,9 +90,9 @@ var getColorString = function(color) {
     }
     if (color.h !== undefined) {
         // it's hsl or hsla
-        var h = color.h % 360;
-        var s = clamp(0, color.s, 100);
-        var l = clamp(0, color.l, 100);
+        var h = (color.h % 360).toFixed(3);
+        var s = clamp(0, color.s, 100).toFixed(3);
+        var l = clamp(0, color.l, 100).toFixed(3);
 
         return 'hsla(' + h + ', ' + s + '%, ' + l + '%, ' + a + ')';
     }
