@@ -23,11 +23,19 @@ var GameInfo = function() {
         g.textAlign = 'center';
         g.textBaseline = 'top';
 
-        g.fillStyle = '#FF0000';
+        g.fillStyle = settings.colors ? getColorString(this._text1Color) : getColorString({
+            r: 255,
+            g: 255,
+            b: 255,
+        });
         g.fillText('HIGH SCORE', 240, 10);
         g.fillText('CURRENT', 575, 10);
 
-        g.fillStyle = '#FFFFFF';
+        g.fillStyle = settings.colors ? getColorString(this._text2Color) : getColorString({
+            r: 255,
+            g: 255,
+            b: 255,
+        });
         g.fillText('1337', 240, 35);
 
         var minutes = '00';
@@ -62,7 +70,7 @@ var GameInfo = function() {
             g.scale(0.6, 0.6);
             g.translate(700, 15);
         }
-        drawGameInfo();
+        drawGameInfo.call(this);
 
         g.restore();
     };
@@ -75,6 +83,16 @@ var GameInfo = function() {
         this.containerSize = containerSize;
         this.showDebugInfo = false;
         this._backgroundColor = constants.gameInfoBackgroundColor;
+        this._text1Color = {
+            r: 255,
+            g: 0,
+            b: 0,
+        };
+        this._text2Color = {
+            r: 255,
+            g: 255,
+            b: 255,
+        };
 
         this.render = render;
         this.update = update;
