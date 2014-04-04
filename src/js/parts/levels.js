@@ -97,7 +97,32 @@ var levels = [{
         ];
     }
 }, {
-    // backgroundColor: '#000000',
+    backgroundColor: {
+        r: 248,
+        g: 242,
+        b: 179,
+    },
+    bordersColor: {
+        r: 136,
+        g: 209,
+        b: 163,
+    },
+    bricks: function() {
+        return [
+            new Brick(new Vector2(525, 400 / 2), new Vector2(25, 10), Brick.types.YELLOW),
+        ];
+    }
+}, {
+    backgroundColor: {
+        r: 248,
+        g: 242,
+        b: 179,
+    },
+    bordersColor: {
+        r: 136,
+        g: 209,
+        b: 163,
+    },
     bricks: function() {
         return [
             new Brick(new Vector2(75, 400 / 2), new Vector2(25, 10), Brick.types.GOLD),
@@ -113,7 +138,16 @@ var levels = [{
         ];
     }
 }, {
-    // backgroundColor: '#000000',
+    backgroundColor: {
+        r: 248,
+        g: 242,
+        b: 179,
+    },
+    bordersColor: {
+        r: 136,
+        g: 209,
+        b: 163,
+    },
     bricks: function() {
         return [
             new Brick(new Vector2(225, 400 / 2), new Vector2(25, 10), Brick.types.WHITE),
