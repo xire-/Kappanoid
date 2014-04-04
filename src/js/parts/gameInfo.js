@@ -34,10 +34,12 @@ var GameInfo = function() {
         g.textBaseline = 'top';
         g.fillStyle = '#FFFFFF';
 
-        g.fillText('FPS: ' + currentFPS.toFixed(1), 5, 10);
-        g.fillText('DELTA: ' + delta.toFixed(1), 5, 20);
-        g.fillText('LOOP: ' + loopTime, 5, 30);
-        g.fillText('NUM PARTICLES: ' + world.particles.length, 5, 40);
+        g.fillText('FPS: ' + currentFPS.toFixed(1), 5, 5);
+        g.fillText('DELTA: ' + delta.toFixed(1), 5, 15);
+        g.fillText('LOOP: ' + loopTime, 5, 25);
+        g.fillText('NUM PARTICLES: ' + world.particles.length, 5, 35);
+        g.fillText('SPEED MULT: ' + world.ballSpeedMult.toFixed(3), 5, 45);
+
 
         g.fillText('1. COLORS: ' + settings.colors, 120, 10);
         g.fillText('2. PARTICLES: ' + settings.particles, 120, 20);

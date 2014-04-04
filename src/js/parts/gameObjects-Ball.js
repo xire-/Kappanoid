@@ -101,7 +101,7 @@ var Ball = function() {
     };
 
     var update = function(delta) {
-        this.center.add(this.direction.clone().mul(this.speed * delta / 1000));
+        this.center.add(this.direction.clone().mul(this.speed * world.ballSpeedMult * delta / 1000));
     };
 
     ///////// private methods
