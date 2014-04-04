@@ -81,7 +81,9 @@ var Ball = function() {
 
         // draw ball
         g.translate(this.center.x, this.center.y);
-        g.rotate(-Math.atan2(this.direction.x, this.direction.y));
+        if (world.paddle.ballIsStuck === false) {
+            g.rotate(-Math.atan2(this.direction.x, this.direction.y));
+        }
 
         g.shadowBlur = 1;
         g.shadowColor = getColorString({
