@@ -69,7 +69,23 @@ var PowerUp = function() {
         g.save();
         g.translate(this.center.x, this.center.y);
         g.beginPath();
-        g.rect(-this.halfSize.x, -this.halfSize.y, this.halfSize.x * 2, this.halfSize.y * 2);
+        g.shadowBlur = 3;
+        g.shadowColor = 'black';
+        g.shadowOffsetX = 3;
+        g.shadowOffsetY = 3;
+
+        var rad = 5;
+        g.moveTo(-(this.halfSize.x - rad), -this.halfSize.y);
+
+        g.lineTo(+(this.halfSize.x - rad), -this.halfSize.y);
+        g.arcTo(this.halfSize.x, -this.halfSize.y, this.halfSize.x, -(this.halfSize.y - rad), rad);
+        g.lineTo(this.halfSize.x, (this.halfSize.y - rad));
+        g.arcTo(this.halfSize.x, this.halfSize.y, this.halfSize.x - rad, this.halfSize.y, rad);
+        g.lineTo(-(this.halfSize.x - rad), this.halfSize.y);
+        g.arcTo(-this.halfSize.x, this.halfSize.y, -this.halfSize.x, this.halfSize.y - rad, rad);
+        g.lineTo(-this.halfSize.x, -(this.halfSize.y - rad));
+        g.arcTo(-this.halfSize.x, -this.halfSize.y, -(this.halfSize.x - rad), -this.halfSize.y, rad);
+
         g.fillStyle = settings.colors ? this.color : '#FFFFFF';
         g.fill();
 
