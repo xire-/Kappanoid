@@ -491,23 +491,7 @@ var World = function() {
         hitBricks.forEach(function(brick) {
             brick.hit();
             if (brick.life <= 0) {
-                // remove brick from all bricks
-                this.bricks.splice(this.bricks.indexOf(brick), 1);
-                // remove brick from breakable bricks
-                this._breakableBricks.splice(this._breakableBricks.indexOf(brick), 1);
-                // remove brick from pruning grid
-                this.pruningGrid.removeAABB(brick);
-
-                this.score += brick.value;
-
-                // TODO maybe spawn powerup (not silver and 1 in 10 chance)
-                if (this.fallingPowerup === null && this.balls.length === 1 && brick.type !== Brick.types.SILVER && randomFloat(1) < 1) {
-                    var pType = PowerUp.types[Object.keys(PowerUp.types)[randomInt(Object.keys(PowerUp.types).length)]];
-                    var pType = PowerUp.types.LASER;
-                    this.fallingPowerup = new PowerUp(brick.center.clone(), brick.halfSize.clone(), pType);
-                }
-
-                Particle.spawn(this.particles, brick.center, new Vector2(-randomInt(0, 110), -randomInt(0, 110)), 0, 2 * Math.PI, 30, 3000, Particle.shapes.MEDIUM_RECTANGLE, brick.color);
+                killBrick.call(this);
             }
         }, this);
     };
@@ -588,26 +572,29 @@ var World = function() {
                 var hitbrick = hitBricks[i];
                 hitbrick.hit();
                 if (hitbrick.life <= 0) {
-                    // remove hitbrick from all bricks
-                    this.bricks.splice(this.bricks.indexOf(hitbrick), 1);
-                    // remove hitbrick from breakable bricks
-                    this._breakableBricks.splice(this._breakableBricks.indexOf(hitbrick), 1);
-                    // remove hitbrick from pruning grid
-                    this.pruningGrid.removeAABB(hitbrick);
-
-                    this.score += hitbrick.value;
-
-                    // TODO maybe spawn powerup (not silver and 1 in 10 chance)
-                    if (this.fallingPowerup === null && this.balls.length === 1 && hitbrick.type !== Brick.types.SILVER && randomFloat(1) < 1) {
-                        var pType = PowerUp.types[Object.keys(PowerUp.types)[randomInt(Object.keys(PowerUp.types).length)]];
-                        var pType = PowerUp.types.LASER;
-                        this.fallingPowerup = new PowerUp(hitbrick.center.clone(), hitbrick.halfSize.clone(), pType);
-                    }
-
-                    Particle.spawn(this.particles, hitbrick.center, new Vector2(-randomInt(0, 110), -randomInt(0, 110)), 0, 2 * Math.PI, 30, 3000, Particle.shapes.MEDIUM_RECTANGLE, hitbrick.color);
+                    killBrick.call(this);
                 }
             }
         }, this);
+    };
+
+    var killBrick = function(brick) {
+        // remove brick from all bricks
+        this.bricks.splice(this.bricks.indexOf(brick), 1);
+        // remove brick from breakable bricks
+        this._breakableBricks.splice(this._breakableBricks.indexOf(brick), 1);
+        // remove brick from pruning grid
+        this.pruningGrid.removeAABB(brick);
+
+        this.score += brick.value;
+
+        // TODO maybe spawn powerup (not silver and 1 in 10 chance)
+        if (this.fallingPowerup === null && this.balls.length === 1 && brick.type !== Brick.types.SILVER && randomFloat(1) < 1) {
+            var pType = PowerUp.types[Object.keys(PowerUp.types)[randomInt(Object.keys(PowerUp.types).length)]];
+            this.fallingPowerup = new PowerUp(brick.center.clone(), brick.halfSize.clone(), pType);
+        }
+
+        Particle.spawn(this.particles, brick.center, new Vector2(-randomInt(0, 110), -randomInt(0, 110)), 0, 2 * Math.PI, 30, 3000, Particle.shapes.MEDIUM_RECTANGLE, brick.color);
     };
 
     var handleBallPaddleCollisions = function() {
