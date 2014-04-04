@@ -1,4 +1,7 @@
 var Paddle = function() {
+    
+    ///////// public methods
+
     var render = function() {
         g.save();
         g.translate(this.center.x, this.center.y);
@@ -54,6 +57,7 @@ var Paddle = function() {
         }
     };
 
+    ///////// constructor
 
     var constructor = function Paddle(center, halfSize, life, color) {
         this.center = center;
@@ -70,7 +74,7 @@ var Paddle = function() {
         this._timeElapsed = 0;
         this._origWidth = halfSize.x;
 
-
+        // public methods
         this.render = render;
         this.update = update;
     };

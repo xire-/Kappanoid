@@ -1,4 +1,7 @@
 var Brick = function() {
+
+    ///////// public static methods / variables
+
     var types = {
         WHITE: {
             life: 1,
@@ -92,9 +95,12 @@ var Brick = function() {
         },
     };
 
+    ///////// public methods
+
     var hit = function() {
         this.life -= 1;
     };
+
 
     var render = function() {
         g.save();
@@ -130,6 +136,7 @@ var Brick = function() {
 
     var update = function( /*delta*/ ) {};
 
+    ///////// constructor
 
     var constructor = function Brick(center, halfSize, type) {
         this.center = center;
@@ -139,6 +146,7 @@ var Brick = function() {
         this.value = type.value;
         this.type = type;
 
+        // public methods
         this.hit = hit;
         this.render = render;
         this.update = update;
@@ -187,6 +195,7 @@ var Brick = function() {
     };
 
     constructor.types = types;
+
     return constructor;
 }();
 

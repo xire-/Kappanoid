@@ -1,4 +1,7 @@
 var Particle = function() {
+
+    ///////// public static methods / variables
+
     var shapes = {
         SMALL_RECTANGLE: {
             render: function() {
@@ -36,6 +39,7 @@ var Particle = function() {
         },
     };
 
+
     var spawn = function(container, position, speed, baseAngle, spreadAngle, count, life, shape, color, callback) {
         if (settings.particles) {
             var hslColor = rgbToHsl(color);
@@ -59,6 +63,8 @@ var Particle = function() {
             }
         }
     };
+
+    ///////// public methods
 
     var render = function() {
         g.save();
@@ -85,6 +91,7 @@ var Particle = function() {
         this.position.add(this._tmpVector.mul(delta / 1000));
     };
 
+    ///////// constructor
 
     var constructor = function Particle(position, velocity, acceleration, life, shape, color, callback) {
         this.position = position;
@@ -97,6 +104,7 @@ var Particle = function() {
         this._callback = callback;
         this._tmpVector = new Vector2(0, 0);
 
+        // public methods
         this.render = render;
         this.update = update;
     };
@@ -153,6 +161,7 @@ var Particle = function() {
 
     constructor.shapes = shapes;
     constructor.spawn = spawn;
+
     return constructor;
 }();
 
