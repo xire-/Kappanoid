@@ -19,6 +19,7 @@ var World = function() {
 
         this.balls = [];
         this.balls.push(new Ball(new Vector2(400, 600 - 50 - 7), 7, 0, new Vector2(0, -1), constants.ballColor));
+        this.ballSpeedMult = 1;
 
         this.pruningGrid = new PruningGrid(new Vector2(20, 15), new Vector2(0, 0), new Vector2(800, 600), 7);
 
@@ -321,6 +322,9 @@ var World = function() {
         // update particles
         updateParticles.call(this, delta);
 
+        // increment ball speed over time
+        this.ballSpeedMult = Math.min(3, this.ballSpeedMult + (delta / 120000));
+
         // level finished?
         if (this._breakableBricks.length === 0) {
             // turn off peggle effect
@@ -354,7 +358,7 @@ var World = function() {
         }
         if (this.paddle.ballIsStuck) {
             this.paddle.ballIsStuck = false;
-            this.balls[0].speed = this.balls[0].storedSpeed;
+            this.balls[0].speed = 300;
 
             this.balls[0].resetTrail();
             this.balls[0].stoppedMovingDate = null;
@@ -614,7 +618,6 @@ var World = function() {
                         if (this.paddle.sticky) {
                             ball.center.x = collisionPoint.x;
                             ball.center.y = this.paddle.center.y - this.paddle.halfSize.y - ball.radius;
-                            ball.storedSpeed = ball.speed;
                             ball.speed = 0;
                             this.paddle.ballIsStuck = true;
                         } else {
@@ -650,6 +653,7 @@ var World = function() {
                 this.update = updateRespawn;
                 this.render = renderRespawn;
                 this.changeTemporaryPowerup(null);
+                this.ballSpeedMult = 1;
                 this.lazors = [];
                 this._timePassed = 0;
             } else {
