@@ -491,7 +491,7 @@ var World = function() {
         hitBricks.forEach(function(brick) {
             brick.hit();
             if (brick.life <= 0) {
-                killBrick.call(this);
+                killBrick.call(this, brick);
             }
         }, this);
     };
@@ -572,7 +572,7 @@ var World = function() {
                 var hitbrick = hitBricks[i];
                 hitbrick.hit();
                 if (hitbrick.life <= 0) {
-                    killBrick.call(this);
+                    killBrick.call(this, hitbrick);
                 }
             }
         }, this);
