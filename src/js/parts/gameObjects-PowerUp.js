@@ -42,8 +42,16 @@ var PowerUp = function() {
                 rand = randomFloat(-0.1, 0.1);
                 world.balls.push(new Ball(ball.center.clone(), ball.radius, ball.speed, new Vector2(-1 + rand, -1), constants.ballColor));
 
+                world.balls[1].resetTrail();
+                world.balls[1].stoppedMovingDate = null;
+                world.balls[1].stoppedMovingPosition = null;
+
                 rand = randomFloat(-0.1, 0.1);
                 world.balls.push(new Ball(ball.center.clone(), ball.radius, ball.speed, new Vector2(1 + rand, -1), constants.ballColor));
+            
+                world.balls[2].resetTrail();
+                world.balls[2].stoppedMovingDate = null;
+                world.balls[2].stoppedMovingPosition = null;
             }
         },
         PLAYER: {
