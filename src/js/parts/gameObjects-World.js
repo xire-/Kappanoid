@@ -80,7 +80,7 @@ var World = function() {
             g: 255,
             b: 255
         });
-        for (var i = 0; i < this.paddle.life - 1; i++) {
+        for (var i = 0; i < this.paddle.life; i++) {
             g.fillText('❤', 5 + 20 * i, 578);
         }
     };
