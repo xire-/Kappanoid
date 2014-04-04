@@ -26,7 +26,7 @@ var PowerUp = function() {
             color: 'orange',
             onActivate: function() {
                 world.balls.forEach(function(ball) {
-                    ball.speed = ball.speed * 0.75;
+                    ball.speed = Math.max(225, ball.speed * 0.75);
                 });
             }
         },
@@ -48,7 +48,7 @@ var PowerUp = function() {
 
                 rand = randomFloat(-0.1, 0.1);
                 world.balls.push(new Ball(ball.center.clone(), ball.radius, ball.speed, new Vector2(1 + rand, -1), constants.ballColor));
-            
+
                 world.balls[2].resetTrail();
                 world.balls[2].stoppedMovingDate = null;
                 world.balls[2].stoppedMovingPosition = null;
