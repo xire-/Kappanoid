@@ -635,7 +635,9 @@ var World = function() {
         this.paddle.enlarged = false;
         this.paddle.lazored = false;
         this.paddle.sticky = false;
-        releaseBalls.call(this);
+        if (type !== PowerUp.types.CATCH) {
+            releaseBalls.call(this);
+        }
 
         //add current powerup
         if (type === PowerUp.types.ENLARGE) {
