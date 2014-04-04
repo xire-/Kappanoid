@@ -1,4 +1,35 @@
 var GameInfo = function() {
+
+    ///////// public methods
+
+    var render = function(delta) {
+        g.save();
+
+        g.translate(this.containerOffset.x, this.containerOffset.y);
+
+        // clip the region
+        g.beginPath();
+        g.rect(0, 0, this.containerSize.x, this.containerSize.y);
+        g.clip();
+
+        // render background
+        g.fillStyle = getColorString(this._backgroundColor);
+        g.fillRect(0, 0, this.containerSize.x, this.containerSize.y);
+
+        if (this.showDebugInfo) {
+            drawDebugInfo(delta);
+            g.scale(0.6, 0.6);
+            g.translate(700, 15);
+        }
+        drawGameInfo.call(this);
+
+        g.restore();
+    };
+
+    var update = function( /*delta*/ ) {};
+
+    ///////// private methods
+
     var drawDebugInfo = function(delta) {
         g.textBaseline = 'top';
         g.fillStyle = '#FFFFFF';
@@ -51,32 +82,7 @@ var GameInfo = function() {
         g.fillText(world.score, 575, 35);
     };
 
-    var render = function(delta) {
-        g.save();
-
-        g.translate(this.containerOffset.x, this.containerOffset.y);
-
-        // clip the region
-        g.beginPath();
-        g.rect(0, 0, this.containerSize.x, this.containerSize.y);
-        g.clip();
-
-        // render background
-        g.fillStyle = getColorString(this._backgroundColor);
-        g.fillRect(0, 0, this.containerSize.x, this.containerSize.y);
-
-        if (this.showDebugInfo) {
-            drawDebugInfo(delta);
-            g.scale(0.6, 0.6);
-            g.translate(700, 15);
-        }
-        drawGameInfo.call(this);
-
-        g.restore();
-    };
-
-    var update = function( /*delta*/ ) {};
-
+    ///////// constructor
 
     var constructor = function GameInfo(containerOffset, containerSize) {
         this.containerOffset = containerOffset;
@@ -94,6 +100,7 @@ var GameInfo = function() {
             b: 255,
         };
 
+        // public methods
         this.render = render;
         this.update = update;
     };

@@ -1,4 +1,13 @@
 var Vector2 = function() {
+
+    ///////// public static methods
+
+    var lerp = function(start, end, percent) {
+        return start.clone().add((end.clone().sub(start)).mul(percent));
+    };
+
+    ///////// public methods
+
     var set = function(vector) {
         console.assert(vector instanceof Vector2, vector);
 
@@ -6,6 +15,7 @@ var Vector2 = function() {
         this.y = vector.y;
         return this;
     };
+
 
     var add = function(vector) {
         console.assert(vector instanceof Vector2, vector);
@@ -35,6 +45,7 @@ var Vector2 = function() {
         return this.x * vector.x + this.y * vector.y;
     };
 
+
     var normalize = function() {
         var scale = this.length();
         this.x /= scale;
@@ -47,41 +58,25 @@ var Vector2 = function() {
     var distance = function(vector) {
         console.assert(vector instanceof Vector2, vector);
 
-        return Math.sqrt(this.squaredDistance(vector));
-    };
-
-    var squaredDistance = function(vector) {
-        console.assert(vector instanceof Vector2, vector);
-
-        return (this.x - vector.x) * (this.x - vector.x) + (this.y - vector.y) * (this.y - vector.y);
+        return Math.sqrt((this.x - vector.x) * (this.x - vector.x) + (this.y - vector.y) * (this.y - vector.y));
     };
 
     var length = function() {
-        return Math.sqrt(this.squaredLength());
+        return Math.sqrt(this.x * this.x + this.y * this.y);
     };
 
-    var squaredLength = function() {
-        return this.x * this.x + this.y * this.y;
-    };
 
     var clone = function() {
         return new Vector2(this.x, this.y);
     };
 
-
-    var lerp = function(start, end, percent) {
-        return start.clone().add((end.clone().sub(start)).mul(percent));
-    };
-
+    ///////// constructor
 
     var constructor = function Vector2(x, y) {
-        if (x === undefined || y === undefined) {
-            x = 0;
-            y = 0;
-        }
         this.x = x;
         this.y = y;
 
+        // public methods
         this.set = set;
         this.add = add;
         this.sub = sub;
@@ -89,9 +84,7 @@ var Vector2 = function() {
         this.dot = dot;
         this.normalize = normalize;
         this.distance = distance;
-        this.squaredDistance = squaredDistance;
         this.length = length;
-        this.squaredLength = squaredLength;
         this.clone = clone;
     };
 
@@ -114,6 +107,7 @@ var Vector2 = function() {
     };
 
     constructor.lerp = lerp;
+
     return constructor;
 }();
 
@@ -124,13 +118,11 @@ function testVector2() {
     vector1 = new Vector2(3, 4);
     console.assert(vector1.x === 3 && vector1.y === 4, JSON.stringify(vector1));
     console.assert(vector1.length() === 5, JSON.stringify(vector1));
-    console.assert(vector1.squaredLength() === 25, JSON.stringify(vector1));
     console.assert(vector1.normalize().length() === 1, JSON.stringify(vector1));
 
     vector1 = new Vector2(3, 4);
     var vector2 = new Vector2(3, 4);
     console.assert(vector1.distance(vector2) === 0, JSON.stringify(vector1), JSON.stringify(vector2));
-    console.assert(vector1.squaredDistance(vector2) === 0, JSON.stringify(vector1), JSON.stringify(vector2));
 
     console.log('testVector2 OK');
 }
