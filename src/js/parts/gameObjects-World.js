@@ -479,7 +479,7 @@ var World = function() {
                     // collision collision collision collision
                     hitBricks.push(brick);
                     deadLazors.push(lazor);
-                    Particle.spawn(this.particles, new Vector2(lazor.center.x, 0), new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.atan2(-1, 0), 0.7, 4, 3000, Particle.shapes.SMALL_RECTANGLE, brick.color);
+                    Particle.spawn(this.particles, new Vector2(lazor.center.x, lazor.center.y), new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.atan2(-1, 0), 0.7, 4, 3000, Particle.shapes.SMALL_RECTANGLE, brick.color);
                 }
             }, this);
         }, this);
