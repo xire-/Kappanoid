@@ -75,6 +75,10 @@ var Vector2 = function() {
 
 
     var constructor = function Vector2(x, y) {
+        if (x === undefined || y === undefined) {
+            x = 0;
+            y = 0;
+        }
         this.x = x;
         this.y = y;
 

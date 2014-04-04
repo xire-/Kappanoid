@@ -38,13 +38,22 @@ var Particle = function() {
 
     var spawn = function(container, position, speed, baseAngle, spreadAngle, count, life, shape, color, callback) {
         if (settings.particles) {
+            var hslColor = rgbToHsl(color);
+
             for (var i = 0; i < count; i++) {
                 var angle = randomFloat(baseAngle - spreadAngle / 2, baseAngle + spreadAngle / 2);
                 var particleVelocity = new Vector2(speed.x * Math.cos(angle), speed.y * Math.sin(angle));
                 var particleAcceleration = new Vector2(0, 110);
                 var particleLife = life;
-                var particleColor = (i % 2 === 0) ? shadeColor(color, 30 * i / count) : shadeColor(color, -30 * i / count);
-                console.log(JSON.stringify(particleColor));
+                var particleColor = (i % 2 === 0) ? {
+                    h: hslColor.h,
+                    s: hslColor.s,
+                    l: hslColor.l + 30 * i / count,
+                } : {
+                    h: hslColor.h,
+                    s: hslColor.s,
+                    l: hslColor.l - 30 * i / count,
+                };
                 var particle = new Particle(new Vector2(position.x, position.y), particleVelocity, particleAcceleration, particleLife, shape, particleColor, callback);
                 container.push(particle);
             }
@@ -134,7 +143,7 @@ var Particle = function() {
         },
 
         set color(value) {
-            console.assert(value !== undefined && value.r !== undefined && value.g !== undefined && value.b !== undefined, JSON.stringify(value));
+            console.assert(isColor(value), JSON.stringify(value));
             this._color = value;
         },
         get color() {
