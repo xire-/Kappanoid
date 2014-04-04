@@ -233,6 +233,7 @@ var World = function() {
         });
 
         this.paddle.render();
+        drawPaddleLifes.call(this);
 
         // render particles
         this.particles.forEach(function(particle) {
