@@ -13,6 +13,7 @@ var Paddle = function() {
             g.scale(1 / speedScale, speedScale);
         }
 
+        g.save();
         g.beginPath();
 
         g.shadowBlur = 5;
@@ -27,9 +28,14 @@ var Paddle = function() {
         g.rect(-this.halfSize.x, -this.halfSize.y, this.halfSize.x * 2, this.halfSize.y * 2);
         g.fillStyle = settings.colors ? this.color : '#FFFFFF';
         g.fill();
+        g.restore();
 
-        g.fillStyle = '#000';
-        g.fillText(this.life, 0, 0);
+
+        g.font = '25px emulogic';
+        g.textAlign = 'center';
+        g.textBaseline = 'middle';
+        g.fillStyle = '#000000';
+        g.fillText('ಠ_ಠ', 0, 0);
 
         g.restore();
     };
