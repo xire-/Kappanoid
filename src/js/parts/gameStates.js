@@ -1,8 +1,8 @@
 ///////////////// IntroState
-// __import__ gameStates-IntroState.js
+// __import__ gameStates-Intro.js
 
 ///////////////// PlayingState
-// __import__ gameStates-PlayingState.js
+// __import__ gameStates-Playing.js
 
 ///////////////// GameOverState
-// __import__ gameStates-GameOverState.js
+// __import__ gameStates-GameOver.js
