@@ -58,7 +58,11 @@ var PowerUp = function() {
             character: 'P',
             color: 'gray',
             onActivate: function() {
-                world.paddle.life += 1;
+                if (world.paddle.life >= 5) {
+                    world.score += 200;
+                } else {
+                    world.paddle.life += 1;
+                }
             }
         },
     };
