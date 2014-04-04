@@ -2,48 +2,93 @@ var Brick = function() {
     var types = {
         WHITE: {
             life: 1,
-            color: '#FFFFFF',
-            value: 50
+            color: {
+                r: 255,
+                g: 255,
+                b: 255,
+            },
+            value: 50,
         },
         ORANGE: {
             life: 1,
-            color: '#FF6600',
-            value: 60
+            color: {
+                r: 255,
+                g: 102,
+                b: 0,
+            },
+            value: 60,
         },
         CYAN: {
             life: 1,
-            color: '#00FFFF',
-            value: 70
+            color: {
+                r: 0,
+                g: 255,
+                b: 255,
+            },
+            value: 70,
         },
         GREEN: {
             life: 1,
-            color: '#00FF00',
-            value: 80
+            color: {
+                r: 0,
+                g: 255,
+                b: 0,
+            },
+            value: 80,
         },
         RED: {
             life: 1,
-            color: '#FF0000',
-            value: 90
+            color: {
+                r: 255,
+                g: 0,
+                b: 0,
+            },
+            value: 90,
         },
         BLUE: {
             life: 1,
-            color: '#0000FF',
-            value: 100
+            color: {
+                r: 0,
+                g: 0,
+                b: 255,
+            },
+            value: 100,
+        },
+        VIOLET: {
+            life: 1,
+            color: {
+                r: 143,
+                g: 0,
+                b: 255,
+            },
+            value: 110,
         },
         YELLOW: {
             life: 1,
-            color: '#FFFF00',
-            value: 120
+            color: {
+                r: 255,
+                g: 255,
+                b: 0,
+            },
+            value: 120,
         },
         SILVER: {
             life: 2,
-            color: '#C0C0C0',
-            value: 240
+            color: {
+                r: 192,
+                g: 192,
+                b: 192,
+            },
+            value: 240,
         },
         GOLD: {
             life: Number.POSITIVE_INFINITY,
-            color: '#FFD700',
-            value: 1337
+            color: {
+                r: 255,
+                g: 215,
+                b: 0,
+            },
+            value: 1337,
         },
     };
 
@@ -56,7 +101,11 @@ var Brick = function() {
 
         g.beginPath();
         g.rect(this.center.x - this.halfSize.x, this.center.y - this.halfSize.y, this.halfSize.x * 2, this.halfSize.y * 2);
-        g.fillStyle = settings.colors ? this.color : '#FFFFFF';
+        g.fillStyle = settings.colors ? getColorString(this.color) : getColorString({
+            r: 255,
+            g: 255,
+            b: 255,
+        });
         g.fill();
 
         g.textAlign = 'center';
