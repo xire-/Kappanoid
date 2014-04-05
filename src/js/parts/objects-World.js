@@ -113,7 +113,7 @@ var World = function() {
     var drawPaddleLifes = function() {
         g.font = '18px emulogic';
         g.textBaseline = 'top';
-        g.fillStyle = settings.colors ? this.paddle.color : getColorString({
+        g.fillStyle = settings.colors ? getColorString(this.paddle.color) : getColorString({
             r: 255,
             g: 255,
             b: 255
