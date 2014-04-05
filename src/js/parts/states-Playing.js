@@ -92,6 +92,11 @@ var PlayingState = function() {
                 world.reset(true);
                 break;
 
+            case 110: // N
+                world._currentLevel = (world._currentLevel + 1) % levels.length;
+                world.reset(true);
+                break;
+
             case 108: // L
                 for (var i = 0; i < 50; i++) {
                     var angle = randomFloat(Math.PI * 2);
