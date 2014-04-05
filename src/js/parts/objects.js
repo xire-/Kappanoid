@@ -14,7 +14,7 @@
 // __import__ objects-World.js
 
 
-function testGameObjects() {
+function testObjects() {
     testBall();
     testBrick();
     testPaddle();

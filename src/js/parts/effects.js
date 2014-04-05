@@ -5,6 +5,6 @@
 // __import__ effects-Lazor.js
 
 
-function testGameEffects() {
+function testEffects() {
     testParticle();
 }
