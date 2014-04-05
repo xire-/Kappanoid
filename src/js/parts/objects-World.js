@@ -82,6 +82,8 @@ var World = function() {
         this.lazors = [];
 
         this.levelTime = null;
+        this.shakeAmount.x = 0;
+        this.shakeAmount.y = 0;
     };
 
     ///////// private methods
@@ -94,7 +96,7 @@ var World = function() {
         g.fillRect(0, 60, this.containerSize.x + constants.bordersRelativeThickness * 2, this.containerSize.y + constants.bordersRelativeThickness);
 
         // translate to render the world area
-        g.translate(this.containerOffset.x, this.containerOffset.y);
+        g.translate(this.containerOffset.x + this.shakeAmount.x, this.containerOffset.y + this.shakeAmount.y);
 
         // clip the region
         g.beginPath();
@@ -319,6 +321,8 @@ var World = function() {
         if (delta === 0) {
             return;
         }
+
+        this.shaker.update(delta);
 
         this.bricks.forEach(function(brick) {
             brick.update(delta);
@@ -562,6 +566,9 @@ var World = function() {
         this.balls.forEach(function(ball) {
             // check and handle collisions with borders
             if (ball.center.x - ball.radius < 0) {
+                // shake screen before changing direction
+                this.shaker.shake(ball.direction.x * 5, ball.direction.y * 5);
+
                 ball.center.x = -ball.center.x + ball.radius * 2;
                 ball.direction.x *= -1;
 
@@ -570,6 +577,9 @@ var World = function() {
                 Particle.spawn(this.particles, new Vector2(0, ball.center.y), new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, 3000, Particle.shapes.SMALL_RECTANGLE, this.bordersColor);
             }
             if (ball.center.y - ball.radius < 0) {
+                // shake screen before changing direction
+                this.shaker.shake(ball.direction.x * 5, ball.direction.y * 5);
+
                 ball.center.y = -ball.center.y + ball.radius * 2;
                 ball.direction.y *= -1;
 
@@ -578,6 +588,9 @@ var World = function() {
                 Particle.spawn(this.particles, new Vector2(ball.center.x, 0), new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, 3000, Particle.shapes.SMALL_RECTANGLE, this.bordersColor);
             }
             if (ball.center.x + ball.radius >= constants.worldRelativeWidth) {
+                // shake screen before changing direction
+                this.shaker.shake(ball.direction.x * 5, ball.direction.y * 5);
+
                 ball.center.x = constants.worldRelativeWidth - ((ball.center.x + ball.radius) - constants.worldRelativeWidth) - ball.radius;
                 ball.direction.x *= -1;
 
@@ -738,6 +751,8 @@ var World = function() {
         // init
         this.containerOffset = containerOffset;
         this.containerSize = containerSize;
+        this.shakeAmount = new Vector2(0, 0);
+        this.shaker = new Shaker(this.shakeAmount);
         this._backgroundColor = constants.worldBackgroundColor;
         this.bordersColor = constants.bordersColor;
         this._canReleaseBalls = false;
