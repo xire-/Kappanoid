@@ -296,6 +296,7 @@ var World = function() {
 
     var updatePrePlaying = function(delta) {
         this._canReleaseBalls = true;
+        this.shaker.update(delta);
 
         // update single components
         this.balls.forEach(function(ball) {
@@ -420,6 +421,8 @@ var World = function() {
     var updateRespawn = function(delta) {
         this._timePassed += delta;
 
+        this.shaker.update(delta);
+
         // update single components
         this.balls.forEach(function(ball) {
             ball.update(delta);
@@ -486,6 +489,8 @@ var World = function() {
 
     var updateLevelCompleted = function(delta) {
         this._timePassed += delta;
+
+        this.shaker.update(delta);
 
         // fireworks
         this._fireworksTime += delta;
