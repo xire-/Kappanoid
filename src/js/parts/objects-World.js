@@ -376,7 +376,7 @@ var World = function() {
             settings.timeScale = 1;
 
             // play victory sound
-            audio.levelCompleted.play();
+            if (settings.sounds) sounds.levelCompleted.play();
 
             this._timePassed = 0;
             this.render = renderLevelCompleted;
@@ -660,8 +660,8 @@ var World = function() {
                             ball.speed = 0;
                             this.paddle.ballIsStuck = true;
 
-                            //play sticky audio
-                            audio.pop.play();
+                            //play sticky sound
+                            if (settings.sounds) sounds.pop.play();
 
                         } else {
                             ball.addTrailVertex(ball.center);

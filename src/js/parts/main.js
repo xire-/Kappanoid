@@ -70,7 +70,7 @@ var kappanoid = (function() {
             b: 34,
         }
     };
-    var audio = {
+    var sounds = {
         pop: new Howl({
             urls: ['sound/pop.mp3']
         }),
@@ -80,6 +80,9 @@ var kappanoid = (function() {
         levelCompleted: new Howl({
             urls: ['sound/levelCompletedFanfare.mp3']
         }),
+    };
+    var music = {
+
     };
 
 
