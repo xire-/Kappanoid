@@ -41,14 +41,14 @@ var PowerUp = function() {
                 var ball = world.balls[0];
                 var rand;
                 rand = randomFloat(-0.1, 0.1);
-                world.balls.push(new Ball(ball.center.clone(), ball.radius, ball.speed, new Vector2(-1 + rand, -1), constants.ballColor));
+                world.balls.push(new Ball(ball.center.clone(), ball.radius, ball.speed, new Vector2(-1 + rand, -1), ball.color));
 
                 world.balls[1].resetTrail();
                 world.balls[1].stoppedMovingDate = null;
                 world.balls[1].stoppedMovingPosition = null;
 
                 rand = randomFloat(-0.1, 0.1);
-                world.balls.push(new Ball(ball.center.clone(), ball.radius, ball.speed, new Vector2(1 + rand, -1), constants.ballColor));
+                world.balls.push(new Ball(ball.center.clone(), ball.radius, ball.speed, new Vector2(1 + rand, -1), ball.color));
 
                 world.balls[2].resetTrail();
                 world.balls[2].stoppedMovingDate = null;
