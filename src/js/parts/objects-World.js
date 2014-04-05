@@ -527,6 +527,10 @@ var World = function() {
 
         this.paddle.update(delta);
 
+        this.balls.forEach(function(ball) {
+            ball.update(delta);
+        });
+
         // update particles
         updateParticles.call(this, delta);
     };
