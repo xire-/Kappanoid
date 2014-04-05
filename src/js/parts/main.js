@@ -82,9 +82,10 @@ var kappanoid = (function() {
 
 
     var init = function(width, height) {
-        if (typeof testPhysics !== 'undefined' && typeof testGameObjects !== 'undefined') {
-            testPhysics();
+        if (typeof testGameEffects !== 'undefined' && typeof testGameObjects !== 'undefined' && typeof testPhysics !== 'undefined') {
+            testGameEffects();
             testGameObjects();
+            testPhysics();
         }
 
         states = {
