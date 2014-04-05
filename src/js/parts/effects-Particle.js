@@ -68,7 +68,14 @@ var Particle = function() {
 
     var render = function() {
         g.save();
-
+        g.shadowBlur = 3;
+        g.shadowColor = getColorString({
+            r: 0,
+            g: 0,
+            b: 0,
+        });
+        g.shadowOffsetX = 2;
+        g.shadowOffsetY = 2;
         this.shape.render.call(this);
 
         g.restore();
