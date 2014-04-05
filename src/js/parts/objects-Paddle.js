@@ -26,16 +26,13 @@ var Paddle = function() {
         g.shadowOffsetY = 3;
 
         g.rect(-this.halfSize.x, -this.halfSize.y, this.halfSize.x * 2, this.halfSize.y * 2);
-        g.fillStyle = settings.colors ? this.color : '#FFFFFF';
+        g.fillStyle = settings.colors ? getColorString(this.color) : getColorString({
+            r: 255,
+            g: 255,
+            b: 255
+        });
         g.fill();
         g.restore();
-
-
-        g.font = '25px emulogic';
-        g.textAlign = 'center';
-        g.textBaseline = 'middle';
-        g.fillStyle = '#000000';
-        g.fillText('ಠ_ಠ', 0, 0);
 
         g.restore();
     };
@@ -112,7 +109,7 @@ var Paddle = function() {
         },
 
         set color(value) {
-            console.assert(value !== undefined && typeof value == 'string', JSON.stringify(value));
+            console.assert(isColor(value), JSON.stringify(value));
             this._color = value;
         },
         get color() {
@@ -127,9 +124,13 @@ function testPaddle() {
     var center1 = new Vector2(3, 4);
     var halfSize1 = new Vector2(100, 300);
     var life1 = 5;
-    var color1 = '#abc';
+    var color1 = {
+        r: 234,
+        g: 245,
+        b: 23
+    };
     var paddle1 = new Paddle(center1, halfSize1, life1, color1);
-    console.assert(JSON.stringify(paddle1.center) === JSON.stringify(center1) && JSON.stringify(paddle1.halfSize) === JSON.stringify(halfSize1) && paddle1.life === life1 && paddle1.color === color1, JSON.stringify(paddle1));
+    console.assert(JSON.stringify(paddle1.center) === JSON.stringify(center1) && JSON.stringify(paddle1.halfSize) === JSON.stringify(halfSize1) && paddle1.life === life1 && JSON.stringify(paddle1.color) === JSON.stringify(color1), JSON.stringify(paddle1));
 
     console.log('testPaddle OK');
 }

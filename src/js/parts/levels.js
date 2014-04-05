@@ -9,6 +9,16 @@ var levels = [{
         g: 209,
         b: 163,
     },
+    ballColor: {
+        r: 210,
+        g: 102,
+        b: 53,
+    },
+    paddleColor: {
+        r: 207,
+        g: 55,
+        b: 70,
+    },
     bricks: function() {
         return [
             new Brick(new Vector2(40, 70), new Vector2(25, 10), Brick.types.SILVER),
@@ -107,6 +117,16 @@ var levels = [{
         g: 209,
         b: 163,
     },
+    ballColor: {
+        r: 210,
+        g: 102,
+        b: 53,
+    },
+    paddleColor: {
+        r: 207,
+        g: 55,
+        b: 70,
+    },
     bricks: function() {
         return [
             new Brick(new Vector2(525, 400 / 2), new Vector2(25, 10), Brick.types.YELLOW),
@@ -122,6 +142,16 @@ var levels = [{
         r: 136,
         g: 209,
         b: 163,
+    },
+    ballColor: {
+        r: 210,
+        g: 102,
+        b: 53,
+    },
+    paddleColor: {
+        r: 207,
+        g: 55,
+        b: 70,
     },
     bricks: function() {
         return [
@@ -147,6 +177,16 @@ var levels = [{
         r: 136,
         g: 209,
         b: 163,
+    },
+    ballColor: {
+        r: 210,
+        g: 102,
+        b: 53,
+    },
+    paddleColor: {
+        r: 207,
+        g: 55,
+        b: 70,
     },
     bricks: function() {
         return [

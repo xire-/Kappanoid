@@ -59,15 +59,6 @@ var kappanoid = (function() {
         canvasRelativeWidth: 800 + 20 * 2,
         canvasRelativeHeight: 60 + 20 + 600,
 
-        bordersColor: '#88D1A3',
-        ballColor: {
-            r: 210,
-            g: 102,
-            b: 53,
-        },
-        brickColor: '#62bd84',
-        paddleColor: '#CF3746',
-        particleColor: '#d26635',
         worldBackgroundColor: {
             r: 248,
             g: 242,

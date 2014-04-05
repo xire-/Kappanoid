@@ -53,7 +53,7 @@ var World = function() {
         this.bordersColor = levels[this._currentLevel].bordersColor;
 
         this.balls = [];
-        this.balls.push(new Ball(new Vector2(400, 600 - 50 - 7), 7, 0, new Vector2(0, -1), constants.ballColor));
+        this.balls.push(new Ball(new Vector2(400, 600 - 50 - 7), 7, 0, new Vector2(0, -1), levels[this._currentLevel].ballColor));
         this.ballSpeedMult = 1;
 
         this.pruningGrid = new PruningGrid(new Vector2(20, 15), new Vector2(0, 0), new Vector2(800, 600), 7);
@@ -76,7 +76,7 @@ var World = function() {
 
         var paddleHalfSize = new Vector2(50, 15);
         var oldLifes = this.paddle !== undefined ? this.paddle.life : 2;
-        this.paddle = new Paddle(new Vector2(800 / 2, 600 + paddleHalfSize.y - 50), paddleHalfSize, oldLifes, constants.paddleColor);
+        this.paddle = new Paddle(new Vector2(800 / 2, 600 + paddleHalfSize.y - 50), paddleHalfSize, oldLifes, levels[this._currentLevel].paddleColor);
 
         this.particles = [];
         this.lazors = [];
@@ -687,7 +687,7 @@ var World = function() {
                 //delete all falling powerup
                 this.fallingPowerup = null;
 
-                this.balls.push(new Ball(new Vector2(400, 600 - 50 - 7), 7, 0, new Vector2(0, -1), constants.ballColor));
+                this.balls.push(new Ball(new Vector2(400, 600 - 50 - 7), 7, 0, new Vector2(0, -1), levels[this._currentLevel].ballColor));
                 this.update = updateRespawn;
                 this.render = renderRespawn;
                 this.changeTemporaryPowerup(null);
