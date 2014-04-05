@@ -1,5 +1,5 @@
 var isColor = function(value) {
-    return (value.r !== undefined && value.g !== undefined && value.b !== undefined) || (value.h !== undefined && value.s !== undefined && value.l !== undefined);
+    return value !== undefined && ((value.r !== undefined && value.g !== undefined && value.b !== undefined) || (value.h !== undefined && value.s !== undefined && value.l !== undefined));
 };
 
 /*
