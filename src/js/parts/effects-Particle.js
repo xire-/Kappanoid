@@ -12,10 +12,22 @@ var Particle = function() {
                     g: 255,
                     b: 255,
                 });
-                g.fillRect(this.position.x - 2, this.position.y - 2, 4, 4);
+                g.fillRect(this.position.x - 1, this.position.y - 1, 2, 2);
             }
         },
         MEDIUM_RECTANGLE: {
+            render: function() {
+                g.globalAlpha = this.life / this._initialLife;
+
+                g.fillStyle = settings.colors ? getColorString(this.color) : getColorString({
+                    r: 255,
+                    g: 255,
+                    b: 255,
+                });
+                g.fillRect(this.position.x - 2, this.position.y - 2, 4, 4);
+            }
+        },
+        BIG_RECTANGLE: {
             render: function() {
                 g.globalAlpha = this.life / this._initialLife;
 
@@ -75,7 +87,14 @@ var Particle = function() {
 
             var life = 3000;
 
-            var shape = Particle.shapes.MEDIUM_RECTANGLE;
+            var shape;
+            if (i % 5 === 0) {
+                shape = Particle.shapes.BIG_RECTANGLE;
+            } else if (i % 2 === 0) {
+                shape = Particle.shapes.SMALL_RECTANGLE;
+            } else {
+                shape = Particle.shapes.MEDIUM_RECTANGLE;
+            }
 
             var hslColor = rgbToHsl(baseColor);
             var color = (i % 2 === 0) ? {
