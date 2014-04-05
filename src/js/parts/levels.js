@@ -20,6 +20,60 @@ var levels = [{
         b: 70,
     },
     bricks: function() {
+        var lvl = [
+            '----------------',
+            'O O X ZZZIII V |',
+            'O OX XZ ZI IV V|',
+            'OO XXXZZZIIIVVV|',
+            'O OX XZ  I  V V ',
+            'O OX XZ  I  V V|',
+            '________________',
+        ].join('');
+        var type = {
+            'O': Brick.types.GOLD,
+            'X': Brick.types.SILVER,
+            'Z': Brick.types.RED,
+            'I': Brick.types.GREEN,
+            'V': Brick.types.BLUE,
+            ' ': Brick.types.WHITE,
+            '-': Brick.types.ORANGE,
+            '_': Brick.types.CYAN,
+            '|': Brick.types.VIOLET,
+        };
+
+        var startX = 25;
+        var startY = 10;
+        var bricks = [];
+        for (var r = 0; r < 7; r++) {
+            for (var c = 0; c < 16; c++) {
+                bricks.push(new Brick(new Vector2(startX + 50 * c, startY + 20 * r), new Vector2(25, 10), type[lvl[r * 16 + c]]));
+            }
+        }
+
+        return bricks;
+    },
+}, {
+    backgroundColor: {
+        r: 112,
+        g: 128,
+        b: 144,
+    },
+    bordersColor: {
+        r: 136,
+        g: 209,
+        b: 163,
+    },
+    ballColor: {
+        r: 210,
+        g: 102,
+        b: 53,
+    },
+    paddleColor: {
+        r: 207,
+        g: 55,
+        b: 70,
+    },
+    bricks: function() {
         return [
             new Brick(new Vector2(40, 70), new Vector2(25, 10), Brick.types.SILVER),
             new Brick(new Vector2(100, 70), new Vector2(25, 10), Brick.types.SILVER),
