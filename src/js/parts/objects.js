@@ -10,9 +10,6 @@
 ///////////////// PowerUp
 // __import__ objects-PowerUp.js
 
-///////////////// Levels
-// __import__ levels.js
-
 ///////////////// World
 // __import__ objects-World.js
 

@@ -178,16 +178,8 @@ var kappanoid = (function() {
     };
 
 
-    /////////////////////////////////// Utils
-    // __import__ utils.js
-
-
     /////////////////////////////////// Game States
     // __import__ states.js
-
-
-    /////////////////////////////////// Physics
-    // __import__ physics.js
 
 
     /////////////////////////////////// Game Effects
@@ -198,8 +190,20 @@ var kappanoid = (function() {
     // __import__ objects.js
 
 
+    /////////////////////////////////// Game Levels
+    // __import__ levels.js
+
+
     /////////////////////////////////// Game Info
     // __import__ gameInfo.js
+
+
+    /////////////////////////////////// Physics
+    // __import__ physics.js
+
+
+    /////////////////////////////////// Utils
+    // __import__ utils.js
 
 
     return {
