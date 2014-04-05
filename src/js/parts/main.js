@@ -4,7 +4,7 @@
  */
 
 /*jslint browser: true, devel: true, multistr: true */
-/*global $*/
+/*global $, Howl*/
 
 var kappanoid = (function() {
     'use strict';
@@ -69,6 +69,17 @@ var kappanoid = (function() {
             g: 34,
             b: 34,
         }
+    };
+    var audio = {
+        pop: new Howl({
+            urls: ['sound/pop.mp3']
+        }),
+        firework: new Howl({
+            urls: ['sound/fireworks1.mp3']
+        }),
+        levelCompleted: new Howl({
+            urls: ['sound/levelCompletedFanfare.mp3']
+        }),
     };
 
 
@@ -177,7 +188,7 @@ var kappanoid = (function() {
     /////////////////////////////////// Game Effects
     // __import__ effects.js
 
-    
+
     /////////////////////////////////// Game Objects
     // __import__ objects.js
 

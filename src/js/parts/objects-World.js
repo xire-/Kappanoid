@@ -375,7 +375,8 @@ var World = function() {
             // turn off peggle effect
             settings.timeScale = 1;
 
-            new Audio('sound/levelCompletedFanfare.mp3').play();
+            // play victory sound
+            audio.levelCompleted.play();
 
             this._timePassed = 0;
             this.render = renderLevelCompleted;
@@ -658,6 +659,10 @@ var World = function() {
                             ball.center.y = this.paddle.center.y - this.paddle.halfSize.y - ball.radius;
                             ball.speed = 0;
                             this.paddle.ballIsStuck = true;
+
+                            //play sticky audio
+                            audio.pop.play();
+
                         } else {
                             ball.addTrailVertex(ball.center);
 
