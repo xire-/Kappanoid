@@ -1,8 +1,8 @@
 var levels = [{
     backgroundColor: {
-        r: 248,
-        g: 242,
-        b: 179,
+        r: 112,
+        g: 128,
+        b: 144,
     },
     bordersColor: {
         r: 136,

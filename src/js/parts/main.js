@@ -183,15 +183,19 @@ var kappanoid = (function() {
 
 
     /////////////////////////////////// Game States
-    // __import__ gameStates.js
+    // __import__ states.js
 
 
     /////////////////////////////////// Physics
     // __import__ physics.js
 
 
+    /////////////////////////////////// Game Effects
+    // __import__ effects.js
+
+    
     /////////////////////////////////// Game Objects
-    // __import__ gameObjects.js
+    // __import__ objects.js
 
 
     /////////////////////////////////// Game Info
