@@ -34,6 +34,9 @@ var PlayingState = function() {
 
                 settings.lastBrickSlowMo = true;
                 settings.paddleSpeedDistortion = true;
+
+                settings.worldShake = !settings.worldShake;
+                world.shaker.enabled = settings.worldShake;
                 break;
             case 49: // 1
                 settings.colors = !settings.colors;
@@ -62,6 +65,8 @@ var PlayingState = function() {
                 settings.paddleSpeedDistortion = !settings.paddleSpeedDistortion;
                 break;
             case 56: // 8
+                settings.worldShake = !settings.worldShake;
+                world.shaker.enabled = settings.worldShake;
                 break;
             case 57: // 9
                 break;

@@ -567,7 +567,7 @@ var World = function() {
             // check and handle collisions with borders
             if (ball.center.x - ball.radius < 0) {
                 // shake screen before changing direction
-                this.shaker.shake(ball.direction.x * 5, ball.direction.y * 5);
+                this.shaker.shake(ball.direction.x, ball.direction.y);
 
                 ball.center.x = -ball.center.x + ball.radius * 2;
                 ball.direction.x *= -1;
@@ -578,7 +578,7 @@ var World = function() {
             }
             if (ball.center.y - ball.radius < 0) {
                 // shake screen before changing direction
-                this.shaker.shake(ball.direction.x * 5, ball.direction.y * 5);
+                this.shaker.shake(ball.direction.x, ball.direction.y);
 
                 ball.center.y = -ball.center.y + ball.radius * 2;
                 ball.direction.y *= -1;
@@ -589,7 +589,7 @@ var World = function() {
             }
             if (ball.center.x + ball.radius >= constants.worldRelativeWidth) {
                 // shake screen before changing direction
-                this.shaker.shake(ball.direction.x * 5, ball.direction.y * 5);
+                this.shaker.shake(ball.direction.x, ball.direction.y);
 
                 ball.center.x = constants.worldRelativeWidth - ((ball.center.x + ball.radius) - constants.worldRelativeWidth) - ball.radius;
                 ball.direction.x *= -1;
@@ -613,6 +613,8 @@ var World = function() {
                 if (collisionPoint !== null) {
                     var xColl = collisionPoint.x == brick.center.x - brick.halfSize.x || collisionPoint.x == brick.center.x + brick.halfSize.x;
                     var yColl = collisionPoint.y == brick.center.y - brick.halfSize.y || collisionPoint.y == brick.center.y + brick.halfSize.y;
+
+                    this.shaker.shake(ball.direction.x, ball.direction.y);
 
                     if (xColl && yColl) {
                         tmpVec.set(brick.center).sub(collisionPoint);
@@ -662,6 +664,7 @@ var World = function() {
                 if (ball.direction.y > 0) {
                     var collisionPoint = collisionDetection.testSphereAABB(ball, this.paddle);
                     if (collisionPoint !== null) {
+                        this.shaker.shake(ball.direction.x, ball.direction.y);
                         // determine resultant direction based on collisionPoint
                         var angle = (collisionPoint.x - this.paddle.center.x) / this.paddle.halfSize.x;
                         ball.direction.x = Math.sin(angle);

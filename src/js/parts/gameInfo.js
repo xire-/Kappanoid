@@ -49,6 +49,7 @@ var GameInfo = function() {
         g.fillText('5. BALL TRAIL: ' + settings.ballTrail, 225, 10);
         g.fillText('6. LAST BRICK SLOW MO: ' + settings.lastBrickSlowMo, 225, 20);
         g.fillText('7. PADDLE SPEED DISTORTION: ' + settings.paddleSpeedDistortion, 225, 30);
+        g.fillText('8. WORLD SHAKE: ' + settings.worldShake, 225, 40);
     };
 
     var drawGameInfo = function() {
