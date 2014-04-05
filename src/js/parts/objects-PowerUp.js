@@ -1,4 +1,7 @@
 var PowerUp = function() {
+
+    ///////// public static methods / variables
+
     var types = {
         LASER: {
             character: 'L',
@@ -65,6 +68,8 @@ var PowerUp = function() {
         },
     };
 
+    ///////// public methods
+
     var render = function() {
         g.save();
         g.translate(this.center.x, this.center.y);
@@ -104,6 +109,7 @@ var PowerUp = function() {
         this.center.y = this.center.y + (100 * delta) / 1000;
     };
 
+    ///////// constructor
 
     var constructor = function PowerUp(center, halfSize, type) {
         this.center = center;
@@ -112,6 +118,7 @@ var PowerUp = function() {
         this.character = type.character;
         this.onActivate = type.onActivate;
 
+        // public methods
         this.render = render;
         this.update = update;
     };
@@ -135,9 +142,12 @@ var PowerUp = function() {
     };
 
     constructor.types = types;
+
     return constructor;
 }();
 
 function testPowerUp() {
+    // TODO
 
+    console.log('testPowerUp OK');
 }

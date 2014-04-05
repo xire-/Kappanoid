@@ -1,5 +1,7 @@
 var Lazor = function() {
 
+    ///////// public methods
+
     var render = function() {
         g.save();
         g.translate(this.center.x, this.center.y);
@@ -13,10 +15,12 @@ var Lazor = function() {
         this.center.y = this.center.y - (600 * delta) / 1000;
     };
 
+    ///////// constructor
 
     var constructor = function Lazor(center) {
         this.center = center;
 
+        // public methods
         this.render = render;
         this.update = update;
     };

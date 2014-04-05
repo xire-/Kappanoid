@@ -1,20 +1,10 @@
 var PruningGrid = function() {
-    // because everyone need a temp vector
+
+    ///////// public static methods / variables
+
     var tmpVector = new Vector2(0, 0);
 
-    /*
-     * given a point, returns the coord of the corresponding cell (in vector form)
-     */
-    var getCellInPoint = function(x, y) {
-        var coord = tmpVector;
-        coord.x = Math.floor((x - this.offset.x) / this.dimension.x * this.numCells.x);
-        coord.y = Math.floor((y - this.offset.y) / this.dimension.y * this.numCells.y);
-
-        coord.x = clamp(0, coord.x, this.numCells.x - 1);
-        coord.y = clamp(0, coord.y, this.numCells.y - 1);
-
-        return coord;
-    };
+    ///////// public methods
 
     var addAABB = function(AABB) {
         var fromX, fromY, toX, toY;
@@ -32,8 +22,8 @@ var PruningGrid = function() {
                 this.grid[r][c].push(AABB);
             }
         }
-
     };
+
     var removeAABB = function(AABB) {
         var fromX, fromY, toX, toY;
 
@@ -56,13 +46,33 @@ var PruningGrid = function() {
             }
         }
     };
+
+
     var getNearby = function(point) {
         var coord = getCellInPoint.call(this, point.x, point.y);
         return this.grid[coord.y][coord.x];
     };
 
+    ///////// private methods
+
+    /*
+     * given a point, returns the coord of the corresponding cell (in vector form)
+     */
+    var getCellInPoint = function(x, y) {
+        var coord = tmpVector;
+        coord.x = Math.floor((x - this.offset.x) / this.dimension.x * this.numCells.x);
+        coord.y = Math.floor((y - this.offset.y) / this.dimension.y * this.numCells.y);
+
+        coord.x = clamp(0, coord.x, this.numCells.x - 1);
+        coord.y = clamp(0, coord.y, this.numCells.y - 1);
+
+        return coord;
+    };
+
+    ///////// constructor
+
     var constructor = function PruningGrid(numCells, offset, dimension, overlap) {
-        // add methods
+        // public methods
         this.addAABB = addAABB;
         this.removeAABB = removeAABB;
         this.getNearby = getNearby;
