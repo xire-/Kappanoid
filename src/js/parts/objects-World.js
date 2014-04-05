@@ -169,7 +169,9 @@ var World = function() {
             this.fallingPowerup = new PowerUp(brick.center.clone(), brick.halfSize.clone(), pType);
         }
 
-        Particle.spawn(this.particles, brick.center, new Vector2(-randomInt(80, 110), -randomInt(80, 110)), 0, 2 * Math.PI, 30, 3000, Particle.shapes.MEDIUM_RECTANGLE, brick.color);
+        if (settings.particles) {
+            Particle.spawnExplosion(this.particles, brick.center, brick.color);
+        }
     };
 
 
