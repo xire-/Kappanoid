@@ -119,6 +119,12 @@ var IntroState = function() {
     ///////// constructor
 
     var constructor = function IntroState() {
+        // public methods
+        this.render = render;
+        this.update = update;
+        this.keyPress = keyPress;
+
+        // init
         this._intro = true;
         this._timePassed = 0;
         this.logos = [
@@ -254,11 +260,6 @@ var IntroState = function() {
             ]
         ];
         this._selectedLogo = this.logos[randomInt(this.logos.length)];
-
-        // public methods
-        this.render = render;
-        this.update = update;
-        this.keyPress = keyPress;
     };
 
     return constructor;

@@ -112,15 +112,16 @@ var PowerUp = function() {
     ///////// constructor
 
     var constructor = function PowerUp(center, halfSize, type) {
+        // public methods
+        this.render = render;
+        this.update = update;
+
+        // init
         this.center = center;
         this.halfSize = halfSize;
         this.color = type.color;
         this.character = type.character;
         this.onActivate = type.onActivate;
-
-        // public methods
-        this.render = render;
-        this.update = update;
     };
 
     constructor.prototype = {

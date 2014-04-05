@@ -723,6 +723,14 @@ var World = function() {
     ///////// constructor
 
     var constructor = function World(containerOffset, containerSize) {
+        // public methods
+        this.reset = reset;
+        this.render = renderIntro;
+        this.update = updateIntro;
+        this.action = action;
+        this.changeTemporaryPowerup = changeTemporaryPowerup;
+
+        // init
         this.containerOffset = containerOffset;
         this.containerSize = containerSize;
         this._backgroundColor = constants.worldBackgroundColor;
@@ -737,13 +745,6 @@ var World = function() {
         this.score = 0;
         this._fireworksTime = 0;
         this.levelTime = null;
-
-        // public methods
-        this.reset = reset;
-        this.render = renderIntro;
-        this.update = updateIntro;
-        this.action = action;
-        this.changeTemporaryPowerup = changeTemporaryPowerup;
 
         // initialize all game objects
         this.reset();

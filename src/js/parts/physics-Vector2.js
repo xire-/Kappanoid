@@ -73,9 +73,6 @@ var Vector2 = function() {
     ///////// constructor
 
     var constructor = function Vector2(x, y) {
-        this.x = x;
-        this.y = y;
-
         // public methods
         this.set = set;
         this.add = add;
@@ -86,6 +83,10 @@ var Vector2 = function() {
         this.distance = distance;
         this.length = length;
         this.clone = clone;
+
+        // init
+        this.x = x;
+        this.y = y;
     };
 
     constructor.prototype = {

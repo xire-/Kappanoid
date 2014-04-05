@@ -94,6 +94,11 @@ var Particle = function() {
     ///////// constructor
 
     var constructor = function Particle(position, velocity, acceleration, life, shape, color, callback) {
+        // public methods
+        this.render = render;
+        this.update = update;
+
+        // init
         this.position = position;
         this.velocity = velocity;
         this.acceleration = acceleration;
@@ -103,10 +108,6 @@ var Particle = function() {
         this.color = color;
         this._callback = callback;
         this._tmpVector = new Vector2(0, 0);
-
-        // public methods
-        this.render = render;
-        this.update = update;
     };
 
     constructor.prototype = {

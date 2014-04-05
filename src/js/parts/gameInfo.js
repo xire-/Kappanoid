@@ -87,6 +87,11 @@ var GameInfo = function() {
     ///////// constructor
 
     var constructor = function GameInfo(containerOffset, containerSize) {
+        // public methods
+        this.render = render;
+        this.update = update;
+
+        // init
         this.containerOffset = containerOffset;
         this.containerSize = containerSize;
         this.showDebugInfo = false;
@@ -101,10 +106,6 @@ var GameInfo = function() {
             g: 255,
             b: 255,
         };
-
-        // public methods
-        this.render = render;
-        this.update = update;
     };
 
     constructor.prototype = {

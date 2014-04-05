@@ -152,6 +152,14 @@ var Ball = function() {
     ///////// constructor
 
     var constructor = function Ball(center, radius, speed, direction, color) {
+        // public methods
+        this.addTrailVertex = addTrailVertex;
+        this.resetTrail = resetTrail;
+        this.fadeTrail = fadeTrail;
+        this.render = render;
+        this.update = update;
+
+        // init
         this.center = center;
         this.radius = radius;
         this.speed = speed;
@@ -162,13 +170,6 @@ var Ball = function() {
         this._trailVertexes = [];
         this.stoppedMovingDate = new Date();
         this.stoppedMovingPosition = this.center;
-
-        // public methods
-        this.addTrailVertex = addTrailVertex;
-        this.resetTrail = resetTrail;
-        this.fadeTrail = fadeTrail;
-        this.render = render;
-        this.update = update;
     };
 
     constructor.prototype = {

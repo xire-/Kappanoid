@@ -147,6 +147,12 @@ var Brick = function() {
     ///////// constructor
 
     var constructor = function Brick(center, halfSize, type) {
+        // public methods
+        this.hit = hit;
+        this.render = render;
+        this.update = update;
+
+        // init
         this.center = center;
         this.halfSize = halfSize;
         this.life = type.life;
@@ -155,11 +161,6 @@ var Brick = function() {
         this.type = type;
 
         this._blinkTimer = 500;
-
-        // public methods
-        this.hit = hit;
-        this.render = render;
-        this.update = update;
     };
 
     constructor.prototype = {

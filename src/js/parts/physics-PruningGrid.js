@@ -77,13 +77,12 @@ var PruningGrid = function() {
         this.removeAABB = removeAABB;
         this.getNearby = getNearby;
 
-        // init param members
+        // init
         this.numCells = numCells;
         this.offset = offset;
         this.dimension = dimension;
         this.overlap = overlap;
 
-        // init other members
         var grid = [];
         for (var r = 0; r < numCells.y; r++) {
             grid[r] = [];

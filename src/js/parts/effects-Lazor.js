@@ -18,11 +18,12 @@ var Lazor = function() {
     ///////// constructor
 
     var constructor = function Lazor(center) {
-        this.center = center;
-
         // public methods
         this.render = render;
         this.update = update;
+
+        // init
+        this.center = center;
     };
 
     constructor.prototype = {

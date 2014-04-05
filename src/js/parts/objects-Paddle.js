@@ -1,5 +1,5 @@
 var Paddle = function() {
-    
+
     ///////// public methods
 
     var render = function() {
@@ -66,6 +66,11 @@ var Paddle = function() {
     ///////// constructor
 
     var constructor = function Paddle(center, halfSize, life, color) {
+        // public methods
+        this.render = render;
+        this.update = update;
+
+        // init
         this.center = center;
         this.halfSize = halfSize;
         this.life = life;
@@ -79,10 +84,6 @@ var Paddle = function() {
         this._oldPosX = 200;
         this._timeElapsed = 0;
         this._origWidth = halfSize.x;
-
-        // public methods
-        this.render = render;
-        this.update = update;
     };
 
     constructor.prototype = {
