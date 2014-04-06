@@ -12,7 +12,7 @@ var Particle = function() {
                     g: 255,
                     b: 255,
                 });
-                g.fillRect(Math.round(this.position.x) - 1, Math.round(this.position.y) - 1, 2, 2);
+                g.fillRect(this.position.x - 1, this.position.y - 1, 2, 2);
             }
         },
         MEDIUM_RECTANGLE: {
@@ -24,7 +24,7 @@ var Particle = function() {
                     g: 255,
                     b: 255,
                 });
-                g.fillRect(Math.round(this.position.x) - 2, Math.round(this.position.y) - 2, 4, 4);
+                g.fillRect(this.position.x - 2, this.position.y - 2, 4, 4);
             }
         },
         BIG_RECTANGLE: {
@@ -36,7 +36,7 @@ var Particle = function() {
                     g: 255,
                     b: 255,
                 });
-                g.fillRect(Math.round(this.position.x) - 4, Math.round(this.position.y) - 4, 8, 8);
+                g.fillRect(this.position.x - 4, this.position.y - 4, 8, 8);
             }
         },
         FIREWORK: {
@@ -46,7 +46,7 @@ var Particle = function() {
                     g: 255,
                     b: 255,
                 });
-                g.fillRect(Math.round(this.position.x) - 2, Math.round(this.position.y) - 2, 4, 4);
+                g.fillRect(this.position.x - 2, this.position.y - 2, 4, 4);
             }
         },
     };

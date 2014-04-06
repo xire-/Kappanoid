@@ -97,18 +97,14 @@ var Trail = function() {
 
             g.beginPath();
             g.lineWidth = lineWidth;
-            var prevVertex_x = Math.round(prevVertex.x);
-            var prevVertex_y = Math.round(prevVertex.y);
-            var vertex_x = Math.round(vertex.x);
-            var vertex_y = Math.round(vertex.y);
 
             g.moveTo(prevVertex_x, prevVertex_y);
 
-            var gradient = g.createLinearGradient(prevVertex_x, prevVertex_y, vertex_x, vertex_y);
+            var gradient = g.createLinearGradient(prevVertex.x, prevVertex.y, vertex.x, vertex.y);
             gradient.addColorStop(0, getColorString(colorPrevVertex));
             gradient.addColorStop(1, getColorString(colorVertex));
             g.strokeStyle = gradient;
-            g.lineTo(vertex_x, vertex_y);
+            g.lineTo(vertex.x, vertex.y);
             g.stroke();
             g.closePath();
 

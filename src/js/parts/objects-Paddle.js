@@ -4,7 +4,7 @@ var Paddle = function() {
 
     var render = function() {
         g.save();
-        g.translate(Math.round(this.center.x), Math.round(this.center.y));
+        g.translate(this.center.x, this.center.y);
         if (settings.paddleSpeedDistortion) {
             // even if it may seem this belong to the update method, it must stay here
             // since it is dependant on the frame rate
