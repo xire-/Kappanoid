@@ -4,7 +4,7 @@ var Lazor = function() {
 
     var render = function() {
         g.save();
-        g.translate(this.center.x, this.center.y);
+        g.translate(Math.round(this.center.x), Math.round(this.center.y));
         g.fillStyle = settings.colors ? '#FF0000' : '#FFFFFF';
         g.fillRect(-1, 0, 2, 7);
         g.restore();

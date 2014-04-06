@@ -119,7 +119,7 @@ var kappanoid = (function() {
         canvas.height = constants.canvasRelativeHeight * scaleFactor;
 
         g = canvas.getContext('2d');
-        g.scale(scaleFactor, scaleFactor);
+        if (scaleFactor !== 1) g.scale(scaleFactor, scaleFactor);
 
         mousePos = new Vector2(constants.bordersRelativeThickness + constants.worldRelativeWidth / 2, 0);
         // receive mouse movement update

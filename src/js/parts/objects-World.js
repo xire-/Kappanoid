@@ -96,7 +96,7 @@ var World = function() {
         g.fillRect(0, 60, this.containerSize.x + constants.bordersRelativeThickness * 2, this.containerSize.y + constants.bordersRelativeThickness);
 
         // translate to render the world area
-        g.translate(this.containerOffset.x + this.shakeAmount.x, this.containerOffset.y + this.shakeAmount.y);
+        g.translate(Math.round(this.containerOffset.x + this.shakeAmount.x), Math.round(this.containerOffset.y + this.shakeAmount.y));
 
         // clip the region
         g.beginPath();
