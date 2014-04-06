@@ -15,6 +15,16 @@ var World = function() {
 
             if (settings.sounds) sounds.lazer.play();
         }
+
+        // if victory, load next level
+        if (this.update === updateLevelCompleted) {
+            this._currentLevel = (this._currentLevel + 1) % levels.length;
+            this.reset(false);
+
+            this._timePassed = 1000;
+            this.render = renderIntroFalling;
+            this.update = updateIntro;
+        }
     };
 
     var changeTemporaryPowerup = function(type) {
@@ -509,23 +519,8 @@ var World = function() {
             Particle.spawnVictoryFireworks(this.particles);
         }
 
-        if (this._timePassed < 1000) {
-            // [0, 1000)
-        } else if (this._timePassed < 2300) {
-            // remove all powerups before changing level
-            this.changeTemporaryPowerup(null);
-            // [1000, 2300)
-        } else if (this._timePassed < 5000) {
-            // [2300, 5000)
-        } else {
-            // >3000 end of animation, enter the next level
-            this._currentLevel = (this._currentLevel + 1) % levels.length;
-            this.reset(false);
-
-            this._timePassed = 1000;
-            this.render = renderIntroFalling;
-            this.update = updateIntro;
-        }
+        // remove all powerups before changing level
+        this.changeTemporaryPowerup(null);
 
         this.paddle.update(delta);
 
