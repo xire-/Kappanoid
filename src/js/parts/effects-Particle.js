@@ -138,7 +138,7 @@ var Particle = function() {
             for (var i = 0; i < 50; i++) {
                 var position = parent.position.clone();
                 var angle = randomFloat(Math.PI * 2);
-                var velocity = new Vector2(randomInt(100) * Math.sin(angle), randomInt(100) * Math.cos(angle));
+                var velocity = new Vector2(randomInt(200) * Math.sin(angle), randomInt(200) * Math.cos(angle));
                 var acceleration = new Vector2(0, 110);
                 var life = 1500 + randomInt(-200, 200);
                 var shape = Particle.shapes.BIG_RECTANGLE;
@@ -147,8 +147,9 @@ var Particle = function() {
                     s: parent.color.s,
                     l: parent.color.l + randomInt(-10, 11),
                 };
+                var drag = 2;
 
-                container.push(new Particle(position, velocity, acceleration, life, shape, color));
+                container.push(new Particle(position, velocity, acceleration, life, shape, color, undefined, drag));
             }
         };
         for (var i = 0; i < 2; i++) {
@@ -197,7 +198,11 @@ var Particle = function() {
         }
 
         this._tmpVector.set(this.acceleration);
+
         this.velocity.add(this._tmpVector.mul(delta / 1000));
+        // calculate drag
+        this.velocity.x = this.velocity.x * Math.exp(-this.drag * (delta / 1000));
+        this.velocity.y = this.velocity.y * Math.exp(-this.drag * (delta / 1000));
 
         this._tmpVector.set(this.velocity);
         this.position.add(this._tmpVector.mul(delta / 1000));
@@ -205,7 +210,7 @@ var Particle = function() {
 
     ///////// constructor
 
-    var constructor = function Particle(position, velocity, acceleration, life, shape, color, callback) {
+    var constructor = function Particle(position, velocity, acceleration, life, shape, color, callback, drag) {
         // public methods
         this.render = render;
         this.update = update;
@@ -218,6 +223,7 @@ var Particle = function() {
         this._initialLife = life;
         this.shape = shape;
         this.color = color;
+        this.drag = drag || 0;
         this._callback = callback;
         this._tmpVector = new Vector2(0, 0);
     };

@@ -98,19 +98,7 @@ var PlayingState = function() {
                 break;
 
             case 108: // L
-                for (var i = 0; i < 50; i++) {
-                    var angle = randomFloat(Math.PI * 2);
-                    var particleVelocity = new Vector2(randomFloat(200) * Math.cos(angle), randomFloat(200) * Math.sin(angle));
-                    var particleAcceleration = new Vector2(0, 110);
-                    var particleLife = randomInt(800, 1200);
-                    var particleColor = getColorString({
-                        h: 0,
-                        s: 100,
-                        l: randomInt(30, 70)
-                    });
-                    var particle = new Particle(new Vector2(400, 300), particleVelocity, particleAcceleration, particleLife, Particle.shapes.MEDIUM_RECTANGLE, particleColor, undefined);
-                    world.particles.push(particle);
-                }
+                Particle.spawnVictoryFireworks(world.particles);
                 break;
 
             case 32: // SPACE
