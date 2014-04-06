@@ -6,12 +6,14 @@ var World = function() {
         // if balls can be released, release them
         releaseBalls.call(this);
 
-        //if lazors con be shooted, shoot them
+        // if lazors con be shooted, shoot them
         if (this.paddle.lazored) {
             var lzr1 = new Lazor(new Vector2(this.paddle.center.x - this.paddle.halfSize.x * 0.75, this.paddle.center.y - this.paddle.halfSize.y));
             var lzr2 = new Lazor(new Vector2(this.paddle.center.x + this.paddle.halfSize.x * 0.75, this.paddle.center.y - this.paddle.halfSize.y));
             this.lazors.push(lzr1);
             this.lazors.push(lzr2);
+
+            if (settings.sounds) sounds.lazer.play();
         }
     };
 
@@ -27,6 +29,7 @@ var World = function() {
         //add current powerup
         if (type === PowerUp.types.ENLARGE) {
             this.paddle.enlarged = true;
+            if (settings.sounds) sounds.longship.play();
         } else if (type === PowerUp.types.LASER) {
             this.paddle.lazored = true;
         } else if (type === PowerUp.types.CATCH) {
@@ -134,6 +137,8 @@ var World = function() {
                 ball.trail.reset();
                 ball.trail.stoppedMovingDate = null;
                 ball.trail.stoppedMovingPosition = null;
+
+                if (settings.sounds) sounds.release.play();
             }, this);
 
             if (this.levelTime === null) {
@@ -249,6 +254,8 @@ var World = function() {
             // >3000 end of animation, transition to next state
             this.render = renderPlaying;
             this.update = updatePrePlaying;
+
+            if (settings.music) music.gameStartMusic.play();
         }
 
         // update paddle position (clamped)
@@ -648,10 +655,9 @@ var World = function() {
                             Particle.spawn(this.particles, collisionPoint, new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, 3000, Particle.shapes.SMALL_RECTANGLE, brick.color);
                         }
                     }
+                    hitBricks.push(brick);
 
                     ball.trail.addVertex(ball.center);
-
-                    hitBricks.push(brick);
                 }
             }, this);
 
@@ -660,6 +666,10 @@ var World = function() {
                 hitbrick.hit();
                 if (hitbrick.life <= 0) {
                     killBrick.call(this, hitbrick);
+
+                    if (settings.sounds) sounds.bounce.play();
+                } else {
+                    if (settings.sounds) sounds.bounceMetal.play();
                 }
             }
         }, this);
@@ -685,15 +695,13 @@ var World = function() {
                             ball.center.y = this.paddle.center.y - this.paddle.halfSize.y - ball.radius;
                             ball.speed = 0;
                             this.paddle.ballIsStuck = true;
-
-                            //play sticky sound
-                            if (settings.sounds) sounds.pop.play();
-
                         } else {
                             ball.trail.addVertex(ball.center);
 
                             Particle.spawn(this.particles, collisionPoint, new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, 3000, Particle.shapes.SMALL_RECTANGLE, this.paddle.color);
                         }
+
+                        if (settings.sounds) sounds.release.play();
                     }
                 }
 
@@ -728,6 +736,8 @@ var World = function() {
             } else {
                 currState = states.gameover;
             }
+
+            if (settings.sounds) sounds.die.play();
         }
     };
 

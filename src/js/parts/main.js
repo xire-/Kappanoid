@@ -71,8 +71,23 @@ var kappanoid = (function() {
         }
     };
     var sounds = {
-        pop: new Howl({
-            urls: ['sound/pop.mp3']
+        release: new Howl({
+            urls: ['sound/release.mp3']
+        }),
+        bounce: new Howl({
+            urls: ['sound/bounce.mp3']
+        }),
+        bounceMetal: new Howl({
+            urls: ['sound/bounce-metal.mp3']
+        }),
+        lazer: new Howl({
+            urls: ['sound/lazer.mp3']
+        }),
+        longship: new Howl({
+            urls: ['sound/longship.mp3']
+        }),
+        die: new Howl({
+            urls: ['sound/die.mp3']
         }),
         firework: new Howl({
             urls: ['sound/fireworks1.mp3']
@@ -82,7 +97,9 @@ var kappanoid = (function() {
         }),
     };
     var music = {
-
+        gameStartMusic: new Howl({
+            urls: ['sound/game-start-music.mp3']
+        }),
     };
 
 
