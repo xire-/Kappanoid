@@ -119,13 +119,12 @@ var Brick = function() {
         g.shadowOffsetX = 3;
         g.shadowOffsetY = 3;
 
-        g.rect(-this.halfSize.x, -this.halfSize.y, this.halfSize.x * 2, this.halfSize.y * 2);
         g.fillStyle = settings.colors ? getColorString(this.color) : getColorString({
             r: 255,
             g: 255,
             b: 255,
         });
-        g.fill();
+        g.fillRect(-this.halfSize.x, -this.halfSize.y, this.halfSize.x * 2, this.halfSize.y * 2);
         g.restore();
         g.clip();
 
