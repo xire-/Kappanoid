@@ -104,6 +104,8 @@ var Particle = function() {
     };
 
     var spawnExplosion2 = function(container, brick) {
+        if (settings.particles === false) return;
+
         for (var i = 0; i < 50; i++) {
             var rx = randomInt(-brick.halfSize.x, brick.halfSize.x);
             var ry = randomInt(-brick.halfSize.y, brick.halfSize.y);
@@ -134,6 +136,8 @@ var Particle = function() {
     };
 
     var spawnVictoryFireworks = function(container) {
+        if (settings.particles === false) return;
+
         var callback = function(parent) {
             for (var i = 0; i < 50; i++) {
                 var position = parent.position.clone();
