@@ -19,6 +19,9 @@ var Particle = function() {
             render: function() {
                 g.globalAlpha = this.life / this._initialLife;
 
+                g.fillStyle = 'rgba(0, 0, 0, 0.5)'
+                g.fillRect(this.position.x - 1, this.position.y - 1, 4, 4);
+
                 g.fillStyle = settings.colors ? getColorString(this.color) : getColorString({
                     r: 255,
                     g: 255,
@@ -31,6 +34,9 @@ var Particle = function() {
             render: function() {
                 g.globalAlpha = this.life / this._initialLife;
 
+                g.fillStyle = 'rgba(0, 0, 0, 0.5)'
+                g.fillRect(this.position.x - 3, this.position.y - 3, 8, 8);
+
                 g.fillStyle = settings.colors ? getColorString(this.color) : getColorString({
                     r: 255,
                     g: 255,
@@ -41,6 +47,9 @@ var Particle = function() {
         },
         FIREWORK: {
             render: function() {
+                g.fillStyle = 'rgba(0, 0, 0, 0.5)'
+                g.fillRect(this.position.x - 1, this.position.y - 1, 4, 4);
+
                 g.fillStyle = settings.colors ? getColorString(this.color) : getColorString({
                     r: 255,
                     g: 255,
@@ -115,14 +124,7 @@ var Particle = function() {
 
     var render = function() {
         g.save();
-        g.shadowBlur = 3;
-        g.shadowColor = getColorString({
-            r: 0,
-            g: 0,
-            b: 0,
-        });
-        g.shadowOffsetX = 2;
-        g.shadowOffsetY = 2;
+
         this.shape.render.call(this);
 
         g.restore();
