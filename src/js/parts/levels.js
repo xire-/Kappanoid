@@ -1,4 +1,179 @@
+var type = {
+    '0': Brick.types.WHITE,
+    '1': Brick.types.ORANGE,
+    '2': Brick.types.CYAN,
+    '3': Brick.types.GREEN,
+    '4': Brick.types.RED,
+    '5': Brick.types.BLUE,
+    '6': Brick.types.VIOLET,
+    '7': Brick.types.YELLOW,
+    '8': Brick.types.SILVER,
+    '9': Brick.types.GOLD,
+};
+
 var levels = [{
+    // arkanoid stage 1
+    backgroundColor: {
+        r: 248,
+        g: 242,
+        b: 179,
+    },
+    bordersColor: {
+        r: 136,
+        g: 209,
+        b: 163,
+    },
+    ballColor: {
+        r: 210,
+        g: 102,
+        b: 53,
+    },
+    paddleColor: {
+        r: 207,
+        g: 55,
+        b: 70,
+    },
+    bricks: function() {
+        var level = [
+            '             ',
+            '             ',
+            '8888888888888',
+            '4444444444444',
+            '7777777777777',
+            '5555555555555',
+            '6666666666666',
+            '3333333333333',
+            '             ',
+            '             ',
+            '             ',
+            '             ',
+            '             ',
+        ];
+
+        var start = new Vector2(40, 20);
+        var offset = new Vector2(10, 7);
+        var bricks = [];
+        for (var r = 0; r < 13; r++) {
+            for (var c = 0; c < 13; c++) {
+                var l = level[r][c];
+                if (l !== ' ') {
+                    bricks.push(new Brick(new Vector2(start.x + (50 + offset.x) * c, start.y + (20 + offset.y) * r), new Vector2(25, 10), type[l]));
+                }
+            }
+        }
+
+        return bricks;
+    },
+}, {
+    // arkanoid stage 2
+    backgroundColor: {
+        r: 248,
+        g: 242,
+        b: 179,
+    },
+    bordersColor: {
+        r: 136,
+        g: 209,
+        b: 163,
+    },
+    ballColor: {
+        r: 210,
+        g: 102,
+        b: 53,
+    },
+    paddleColor: {
+        r: 207,
+        g: 55,
+        b: 70,
+    },
+    bricks: function() {
+        var level = [
+            '0            ',
+            '01           ',
+            '012          ',
+            '0123         ',
+            '01234        ',
+            '012345       ',
+            '0123456      ',
+            '01234567     ',
+            '012345670    ',
+            '0123456701   ',
+            '01234567012  ',
+            '012345670123 ',
+            '8888888888884',
+        ];
+
+        var start = new Vector2(40, 20);
+        var offset = new Vector2(10, 7);
+        var bricks = [];
+        for (var r = 0; r < 13; r++) {
+            for (var c = 0; c < 13; c++) {
+                var l = level[r][c];
+                if (l !== ' ') {
+                    bricks.push(new Brick(new Vector2(start.x + (50 + offset.x) * c, start.y + (20 + offset.y) * r), new Vector2(25, 10), type[l]));
+                }
+            }
+        }
+
+        return bricks;
+    },
+}, {
+    // arkanoid stage 3
+    backgroundColor: {
+        r: 248,
+        g: 242,
+        b: 179,
+    },
+    bordersColor: {
+        r: 136,
+        g: 209,
+        b: 163,
+    },
+    ballColor: {
+        r: 210,
+        g: 102,
+        b: 53,
+    },
+    paddleColor: {
+        r: 207,
+        g: 55,
+        b: 70,
+    },
+    bricks: function() {
+        var level = [
+            '             ',
+            '3333333333333',
+            '             ',
+            '0009999999999',
+            '             ',
+            '4444444444444',
+            '             ',
+            '9999999999000',
+            '             ',
+            '6666666666666',
+            '             ',
+            '5559999999999',
+            '             ',
+            '2222222222222',
+            '             ',
+            '9999999999222',
+        ];
+
+        var start = new Vector2(40, 20);
+        var offset = new Vector2(10, 7);
+        var bricks = [];
+        for (var r = 0; r < 16; r++) {
+            for (var c = 0; c < 13; c++) {
+                var l = level[r][c];
+                if (l !== ' ') {
+                    bricks.push(new Brick(new Vector2(start.x + (50 + offset.x) * c, start.y + (20 + offset.y) * r), new Vector2(25, 10), type[l]));
+                }
+            }
+        }
+
+        return bricks;
+    },
+}, {
     backgroundColor: {
         r: 112,
         g: 128,
@@ -52,114 +227,6 @@ var levels = [{
 
         return bricks;
     },
-}, {
-    backgroundColor: {
-        r: 112,
-        g: 128,
-        b: 144,
-    },
-    bordersColor: {
-        r: 136,
-        g: 209,
-        b: 163,
-    },
-    ballColor: {
-        r: 210,
-        g: 102,
-        b: 53,
-    },
-    paddleColor: {
-        r: 207,
-        g: 55,
-        b: 70,
-    },
-    bricks: function() {
-        return [
-            new Brick(new Vector2(40, 70), new Vector2(25, 10), Brick.types.SILVER),
-            new Brick(new Vector2(100, 70), new Vector2(25, 10), Brick.types.SILVER),
-            new Brick(new Vector2(160, 70), new Vector2(25, 10), Brick.types.SILVER),
-            new Brick(new Vector2(220, 70), new Vector2(25, 10), Brick.types.SILVER),
-            new Brick(new Vector2(280, 70), new Vector2(25, 10), Brick.types.SILVER),
-            new Brick(new Vector2(340, 70), new Vector2(25, 10), Brick.types.SILVER),
-            new Brick(new Vector2(400, 70), new Vector2(25, 10), Brick.types.SILVER),
-            new Brick(new Vector2(460, 70), new Vector2(25, 10), Brick.types.SILVER),
-            new Brick(new Vector2(520, 70), new Vector2(25, 10), Brick.types.SILVER),
-            new Brick(new Vector2(580, 70), new Vector2(25, 10), Brick.types.SILVER),
-            new Brick(new Vector2(640, 70), new Vector2(25, 10), Brick.types.SILVER),
-            new Brick(new Vector2(700, 70), new Vector2(25, 10), Brick.types.SILVER),
-            new Brick(new Vector2(760, 70), new Vector2(25, 10), Brick.types.SILVER),
-
-            new Brick(new Vector2(40, 100), new Vector2(25, 10), Brick.types.RED),
-            new Brick(new Vector2(100, 100), new Vector2(25, 10), Brick.types.RED),
-            new Brick(new Vector2(160, 100), new Vector2(25, 10), Brick.types.RED),
-            new Brick(new Vector2(220, 100), new Vector2(25, 10), Brick.types.RED),
-            new Brick(new Vector2(280, 100), new Vector2(25, 10), Brick.types.RED),
-            new Brick(new Vector2(340, 100), new Vector2(25, 10), Brick.types.RED),
-            new Brick(new Vector2(400, 100), new Vector2(25, 10), Brick.types.RED),
-            new Brick(new Vector2(460, 100), new Vector2(25, 10), Brick.types.RED),
-            new Brick(new Vector2(520, 100), new Vector2(25, 10), Brick.types.RED),
-            new Brick(new Vector2(580, 100), new Vector2(25, 10), Brick.types.RED),
-            new Brick(new Vector2(640, 100), new Vector2(25, 10), Brick.types.RED),
-            new Brick(new Vector2(700, 100), new Vector2(25, 10), Brick.types.RED),
-            new Brick(new Vector2(760, 100), new Vector2(25, 10), Brick.types.RED),
-
-            new Brick(new Vector2(40, 130), new Vector2(25, 10), Brick.types.YELLOW),
-            new Brick(new Vector2(100, 130), new Vector2(25, 10), Brick.types.YELLOW),
-            new Brick(new Vector2(160, 130), new Vector2(25, 10), Brick.types.YELLOW),
-            new Brick(new Vector2(220, 130), new Vector2(25, 10), Brick.types.YELLOW),
-            new Brick(new Vector2(280, 130), new Vector2(25, 10), Brick.types.YELLOW),
-            new Brick(new Vector2(340, 130), new Vector2(25, 10), Brick.types.YELLOW),
-            new Brick(new Vector2(400, 130), new Vector2(25, 10), Brick.types.YELLOW),
-            new Brick(new Vector2(460, 130), new Vector2(25, 10), Brick.types.YELLOW),
-            new Brick(new Vector2(520, 130), new Vector2(25, 10), Brick.types.YELLOW),
-            new Brick(new Vector2(580, 130), new Vector2(25, 10), Brick.types.YELLOW),
-            new Brick(new Vector2(640, 130), new Vector2(25, 10), Brick.types.YELLOW),
-            new Brick(new Vector2(700, 130), new Vector2(25, 10), Brick.types.YELLOW),
-            new Brick(new Vector2(760, 130), new Vector2(25, 10), Brick.types.YELLOW),
-
-            new Brick(new Vector2(40, 160), new Vector2(25, 10), Brick.types.BLUE),
-            new Brick(new Vector2(100, 160), new Vector2(25, 10), Brick.types.BLUE),
-            new Brick(new Vector2(160, 160), new Vector2(25, 10), Brick.types.BLUE),
-            new Brick(new Vector2(220, 160), new Vector2(25, 10), Brick.types.BLUE),
-            new Brick(new Vector2(280, 160), new Vector2(25, 10), Brick.types.BLUE),
-            new Brick(new Vector2(340, 160), new Vector2(25, 10), Brick.types.BLUE),
-            new Brick(new Vector2(400, 160), new Vector2(25, 10), Brick.types.BLUE),
-            new Brick(new Vector2(460, 160), new Vector2(25, 10), Brick.types.BLUE),
-            new Brick(new Vector2(520, 160), new Vector2(25, 10), Brick.types.BLUE),
-            new Brick(new Vector2(580, 160), new Vector2(25, 10), Brick.types.BLUE),
-            new Brick(new Vector2(640, 160), new Vector2(25, 10), Brick.types.BLUE),
-            new Brick(new Vector2(700, 160), new Vector2(25, 10), Brick.types.BLUE),
-            new Brick(new Vector2(760, 160), new Vector2(25, 10), Brick.types.BLUE),
-
-            new Brick(new Vector2(40, 190), new Vector2(25, 10), Brick.types.VIOLET),
-            new Brick(new Vector2(100, 190), new Vector2(25, 10), Brick.types.VIOLET),
-            new Brick(new Vector2(160, 190), new Vector2(25, 10), Brick.types.VIOLET),
-            new Brick(new Vector2(220, 190), new Vector2(25, 10), Brick.types.VIOLET),
-            new Brick(new Vector2(280, 190), new Vector2(25, 10), Brick.types.VIOLET),
-            new Brick(new Vector2(340, 190), new Vector2(25, 10), Brick.types.VIOLET),
-            new Brick(new Vector2(400, 190), new Vector2(25, 10), Brick.types.VIOLET),
-            new Brick(new Vector2(460, 190), new Vector2(25, 10), Brick.types.VIOLET),
-            new Brick(new Vector2(520, 190), new Vector2(25, 10), Brick.types.VIOLET),
-            new Brick(new Vector2(580, 190), new Vector2(25, 10), Brick.types.VIOLET),
-            new Brick(new Vector2(640, 190), new Vector2(25, 10), Brick.types.VIOLET),
-            new Brick(new Vector2(700, 190), new Vector2(25, 10), Brick.types.VIOLET),
-            new Brick(new Vector2(760, 190), new Vector2(25, 10), Brick.types.VIOLET),
-
-            new Brick(new Vector2(40, 220), new Vector2(25, 10), Brick.types.GREEN),
-            new Brick(new Vector2(100, 220), new Vector2(25, 10), Brick.types.GREEN),
-            new Brick(new Vector2(160, 220), new Vector2(25, 10), Brick.types.GREEN),
-            new Brick(new Vector2(220, 220), new Vector2(25, 10), Brick.types.GREEN),
-            new Brick(new Vector2(280, 220), new Vector2(25, 10), Brick.types.GREEN),
-            new Brick(new Vector2(340, 220), new Vector2(25, 10), Brick.types.GREEN),
-            new Brick(new Vector2(400, 220), new Vector2(25, 10), Brick.types.GREEN),
-            new Brick(new Vector2(460, 220), new Vector2(25, 10), Brick.types.GREEN),
-            new Brick(new Vector2(520, 220), new Vector2(25, 10), Brick.types.GREEN),
-            new Brick(new Vector2(580, 220), new Vector2(25, 10), Brick.types.GREEN),
-            new Brick(new Vector2(640, 220), new Vector2(25, 10), Brick.types.GREEN),
-            new Brick(new Vector2(700, 220), new Vector2(25, 10), Brick.types.GREEN),
-            new Brick(new Vector2(760, 220), new Vector2(25, 10), Brick.types.GREEN),
-        ];
-    }
 }, {
     backgroundColor: {
         r: 248,
