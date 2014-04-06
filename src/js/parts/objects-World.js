@@ -506,12 +506,7 @@ var World = function() {
         if (this._fireworksTime > 500) {
             this._fireworksTime = 0;
 
-            var p = this.particles;
-            var callback = function(parent) {
-                Particle.spawn(p, parent.position, new Vector2(-randomInt(60, 110), -randomInt(80, 110)), 0, 2 * Math.PI, 30, 3000, Particle.shapes.MEDIUM_RECTANGLE, parent.color);
-            };
-            Particle.spawn(this.particles, new Vector2(0, constants.worldRelativeHeight), new Vector2(randomInt(20, 500), -randomInt(300, 700)), Math.PI / 4, 0.3, 1, 1000, Particle.shapes.FIREWORK, '#00FF00', callback);
-            Particle.spawn(this.particles, new Vector2(constants.worldRelativeWidth, constants.worldRelativeHeight), new Vector2(-randomInt(20, 500), -randomInt(300, 700)), Math.PI / 4, 0.3, 1, 1000, Particle.shapes.FIREWORK, '#00FF00', callback);
+            Particle.spawnVictoryFireworks(this.particles);
         }
 
         if (this._timePassed < 1000) {

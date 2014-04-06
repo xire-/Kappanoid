@@ -8,11 +8,7 @@ var Particle = function() {
                 //g.globalAlpha = this.life / this._initialLife;
                 g.globalAlpha = easing.easeInQuart(this._initialLife - this.life, 1, -1, this._initialLife);
 
-                g.fillStyle = settings.colors ? getColorString(this.color) : getColorString({
-                    r: 255,
-                    g: 255,
-                    b: 255,
-                });
+                g.fillStyle = settings.colors ? getColorString(this.color) : 'white';
                 g.fillRect(this.position.x - 1, this.position.y - 1, 2, 2);
             }
         },
@@ -24,11 +20,7 @@ var Particle = function() {
                 g.fillStyle = 'rgba(0, 0, 0, 0.5)';
                 g.fillRect(this.position.x - 1, this.position.y - 1, 4, 4);
 
-                g.fillStyle = settings.colors ? getColorString(this.color) : getColorString({
-                    r: 255,
-                    g: 255,
-                    b: 255,
-                });
+                g.fillStyle = settings.colors ? getColorString(this.color) : 'white';
                 g.fillRect(this.position.x - 2, this.position.y - 2, 4, 4);
             }
         },
@@ -40,11 +32,7 @@ var Particle = function() {
                 g.fillStyle = 'rgba(0, 0, 0, 0.5)';
                 g.fillRect(this.position.x - 3, this.position.y - 3, 8, 8);
 
-                g.fillStyle = settings.colors ? getColorString(this.color) : getColorString({
-                    r: 255,
-                    g: 255,
-                    b: 255,
-                });
+                g.fillStyle = settings.colors ? getColorString(this.color) : 'white';
                 g.fillRect(this.position.x - 4, this.position.y - 4, 8, 8);
             }
         },
@@ -53,11 +41,7 @@ var Particle = function() {
                 g.fillStyle = 'rgba(0, 0, 0, 0.5)';
                 g.fillRect(this.position.x - 1, this.position.y - 1, 4, 4);
 
-                g.fillStyle = settings.colors ? getColorString(this.color) : getColorString({
-                    r: 255,
-                    g: 255,
-                    b: 255,
-                });
+                g.fillStyle = settings.colors ? getColorString(this.color) : 'white';
                 g.fillRect(this.position.x - 2, this.position.y - 2, 4, 4);
             }
         },
@@ -146,6 +130,49 @@ var Particle = function() {
             };
 
             container.push(new Particle(position, velocity, acceleration, life, shape, color));
+        }
+    };
+
+    var spawnVictoryFireworks = function(container) {
+        var callback = function(parent) {
+            for (var i = 0; i < 50; i++) {
+                var position = parent.position.clone();
+                var angle = randomFloat(Math.PI * 2);
+                var velocity = new Vector2(randomInt(100) * Math.sin(angle), randomInt(100) * Math.cos(angle));
+                var acceleration = new Vector2(0, 110);
+                var life = 1500 + randomInt(-200, 200);
+                var shape = Particle.shapes.BIG_RECTANGLE;
+                var color = {
+                    h: parent.color.h,
+                    s: parent.color.s,
+                    l: parent.color.l + randomInt(-10, 11),
+                };
+
+                container.push(new Particle(position, velocity, acceleration, life, shape, color));
+            }
+        };
+        for (var i = 0; i < 2; i++) {
+            var position = new Vector2(0, constants.worldRelativeHeight);
+            var velocity = new Vector2(randomInt(20, 400), -randomInt(300, 600));
+            var acceleration = new Vector2(0, 110);
+            var life = 1000 + randomInt(-200, 200);
+            var shape = Particle.shapes.FIREWORK;
+            var color = {
+                h: randomInt(12) * 30,
+                s: 100,
+                l: 50,
+            };
+            container.push(new Particle(position, velocity, acceleration, life, shape, color, callback));
+
+            position = new Vector2(constants.worldRelativeWidth, constants.worldRelativeHeight);
+            velocity = new Vector2(-randomInt(20, 400), -randomInt(300, 600));
+            life = 1000 + randomInt(-200, 200);
+            color = {
+                h: randomInt(12) * 30,
+                s: 100,
+                l: 50,
+            };
+            container.push(new Particle(position, velocity, acceleration, life, shape, color, callback));
         }
     };
 
@@ -248,6 +275,8 @@ var Particle = function() {
     constructor.shapes = shapes;
     constructor.spawn = spawn;
     constructor.spawnExplosion = spawnExplosion2;
+    constructor.spawnVictoryFireworks = spawnVictoryFireworks;
+
 
     return constructor;
 }();
