@@ -52,9 +52,9 @@ var Paddle = function() {
             // bring balls along
             world.balls.forEach(function(ball) {
                 ball.center.x += this.center.x - this._oldPosX;
-                if (ball.stoppedMovingDate === null) {
-                    ball.stoppedMovingDate = new Date();
-                    ball.stoppedMovingPosition = ball.center.clone();
+                if (ball.trail.stoppedMovingDate === null) {
+                    ball.trail.stoppedMovingDate = new Date();
+                    ball.trail.stoppedMovingPosition = ball.center.clone();
                 }
             }, this);
         }

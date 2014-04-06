@@ -7,6 +7,9 @@
 ///////////////// Shaker
 // __import__ effects-Shaker.js
 
+///////////////// Trail
+// __import__ effects-Trail.js
+
 
 function testEffects() {
     testParticle();

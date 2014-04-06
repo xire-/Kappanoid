@@ -131,9 +131,9 @@ var World = function() {
             this.balls.forEach(function(ball) {
                 ball.direction = new Vector2(randomFloat(-1, 1), -1);
                 ball.speed = 300;
-                ball.resetTrail();
-                ball.stoppedMovingDate = null;
-                ball.stoppedMovingPosition = null;
+                ball.trail.reset();
+                ball.trail.stoppedMovingDate = null;
+                ball.trail.stoppedMovingPosition = null;
             }, this);
 
             if (this.levelTime === null) {
@@ -146,10 +146,9 @@ var World = function() {
         if (this.paddle.ballIsStuck) {
             this.paddle.ballIsStuck = false;
             this.balls[0].speed = 300;
-
-            this.balls[0].resetTrail();
-            this.balls[0].stoppedMovingDate = null;
-            this.balls[0].stoppedMovingPosition = null;
+            this.balls[0].trail.reset();
+            this.balls[0].trail.stoppedMovingDate = null;
+            this.balls[0].trail.stoppedMovingPosition = null;
         }
     };
 
@@ -583,7 +582,7 @@ var World = function() {
                 ball.center.x = -ball.center.x + ball.radius * 2;
                 ball.direction.x *= -1;
 
-                ball.addTrailVertex(ball.center);
+                ball.trail.addVertex(ball.center);
 
                 Particle.spawn(this.particles, new Vector2(0, ball.center.y), new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, 3000, Particle.shapes.SMALL_RECTANGLE, this.bordersColor);
             }
@@ -594,7 +593,7 @@ var World = function() {
                 ball.center.y = -ball.center.y + ball.radius * 2;
                 ball.direction.y *= -1;
 
-                ball.addTrailVertex(ball.center);
+                ball.trail.addVertex(ball.center);
 
                 Particle.spawn(this.particles, new Vector2(ball.center.x, 0), new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, 3000, Particle.shapes.SMALL_RECTANGLE, this.bordersColor);
             }
@@ -605,7 +604,7 @@ var World = function() {
                 ball.center.x = constants.worldRelativeWidth - ((ball.center.x + ball.radius) - constants.worldRelativeWidth) - ball.radius;
                 ball.direction.x *= -1;
 
-                ball.addTrailVertex(ball.center);
+                ball.trail.addVertex(ball.center);
 
                 Particle.spawn(this.particles, ball.center, new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, 3000, Particle.shapes.SMALL_RECTANGLE, this.bordersColor);
             }
@@ -650,7 +649,7 @@ var World = function() {
                         }
                     }
 
-                    ball.addTrailVertex(ball.center);
+                    ball.trail.addVertex(ball.center);
 
                     hitBricks.push(brick);
                 }
@@ -691,7 +690,7 @@ var World = function() {
                             if (settings.sounds) sounds.pop.play();
 
                         } else {
-                            ball.addTrailVertex(ball.center);
+                            ball.trail.addVertex(ball.center);
 
                             Particle.spawn(this.particles, collisionPoint, new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, 3000, Particle.shapes.SMALL_RECTANGLE, this.paddle.color);
                         }

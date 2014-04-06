@@ -28,7 +28,7 @@ var PlayingState = function() {
                 settings.music = true;
 
                 world.balls.forEach(function(ball) {
-                    ball.resetTrail();
+                    ball.trail.reset();
                 });
                 settings.ballTrail = true;
 
@@ -53,7 +53,7 @@ var PlayingState = function() {
             case 53: // 5
                 if (!settings.ballTrail) {
                     world.balls.forEach(function(ball) {
-                        ball.resetTrail();
+                        ball.trail.reset();
                     });
                 }
                 settings.ballTrail = !settings.ballTrail;
