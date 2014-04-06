@@ -10,6 +10,10 @@ var Shaker = function() {
         } else {
             this.target.x = Math.pow(2, -4 * this._timePassed / 1000) * this.shakePower * this.direction.x * Math.sin(5 * Math.PI * this._timePassed / 1000);
             this.target.y = Math.pow(2, -4 * this._timePassed / 1000) * this.shakePower * this.direction.y * Math.sin(5 * Math.PI * this._timePassed / 1000);
+
+            // put some round up in this shit
+            this.target.x = Math.round(this.target.x);
+            this.target.y = Math.round(this.target.y);
         }
     };
 

@@ -124,6 +124,7 @@ var Brick = function() {
             g: 255,
             b: 255,
         });
+        g.rect(-this.halfSize.x, -this.halfSize.y, this.halfSize.x * 2, this.halfSize.y * 2);
         g.fillRect(-this.halfSize.x, -this.halfSize.y, this.halfSize.x * 2, this.halfSize.y * 2);
         g.restore();
         g.clip();
