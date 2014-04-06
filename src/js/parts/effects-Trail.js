@@ -98,7 +98,7 @@ var Trail = function() {
             g.beginPath();
             g.lineWidth = lineWidth;
 
-            g.moveTo(prevVertex_x, prevVertex_y);
+            g.moveTo(prevVertex.x, prevVertex.y);
 
             var gradient = g.createLinearGradient(prevVertex.x, prevVertex.y, vertex.x, vertex.y);
             gradient.addColorStop(0, getColorString(colorPrevVertex));
