@@ -78,7 +78,7 @@ var Particle = function() {
 
     var spawnExplosion = function(container, position, baseColor) {
         for (var i = 0; i < 20; i++) {
-            var position = position.clone();
+            position = position.clone();
 
             var angle = randomFloat(-Math.PI, Math.PI);
             var velocity = new Vector2(randomInt(0, 100) * Math.cos(angle), randomInt(0, 100) * Math.sin(angle));
@@ -109,7 +109,7 @@ var Particle = function() {
 
             container.push(new Particle(position, velocity, acceleration, life, shape, color));
         }
-    }
+    };
 
     ///////// public methods
 
