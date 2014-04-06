@@ -5,7 +5,8 @@ var Particle = function() {
     var shapes = {
         SMALL_RECTANGLE: {
             render: function() {
-                g.globalAlpha = this.life / this._initialLife;
+                //g.globalAlpha = this.life / this._initialLife;
+                g.globalAlpha = easing.easeInQuart(this._initialLife - this.life, 1, -1, this._initialLife);
 
                 g.fillStyle = settings.colors ? getColorString(this.color) : getColorString({
                     r: 255,
@@ -17,7 +18,8 @@ var Particle = function() {
         },
         MEDIUM_RECTANGLE: {
             render: function() {
-                g.globalAlpha = this.life / this._initialLife;
+                //g.globalAlpha = this.life / this._initialLife;
+                g.globalAlpha = easing.easeInQuart(this._initialLife - this.life, 1, -1, this._initialLife);
 
                 g.fillStyle = 'rgba(0, 0, 0, 0.5)';
                 g.fillRect(this.position.x - 1, this.position.y - 1, 4, 4);
@@ -32,7 +34,8 @@ var Particle = function() {
         },
         BIG_RECTANGLE: {
             render: function() {
-                g.globalAlpha = this.life / this._initialLife;
+                //g.globalAlpha = this.life / this._initialLife;
+                g.globalAlpha = easing.easeInQuart(this._initialLife - this.life, 1, -1, this._initialLife);
 
                 g.fillStyle = 'rgba(0, 0, 0, 0.5)';
                 g.fillRect(this.position.x - 3, this.position.y - 3, 8, 8);
@@ -106,14 +109,40 @@ var Particle = function() {
             }
 
             var hslColor = rgbToHsl(baseColor);
-            var color = (i % 2 === 0) ? {
+            var color = {
                 h: hslColor.h,
                 s: hslColor.s,
-                l: hslColor.l + 5 * i / count,
-            } : {
+                l: hslColor.l + randomInt(-5, 6),
+            };
+
+            container.push(new Particle(position, velocity, acceleration, life, shape, color));
+        }
+    };
+
+    var spawnExplosion2 = function(container, brick) {
+        for (var i = 0; i < 50; i++) {
+            var rx = randomInt(-brick.halfSize.x, brick.halfSize.x);
+            var ry = randomInt(-brick.halfSize.y, brick.halfSize.y);
+            var position = new Vector2(brick.center.x + rx, brick.center.y + ry);
+
+            var velocity = new Vector2(2 * rx, 2 * ry);
+
+            var acceleration = new Vector2(0, 110);
+
+            var life = 1500 + randomInt(-200, 200);
+
+            var shape;
+            if (i % 10 < 6) {
+                shape = Particle.shapes.BIG_RECTANGLE;
+            } else {
+                shape = Particle.shapes.MEDIUM_RECTANGLE;
+            }
+
+            var hslColor = rgbToHsl(brick.color);
+            var color = {
                 h: hslColor.h,
                 s: hslColor.s,
-                l: hslColor.l - 5 * i / count,
+                l: hslColor.l + randomInt(-5, 6),
             };
 
             container.push(new Particle(position, velocity, acceleration, life, shape, color));
@@ -218,7 +247,7 @@ var Particle = function() {
 
     constructor.shapes = shapes;
     constructor.spawn = spawn;
-    constructor.spawnExplosion = spawnExplosion;
+    constructor.spawnExplosion = spawnExplosion2;
 
     return constructor;
 }();

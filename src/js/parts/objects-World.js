@@ -174,7 +174,8 @@ var World = function() {
         }
 
         if (settings.particles) {
-            Particle.spawnExplosion(this.particles, brick.center, brick.color);
+            //Particle.spawnExplosion(this.particles, brick.center, brick.color);
+            Particle.spawnExplosion(this.particles, brick);
         }
     };
 
