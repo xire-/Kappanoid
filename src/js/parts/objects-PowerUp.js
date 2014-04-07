@@ -99,7 +99,6 @@ var PowerUp = function() {
     var render = function() {
         g.save();
         g.translate(this.center.x, this.center.y);
-        g.beginPath();
 
         g.save();
 
@@ -149,13 +148,15 @@ var PowerUp = function() {
             b: 0,
         });
         g.fillText(this.character, 0, 0);
-        g.lineWidth = 2;
-        g.strokeStyle = settings.colors ? charcolor : getColorString({
-            r: 0,
-            g: 0,
-            b: 0,
-        });
-        g.strokeText(this.character, 0, 0);
+
+        if (settings.colors) {
+            g.strokeStyle = settings.colors ? charcolor : getColorString({
+                r: 0,
+                g: 0,
+                b: 0,
+            });
+            g.strokeText(this.character, 0, 0);
+        }
 
         g.restore();
     };
