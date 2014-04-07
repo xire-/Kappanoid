@@ -11,8 +11,23 @@ var GameOverState = function() {
         // render the game world
         world.render();
 
-        g.fillStyle = '#FFFFFF';
-        g.fillText('derp you deaded', 500, 600);
+        g.lineWidth = 2;
+        g.font = '30px emulogic';
+        g.textAlign = 'center';
+        g.textBaseline = 'middle';
+
+        g.fillStyle = getColorString({
+            r: 255,
+            g: 255,
+            b: 255,
+        });
+        g.fillText('GAME OVER', constants.worldRelativeWidth / 2, constants.worldRelativeHeight / 2);
+        g.strokeStyle = getColorString({
+            r: 0,
+            g: 0,
+            b: 0,
+        });
+        g.strokeText('GAME OVER', constants.worldRelativeWidth / 2, constants.worldRelativeHeight / 2);
 
         g.restore();
     };

@@ -488,15 +488,22 @@ var World = function() {
 
 
         g.lineWidth = 2;
+        g.font = '30px emulogic';
         g.textAlign = 'center';
         g.textBaseline = 'middle';
-        g.font = '30px emulogic';
-        g.fillStyle = '#FFFFFF';
-        g.fillText('LEVEL ' + (this._currentLevel + 1), 400, 250);
-        g.fillText('COMPLETE!', 400, 280);
-        g.strokeStyle = '#000000';
-        g.strokeText('LEVEL ' + (this._currentLevel + 1), 400, 250);
-        g.strokeText('COMPLETE!', 400, 280);
+
+        g.fillStyle = getColorString({
+            r: 255,
+            g: 255,
+            b: 255,
+        });
+        g.fillText('LEVEL ' + (this._currentLevel + 1) + ' COMPLETE!', constants.worldRelativeWidth / 2, constants.worldRelativeHeight / 2);
+        g.strokeStyle = getColorString({
+            r: 0,
+            g: 0,
+            b: 0,
+        });
+        g.strokeText('LEVEL ' + (this._currentLevel + 1) + ' COMPLETE!', constants.worldRelativeWidth / 2, constants.worldRelativeHeight / 2);
 
         g.restore();
     };
