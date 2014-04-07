@@ -41,15 +41,24 @@ var GameInfo = function() {
         g.fillText('SPEED MULT: ' + world.ballSpeedMult.toFixed(3), 5, 45);
 
 
-        g.fillText('1. COLORS: ' + settings.colors, 120, 10);
-        g.fillText('2. PARTICLES: ' + settings.particles, 120, 20);
-        g.fillText('3. SOUNDS: ' + settings.sounds, 120, 30);
-        g.fillText('4. MUSIC: ' + settings.music, 120, 40);
+        g.fillStyle = settings.colors ? '#00FF00' : '#FF0000';
+        g.fillText('1. COLORS', 120, 10);
+        g.fillStyle = settings.particles ? '#00FF00' : '#FF0000';
+        g.fillText('2. PARTICLES', 120, 20);
+        g.fillStyle = settings.sounds ? '#00FF00' : '#FF0000';
+        g.fillText('3. SOUNDS', 120, 30);
+        g.fillStyle = settings.music ? '#00FF00' : '#FF0000';
+        g.fillText('4. MUSIC', 120, 40);
 
-        g.fillText('5. BALL TRAIL: ' + settings.ballTrail, 225, 10);
-        g.fillText('6. LAST BRICK SLOW MO: ' + settings.lastBrickSlowMo, 225, 20);
-        g.fillText('7. PADDLE SPEED DISTORTION: ' + settings.paddleSpeedDistortion, 225, 30);
-        g.fillText('8. WORLD SHAKE: ' + settings.worldShake, 225, 40);
+
+        g.fillStyle = settings.ballTrail ? '#00FF00' : '#FF0000';
+        g.fillText('5. BALL TRAIL', 225, 10);
+        g.fillStyle = settings.lastBrickSlowMo ? '#00FF00' : '#FF0000';
+        g.fillText('6. LAST BRICK SLOW MO', 225, 20);
+        g.fillStyle = settings.paddleSpeedDistortion ? '#00FF00' : '#FF0000';
+        g.fillText('7. PADDLE SPEED DISTORTION', 225, 30);
+        g.fillStyle = settings.worldShake ? '#00FF00' : '#FF0000';
+        g.fillText('8. WORLD SHAKE', 225, 40);
     };
 
     var drawGameInfo = function() {
