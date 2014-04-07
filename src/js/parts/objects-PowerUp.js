@@ -5,14 +5,22 @@ var PowerUp = function() {
     var types = {
         LASER: {
             character: 'L',
-            color: 'red',
+            color: {
+                r: 255,
+                g: 102,
+                b: 102,
+            },
             onActivate: function() {
                 world.changeTemporaryPowerup(PowerUp.types.LASER);
             }
         },
         ENLARGE: {
             character: 'E',
-            color: 'blue',
+            color: {
+                r: 102,
+                g: 178,
+                b: 255,
+            },
             onActivate: function() {
                 world.changeTemporaryPowerup(PowerUp.types.ENLARGE);
                 if (settings.sounds) sounds.longship.play();
@@ -20,21 +28,33 @@ var PowerUp = function() {
         },
         CATCH: {
             character: 'C',
-            color: 'green',
+            color: {
+                r: 102,
+                g: 255,
+                b: 102,
+            },
             onActivate: function() {
                 world.changeTemporaryPowerup(PowerUp.types.CATCH);
             }
         },
         SLOW: {
             character: 'S',
-            color: 'orange',
+            color: {
+                r: 255,
+                g: 178,
+                b: 102,
+            },
             onActivate: function() {
                 world.ballSpeedMult = Math.max(0.5, world.ballSpeedMult - 0.25);
             }
         },
         DISRUPTION: {
             character: 'D',
-            color: 'cyan',
+            color: {
+                r: 102,
+                g: 255,
+                b: 255,
+            },
             onActivate: function() {
                 // remove other current powerup
                 world.changeTemporaryPowerup(null);
@@ -58,7 +78,11 @@ var PowerUp = function() {
         },
         PLAYER: {
             character: 'P',
-            color: 'gray',
+            color: {
+                r: 192,
+                g: 192,
+                b: 192,
+            },
             onActivate: function() {
                 if (world.paddle.life >= 5) {
                     world.score += 200;
@@ -76,10 +100,15 @@ var PowerUp = function() {
         g.save();
         g.translate(this.center.x, this.center.y);
         g.beginPath();
-        g.shadowBlur = 3;
-        g.shadowColor = 'black';
-        g.shadowOffsetX = 3;
-        g.shadowOffsetY = 3;
+
+        g.save();
+
+        if (settings.colors) {
+            g.shadowBlur = 3;
+            g.shadowColor = 'black';
+            g.shadowOffsetX = 3;
+            g.shadowOffsetY = 3;
+        }
 
         var rad = 5;
         g.moveTo(-(this.halfSize.x - rad), -this.halfSize.y);
@@ -93,15 +122,40 @@ var PowerUp = function() {
         g.lineTo(-this.halfSize.x, -(this.halfSize.y - rad));
         g.arcTo(-this.halfSize.x, -this.halfSize.y, -(this.halfSize.x - rad), -this.halfSize.y, rad);
 
-        g.fillStyle = settings.colors ? this.color : '#FFFFFF';
+        g.fillStyle = settings.colors ? getColorString(this.color) : getColorString({
+            r: 255,
+            g: 255,
+            b: 255,
+        });
         g.fill();
 
-        g.font = ((this.halfSize.y - 1) * 2) + 'px emulogic';
+        g.restore();
+
+        g.font = ((this.halfSize.y - 4) * 2) + 'px emulogic';
         g.textAlign = 'center';
         g.textBaseline = 'middle';
-        var charcolor = this.character === 'P' ? 'cyan' : 'yellow';
-        g.fillStyle = settings.colors ? charcolor : '#000000';
+        var charcolor = this.character === 'P' ? getColorString({
+            r: 102,
+            g: 255,
+            b: 255,
+        }) : getColorString({
+            r: 255,
+            g: 255,
+            b: 102,
+        });
+        g.fillStyle = settings.colors ? charcolor : getColorString({
+            r: 0,
+            g: 0,
+            b: 0,
+        });
         g.fillText(this.character, 0, 0);
+        g.lineWidth = 2;
+        g.strokeStyle = settings.colors ? charcolor : getColorString({
+            r: 0,
+            g: 0,
+            b: 0,
+        });
+        g.strokeText(this.character, 0, 0);
 
         g.restore();
     };
