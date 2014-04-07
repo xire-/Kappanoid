@@ -183,7 +183,6 @@ var World = function() {
             this.fallingPowerup = new PowerUp(brick.center.clone(), brick.halfSize.clone(), pType);
         }
 
-        //Particle.spawnExplosion(this.particles, brick.center, brick.color);
         Particle.spawnExplosion(this.particles, brick);
     };
 

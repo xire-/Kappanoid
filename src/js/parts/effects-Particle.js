@@ -72,38 +72,7 @@ var Particle = function() {
         }
     };
 
-    var spawnExplosion = function(container, position, baseColor) {
-        for (var i = 0; i < 20; i++) {
-            position = position.clone();
-
-            var angle = randomFloat(-Math.PI, Math.PI);
-            var velocity = new Vector2(randomInt(0, 100) * Math.cos(angle), randomInt(0, 100) * Math.sin(angle));
-
-            var acceleration = new Vector2(0, 110);
-
-            var life = 3000;
-
-            var shape;
-            if (i % 5 === 0) {
-                shape = Particle.shapes.BIG_RECTANGLE;
-            } else if (i % 2 === 0) {
-                shape = Particle.shapes.SMALL_RECTANGLE;
-            } else {
-                shape = Particle.shapes.MEDIUM_RECTANGLE;
-            }
-
-            var hslColor = rgbToHsl(baseColor);
-            var color = {
-                h: hslColor.h,
-                s: hslColor.s,
-                l: hslColor.l + randomInt(-5, 6),
-            };
-
-            container.push(new Particle(position, velocity, acceleration, life, shape, color));
-        }
-    };
-
-    var spawnExplosion2 = function(container, brick) {
+    var spawnExplosion = function(container, brick) {
         if (settings.particles === false) return;
 
         for (var i = 0; i < 50; i++) {
@@ -284,7 +253,7 @@ var Particle = function() {
 
     constructor.shapes = shapes;
     constructor.spawn = spawn;
-    constructor.spawnExplosion = spawnExplosion2;
+    constructor.spawnExplosion = spawnExplosion;
     constructor.spawnVictoryFireworks = spawnVictoryFireworks;
 
 
