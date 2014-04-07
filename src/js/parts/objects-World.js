@@ -39,7 +39,6 @@ var World = function() {
         //add current powerup
         if (type === PowerUp.types.ENLARGE) {
             this.paddle.enlarged = true;
-            if (settings.sounds) sounds.longship.play();
         } else if (type === PowerUp.types.LASER) {
             this.paddle.lazored = true;
         } else if (type === PowerUp.types.CATCH) {
@@ -164,6 +163,8 @@ var World = function() {
             this.balls[0].trail.reset();
             this.balls[0].trail.stoppedMovingDate = null;
             this.balls[0].trail.stoppedMovingPosition = null;
+
+            if (settings.sounds) sounds.release.play();
         }
     };
 
@@ -257,14 +258,14 @@ var World = function() {
         } else if (this._timePassed < 2300) {
             // [1000, 2300) falling bricks
             this.render = renderIntroFalling;
+
+            if (settings.music && music.levelStartMusic.pos() === 0) music.levelStartMusic.play();
         } else if (this._timePassed < 3000) {
             // [2300, 3000) paddle and balls fade in
         } else {
             // >3000 end of animation, transition to next state
             this.render = renderPlaying;
             this.update = updatePrePlaying;
-
-            if (settings.music) music.gameStartMusic.play();
         }
 
         // update paddle position (clamped)
@@ -396,9 +397,6 @@ var World = function() {
         if (this._breakableBricks.length === 0) {
             // turn off peggle effect
             settings.timeScale = 1;
-
-            // play victory sound
-            if (settings.sounds) sounds.levelCompleted.play();
 
             this._timePassed = 0;
             this.render = renderLevelCompleted;
@@ -684,13 +682,15 @@ var World = function() {
                             ball.center.y = this.paddle.center.y - this.paddle.halfSize.y - ball.radius;
                             ball.speed = 0;
                             this.paddle.ballIsStuck = true;
+
+                            if (settings.sounds) sounds.collect.play();
                         } else {
                             ball.trail.addVertex(ball.center);
 
                             Particle.spawn(this.particles, collisionPoint, new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, 3000, Particle.shapes.SMALL_RECTANGLE, this.paddle.color);
-                        }
 
-                        if (settings.sounds) sounds.release.play();
+                            if (settings.sounds) sounds.release.play();
+                        }
                     }
                 }
 
@@ -722,11 +722,19 @@ var World = function() {
                 this.ballSpeedMult = 1;
                 this.lazors = [];
                 this._timePassed = 0;
+
+                if (settings.sounds) {
+                    if (Math.random() < 0.5) {
+                        sounds.die.play();
+                    } else {
+                        sounds.die2.play();
+                    }
+                }
             } else {
                 currState = states.gameover;
-            }
 
-            if (settings.sounds) sounds.die.play();
+                if (settings.music) music.gameOverMusic.play();
+            }
         }
     };
 

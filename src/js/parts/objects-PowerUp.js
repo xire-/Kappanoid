@@ -15,6 +15,7 @@ var PowerUp = function() {
             color: 'blue',
             onActivate: function() {
                 world.changeTemporaryPowerup(PowerUp.types.ENLARGE);
+                if (settings.sounds) sounds.longship.play();
             }
         },
         CATCH: {
@@ -64,6 +65,7 @@ var PowerUp = function() {
                 } else {
                     world.paddle.life += 1;
                 }
+                if (settings.sounds) sounds.life.play();
             }
         },
     };

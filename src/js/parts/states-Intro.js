@@ -74,6 +74,9 @@ var IntroState = function() {
                 if (this._intro) {
                     this._intro = false;
                     this._timePassed = 0;
+
+                    // if the intro music is still playing, fade it out
+                    if (settings.music) music.introMusic.fadeOut(0, 1500);
                 }
                 // prevent space from scrolling the page
                 return false;
@@ -260,6 +263,8 @@ var IntroState = function() {
             ]
         ];
         this._selectedLogo = this.logos[randomInt(this.logos.length)];
+
+        if (settings.music) music.introMusic.play();
     };
 
     return constructor;
