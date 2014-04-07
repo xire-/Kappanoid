@@ -537,7 +537,7 @@ var World = function() {
         this.lazors.forEach(function(lazor) {
             // check and handle collisions with top border
             if (lazor.center.y < 0) {
-                Particle.spawn(this.particles, new Vector2(lazor.center.x, 0), new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.atan2(-1, 0), 0.7, 4, 3000, Particle.shapes.SMALL_RECTANGLE, this.bordersColor);
+                Particle.spawnCollisionEffect(this.particles, lazor.center.x, 0, 0, -1, this.bordersColor);
                 deadLazors.push(lazor);
             }
 
@@ -550,7 +550,7 @@ var World = function() {
                     // collision collision collision collision
                     hitBricks.push(brick);
                     deadLazors.push(lazor);
-                    Particle.spawn(this.particles, new Vector2(lazor.center.x, lazor.center.y), new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.atan2(-1, 0), 0.7, 4, 3000, Particle.shapes.SMALL_RECTANGLE, brick.color);
+                    Particle.spawnCollisionEffect(this.particles, lazor.center.x, lazor.center.y, 0, -1, brick.color);
                 }
             }, this);
         }, this);
@@ -578,8 +578,7 @@ var World = function() {
                 ball.direction.x *= -1;
 
                 ball.trail.addVertex(ball.center);
-
-                Particle.spawn(this.particles, new Vector2(0, ball.center.y), new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, 3000, Particle.shapes.SMALL_RECTANGLE, this.bordersColor);
+                Particle.spawnCollisionEffect(this.particles, 0, ball.center.y, ball.direction.x, ball.direction.y, this.bordersColor);
             }
             if (ball.center.y - ball.radius < 0) {
                 // shake screen before changing direction
@@ -590,7 +589,7 @@ var World = function() {
 
                 ball.trail.addVertex(ball.center);
 
-                Particle.spawn(this.particles, new Vector2(ball.center.x, 0), new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, 3000, Particle.shapes.SMALL_RECTANGLE, this.bordersColor);
+                Particle.spawnCollisionEffect(this.particles, ball.center.x, 0, ball.direction.x, ball.direction.y, this.bordersColor);
             }
             if (ball.center.x + ball.radius >= constants.worldRelativeWidth) {
                 // shake screen before changing direction
@@ -601,7 +600,7 @@ var World = function() {
 
                 ball.trail.addVertex(ball.center);
 
-                Particle.spawn(this.particles, ball.center, new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, 3000, Particle.shapes.SMALL_RECTANGLE, this.bordersColor);
+                Particle.spawnCollisionEffect(this.particles, 800, ball.center.y, ball.direction.x, ball.direction.y, this.bordersColor);
             }
         }, this);
     };
@@ -628,21 +627,18 @@ var World = function() {
 
                         if (xDir) {
                             ball.direction.x = -ball.direction.x;
-                            Particle.spawn(this.particles, collisionPoint, new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, 3000, Particle.shapes.SMALL_RECTANGLE, brick.color);
                         }
                         if (yDir) {
                             ball.direction.y = -ball.direction.y;
-                            Particle.spawn(this.particles, collisionPoint, new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, 3000, Particle.shapes.SMALL_RECTANGLE, brick.color);
                         }
                     } else {
                         if (xColl) {
                             ball.direction.x = -ball.direction.x;
-                            Particle.spawn(this.particles, collisionPoint, new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.PI - Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, 3000, Particle.shapes.SMALL_RECTANGLE, brick.color);
                         } else if (yColl) {
                             ball.direction.y = -ball.direction.y;
-                            Particle.spawn(this.particles, collisionPoint, new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, 3000, Particle.shapes.SMALL_RECTANGLE, brick.color);
                         }
                     }
+                    Particle.spawnCollisionEffect(this.particles, collisionPoint.x, collisionPoint.y, ball.direction.x, ball.direction.y, brick.color);
                     hitBricks.push(brick);
 
                     ball.trail.addVertex(ball.center);
@@ -686,7 +682,7 @@ var World = function() {
                         } else {
                             ball.trail.addVertex(ball.center);
 
-                            Particle.spawn(this.particles, collisionPoint, new Vector2(-randomInt(60, 110), -randomInt(80, 110)), -Math.atan2(ball.direction.y, ball.direction.x), 0.7, 4, 3000, Particle.shapes.SMALL_RECTANGLE, this.paddle.color);
+                            Particle.spawnCollisionEffect(this.particles, collisionPoint.x, collisionPoint.y, ball.direction.x, ball.direction.y, this.paddle.color);
                         }
 
                         if (settings.sounds) sounds.release.play();
@@ -765,7 +761,7 @@ var World = function() {
         this.shakeAmount = new Vector2(0, 0);
         this.shaker = new Shaker(this.shakeAmount);
         this._backgroundColor = constants.worldBackgroundColor;
-        this.bordersColor = constants.bordersColor;
+        this.bordersColor = undefined;
         this._canReleaseBalls = false;
         this._timePassed = 0;
         this._brickMillisOffset = 0;

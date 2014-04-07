@@ -94,13 +94,29 @@ var Particle = function() {
             }
 
             var hslColor = rgbToHsl(brick.color);
-            var color = {
-                h: hslColor.h,
-                s: hslColor.s,
-                l: hslColor.l + randomInt(-5, 6),
-            };
+            hslColor.l += randomInt(-10, 11);
 
-            container.push(new Particle(position, velocity, acceleration, life, shape, color));
+            container.push(new Particle(position, velocity, acceleration, life, shape, hslColor));
+        }
+    };
+
+    var spawnCollisionEffect = function(container, posX, posY, dirX, dirY, color) {
+        if (settings.particles === false) return;
+
+        for (var i = 0; i < 10; i++) {
+            var position = new Vector2(posX, posY);
+            var dir = Math.atan2(dirY, dirX) + randomFloat(-0.3, 0.3);
+            var spd = randomInt(200);
+            var velocity = new Vector2(Math.cos(dir) * spd, Math.sin(dir) * spd);
+            var acceleration = new Vector2(0, 110);
+            var life = 750 + randomInt(-100, 100);
+            var shape = i < 5 ? Particle.shapes.MEDIUM_RECTANGLE : Particle.shapes.SMALL_RECTANGLE;
+
+            var hslColor = rgbToHsl(color);
+            hslColor.l += randomInt(-10, 11);
+            var drag = 2;
+
+            container.push(new Particle(position, velocity, acceleration, life, shape, hslColor, undefined, drag));
         }
     };
 
@@ -255,6 +271,7 @@ var Particle = function() {
     constructor.spawn = spawn;
     constructor.spawnExplosion = spawnExplosion;
     constructor.spawnVictoryFireworks = spawnVictoryFireworks;
+    constructor.spawnCollisionEffect = spawnCollisionEffect;
 
 
     return constructor;
