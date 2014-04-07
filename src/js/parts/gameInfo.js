@@ -70,7 +70,7 @@ var GameInfo = function() {
             g: 255,
             b: 255,
         });
-        g.fillText('1337', 240, 35);
+        g.fillText(localStorage.highscore, 240, 35);
 
         var minutes = '00';
         var seconds = '00';
