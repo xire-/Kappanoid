@@ -734,6 +734,7 @@ var World = function() {
                 }
             } else {
                 currState = states.gameover;
+                localStorage.highscore = Math.max(localStorage.highscore, this.score);
 
                 if (settings.music) music.gameOverMusic.play();
             }

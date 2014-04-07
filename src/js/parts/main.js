@@ -126,6 +126,8 @@ var kappanoid = (function() {
         };
         currState = states.intro;
 
+        localStorage.highscore = localStorage.highscore || 0;
+
         initCanvas(width, height);
 
         gameInfo = new GameInfo(new Vector2(0, 0), new Vector2(constants.gameInfoRelativeWidth, constants.gameInfoRelativeHeight));
