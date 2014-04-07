@@ -72,38 +72,7 @@ var Particle = function() {
         }
     };
 
-    var spawnExplosion = function(container, position, baseColor) {
-        for (var i = 0; i < 20; i++) {
-            position = position.clone();
-
-            var angle = randomFloat(-Math.PI, Math.PI);
-            var velocity = new Vector2(randomInt(0, 100) * Math.cos(angle), randomInt(0, 100) * Math.sin(angle));
-
-            var acceleration = new Vector2(0, 110);
-
-            var life = 3000;
-
-            var shape;
-            if (i % 5 === 0) {
-                shape = Particle.shapes.BIG_RECTANGLE;
-            } else if (i % 2 === 0) {
-                shape = Particle.shapes.SMALL_RECTANGLE;
-            } else {
-                shape = Particle.shapes.MEDIUM_RECTANGLE;
-            }
-
-            var hslColor = rgbToHsl(baseColor);
-            var color = {
-                h: hslColor.h,
-                s: hslColor.s,
-                l: hslColor.l + randomInt(-5, 6),
-            };
-
-            container.push(new Particle(position, velocity, acceleration, life, shape, color));
-        }
-    };
-
-    var spawnExplosion2 = function(container, brick) {
+    var spawnExplosion = function(container, brick) {
         if (settings.particles === false) return;
 
         for (var i = 0; i < 50; i++) {
@@ -125,13 +94,29 @@ var Particle = function() {
             }
 
             var hslColor = rgbToHsl(brick.color);
-            var color = {
-                h: hslColor.h,
-                s: hslColor.s,
-                l: hslColor.l + randomInt(-5, 6),
-            };
+            hslColor.l += randomInt(-10, 11);
 
-            container.push(new Particle(position, velocity, acceleration, life, shape, color));
+            container.push(new Particle(position, velocity, acceleration, life, shape, hslColor));
+        }
+    };
+
+    var spawnCollisionEffect = function(container, posX, posY, dirX, dirY, color) {
+        if (settings.particles === false) return;
+
+        for (var i = 0; i < 10; i++) {
+            var position = new Vector2(posX, posY);
+            var dir = Math.atan2(dirY, dirX) + randomFloat(-0.3, 0.3);
+            var spd = randomInt(200);
+            var velocity = new Vector2(Math.cos(dir) * spd, Math.sin(dir) * spd);
+            var acceleration = new Vector2(0, 110);
+            var life = 750 + randomInt(-100, 100);
+            var shape = i < 5 ? Particle.shapes.MEDIUM_RECTANGLE : Particle.shapes.SMALL_RECTANGLE;
+
+            var hslColor = rgbToHsl(color);
+            hslColor.l += randomInt(-10, 11);
+            var drag = 2;
+
+            container.push(new Particle(position, velocity, acceleration, life, shape, hslColor, undefined, drag));
         }
     };
 
@@ -284,8 +269,9 @@ var Particle = function() {
 
     constructor.shapes = shapes;
     constructor.spawn = spawn;
-    constructor.spawnExplosion = spawnExplosion2;
+    constructor.spawnExplosion = spawnExplosion;
     constructor.spawnVictoryFireworks = spawnVictoryFireworks;
+    constructor.spawnCollisionEffect = spawnCollisionEffect;
 
 
     return constructor;

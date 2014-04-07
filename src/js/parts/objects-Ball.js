@@ -14,7 +14,7 @@ var Ball = function() {
         g.translate(this.center.x, this.center.y);
 
         if (world.paddle.ballIsStuck === false) {
-            g.rotate(-Math.atan2(this.direction.x, this.direction.y));
+            g.rotate(Math.atan2(this.direction.y, this.direction.x));
         }
 
         g.shadowOffsetX = 3;
