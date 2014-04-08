@@ -3,8 +3,8 @@ var World = function() {
     ///////// public methods
 
     var action = function() {
-        // if balls can be released, release them
-        releaseBalls.call(this);
+        // if the ball can be released, release it
+        releaseBall.call(this);
 
         // if lazors con be shooted, shoot them
         if (this.paddle.lazored) {
@@ -33,7 +33,7 @@ var World = function() {
         this.paddle.lazored = false;
         this.paddle.sticky = false;
         if (type !== PowerUp.types.CATCH) {
-            releaseBalls.call(this);
+            releaseBall.call(this);
         }
 
         //add current powerup
@@ -138,8 +138,8 @@ var World = function() {
     };
 
 
-    var releaseBalls = function() {
-        if (this._canReleaseBalls) {
+    var releaseBall = function() {
+        if (this._canReleaseBall) {
             this.balls.forEach(function(ball) {
                 ball.direction = new Vector2(randomFloat(-1, 1), -1);
                 ball.speed = 300;
@@ -155,7 +155,7 @@ var World = function() {
             }
 
             this.update = updatePlaying;
-            this._canReleaseBalls = false;
+            this._canReleaseBall = false;
         }
         if (this.paddle.ballIsStuck) {
             this.paddle.ballIsStuck = false;
@@ -312,7 +312,7 @@ var World = function() {
     };
 
     var updatePrePlaying = function(delta) {
-        this._canReleaseBalls = true;
+        this._canReleaseBall = true;
         this.shaker.update(delta);
 
         // update single components
@@ -778,7 +778,7 @@ var World = function() {
         this.shaker = new Shaker(this.shakeAmount);
         this._backgroundColor = constants.worldBackgroundColor;
         this.bordersColor = undefined;
-        this._canReleaseBalls = false;
+        this._canReleaseBall = false;
         this._timePassed = 0;
         this._brickMillisOffset = 0;
         this._currentLevel = 0;
