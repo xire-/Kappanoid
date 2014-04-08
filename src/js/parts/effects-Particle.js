@@ -42,7 +42,7 @@ var Particle = function() {
 
                 g.beginPath();
                 g.fillStyle = 'rgba(0, 0, 0, 0.5)';
-                g.arc(this.position.x + 1, this.position.y, 1+1, 0, 2 * Math.PI);
+                g.arc(this.position.x + 1, this.position.y, 1 + 1, 0, 2 * Math.PI);
                 g.fill();
                 g.closePath();
 
@@ -59,7 +59,7 @@ var Particle = function() {
 
                 g.beginPath();
                 g.fillStyle = 'rgba(0, 0, 0, 0.5)';
-                g.arc(this.position.x + 1, this.position.y+1, 2, 0, 2 * Math.PI);
+                g.arc(this.position.x + 1, this.position.y + 1, 2, 0, 2 * Math.PI);
                 g.fill();
                 g.closePath();
 
