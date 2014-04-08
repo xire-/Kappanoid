@@ -18,17 +18,26 @@ var World = function() {
 
         // if victory, load next level
         if (this.update === updateLevelCompleted) {
-            this._currentLevel = (this._currentLevel + 1) % levels.length;
-            this.reset(false);
+            if (this._currentLevel === levels.length - 1) {
+                // no more levels, grats!
+                currState = states.gameover;
+                localStorage.highscore = Math.max(localStorage.highscore, this.score);
 
-            this._timePassed = 1000;
-            this.render = renderIntroFalling;
-            this.update = updateIntro;
+                if (settings.music) music.gameOverMusic.play();
+            } else {
+                this._currentLevel++;
+
+                this.reset(false);
+
+                this._timePassed = 1000;
+                this.render = renderIntroFalling;
+                this.update = updateIntro;
+            }
         }
     };
 
     var changeTemporaryPowerup = function(type) {
-        //remove all temporary powerups
+        // remove all temporary powerups
         this.paddle.enlarged = false;
         this.paddle.lazored = false;
         this.paddle.sticky = false;
@@ -36,7 +45,7 @@ var World = function() {
             releaseBall.call(this);
         }
 
-        //add current powerup
+        // add current powerup
         if (type === PowerUp.types.ENLARGE) {
             this.paddle.enlarged = true;
         } else if (type === PowerUp.types.LASER) {
@@ -447,6 +456,18 @@ var World = function() {
         });
 
         this.paddle.update(delta);
+
+        var steps = 10;
+        for (var i = 0; i < steps; i++) {
+            for (var j = this.balls.length - 1; j >= 0; j--) {
+                this.balls[j].update(delta / steps);
+            }
+            for (j = this.lazors.length - 1; j >= 0; j--) {
+                this.lazors[j].update(delta / steps);
+            }
+
+            handleBallBordersCollisions.call(this);
+        }
 
         // bring balls along
         this.balls.forEach(function(ball) {
