@@ -37,13 +37,15 @@ var GameOverState = function() {
     };
 
     var keyPress = function(e) {
+        keyPressToggleSettings(e);
+
         switch (e.keyCode) {
             case 32: // SPACE
                 //world.releaseBalls();
                 // prevent space from scrolling the page
                 return false;
+
             default:
-                // alert(e.keyCode);
                 break;
         }
     };

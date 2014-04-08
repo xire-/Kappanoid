@@ -105,3 +105,64 @@ var getColorString = function(color) {
         return 'hsla(' + h + ', ' + s + '%, ' + l + '%, ' + a + ')';
     }
 };
+
+/*
+ * common keycode checks needed in all game states
+ */
+var keyPressToggleSettings = function(e) {
+    switch (e.keyCode) {
+        case 48: // 0
+            settings.colors = true;
+            settings.particles = true;
+            settings.sounds = true;
+            settings.music = true;
+
+            world.balls.forEach(function(ball) {
+                ball.trail.reset();
+            });
+            settings.ballTrail = true;
+
+            settings.lastBrickSlowMo = true;
+            settings.paddleSpeedDistortion = true;
+
+            settings.worldShake = true;
+            world.shaker.enabled = settings.worldShake;
+            break;
+        case 49: // 1
+            settings.colors = !settings.colors;
+            break;
+        case 50: // 2
+            settings.particles = !settings.particles;
+            break;
+        case 51: // 3
+            settings.sounds = !settings.sounds;
+            break;
+        case 52: // 4
+            settings.music = !settings.music;
+            break;
+        case 53: // 5
+            if (!settings.ballTrail) {
+                world.balls.forEach(function(ball) {
+                    ball.trail.reset();
+                });
+            }
+            settings.ballTrail = !settings.ballTrail;
+            break;
+        case 54: // 6
+            settings.lastBrickSlowMo = !settings.lastBrickSlowMo;
+            break;
+        case 55: // 7
+            settings.paddleSpeedDistortion = !settings.paddleSpeedDistortion;
+            break;
+        case 56: // 8
+            settings.worldShake = !settings.worldShake;
+            world.shaker.enabled = settings.worldShake;
+            break;
+        case 57: // 9
+            break;
+
+        case 100: // D
+            gameInfo.showDebugInfo = !gameInfo.showDebugInfo;
+            break;
+    }
+};

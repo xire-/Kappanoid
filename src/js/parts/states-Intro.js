@@ -69,6 +69,8 @@ var IntroState = function() {
     };
 
     var keyPress = function(e) {
+        keyPressToggleSettings(e);
+
         switch (e.keyCode) {
             case 32: // SPACE
                 if (this._intro) {
@@ -80,10 +82,6 @@ var IntroState = function() {
                 }
                 // prevent space from scrolling the page
                 return false;
-
-            case 100: // D
-                gameInfo.showDebugInfo = !gameInfo.showDebugInfo;
-                break;
 
             default:
                 break;
