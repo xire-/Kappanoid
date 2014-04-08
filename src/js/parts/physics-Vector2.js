@@ -9,8 +9,7 @@ var Vector2 = function() {
     ///////// public methods
 
     var set = function(vector) {
-        console.assert(vector instanceof Vector2, vector);
-
+        console.assert(isInstanceOf(vector, Vector2), vector);
         this.x = vector.x;
         this.y = vector.y;
         return this;
@@ -18,16 +17,14 @@ var Vector2 = function() {
 
 
     var add = function(vector) {
-        console.assert(vector instanceof Vector2, vector);
-
+        console.assert(isInstanceOf(vector, Vector2), vector);
         this.x += vector.x;
         this.y += vector.y;
         return this;
     };
 
     var sub = function(vector) {
-        console.assert(vector instanceof Vector2, vector);
-
+        console.assert(isInstanceOf(vector, Vector2), vector);
         this.x -= vector.x;
         this.y -= vector.y;
         return this;
@@ -40,8 +37,7 @@ var Vector2 = function() {
     };
 
     var dot = function(vector) {
-        console.assert(vector instanceof Vector2, vector);
-
+        console.assert(isInstanceOf(vector, Vector2), vector);
         return this.x * vector.x + this.y * vector.y;
     };
 
@@ -50,14 +46,12 @@ var Vector2 = function() {
         var scale = this.length();
         this.x /= scale;
         this.y /= scale;
-
         console.assert(this.length() === 1, this.length());
         return this;
     };
 
     var distance = function(vector) {
-        console.assert(vector instanceof Vector2, vector);
-
+        console.assert(isInstanceOf(vector, Vector2), vector);
         return Math.sqrt((this.x - vector.x) * (this.x - vector.x) + (this.y - vector.y) * (this.y - vector.y));
     };
 
@@ -91,7 +85,7 @@ var Vector2 = function() {
 
     constructor.prototype = {
         set x(value) {
-            console.assert(value !== undefined && typeof value == 'number', JSON.stringify(value));
+            console.assert(isTypeOf(value, 'number'), JSON.stringify(value));
             this._x = value;
         },
         get x() {
@@ -99,7 +93,7 @@ var Vector2 = function() {
         },
 
         set y(value) {
-            console.assert(value !== undefined && typeof value == 'number', JSON.stringify(value));
+            console.assert(isTypeOf(value, 'number'), JSON.stringify(value));
             this._y = value;
         },
         get y() {

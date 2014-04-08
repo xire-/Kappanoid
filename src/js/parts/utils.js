@@ -1,3 +1,11 @@
+var isTypeOf = function(value, type) {
+    return value !== undefined && typeof value === type;
+};
+
+var isInstanceOf = function(value, instance) {
+    return value !== undefined && value instanceof instance;
+};
+
 var isColor = function(value) {
     return value !== undefined && ((value.r !== undefined && value.g !== undefined && value.b !== undefined) || (value.h !== undefined && value.s !== undefined && value.l !== undefined));
 };

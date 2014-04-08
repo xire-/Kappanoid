@@ -212,6 +212,10 @@ var kappanoid = (function() {
     };
 
 
+    /////////////////////////////////// Utils
+    // __import__ utils.js
+
+
     /////////////////////////////////// Game States
     // __import__ states.js
 
@@ -234,10 +238,6 @@ var kappanoid = (function() {
 
     /////////////////////////////////// Physics
     // __import__ physics.js
-
-
-    /////////////////////////////////// Utils
-    // __import__ utils.js
 
 
     return {
