@@ -36,6 +36,40 @@ var Particle = function() {
                 g.fillRect(this.position.x - 4, this.position.y - 4, 8, 8);
             }
         },
+        SMALL_CIRCLE: {
+            render: function() {
+                g.globalAlpha = easing.easeInQuart(this._initialLife - this.life, 1, -1, this._initialLife);
+
+                g.beginPath();
+                g.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                g.arc(this.position.x + 1, this.position.y, 1+1, 0, 2 * Math.PI);
+                g.fill();
+                g.closePath();
+
+                g.beginPath();
+                g.fillStyle = settings.colors ? getColorString(this.color) : 'white';
+                g.arc(this.position.x, this.position.y, 1, 0, 2 * Math.PI);
+                g.fill();
+                g.closePath();
+            }
+        },
+        MEDIUM_CIRCLE: {
+            render: function() {
+                g.globalAlpha = easing.easeInQuart(this._initialLife - this.life, 1, -1, this._initialLife);
+
+                g.beginPath();
+                g.fillStyle = 'rgba(0, 0, 0, 0.5)';
+                g.arc(this.position.x + 1, this.position.y+1, 2, 0, 2 * Math.PI);
+                g.fill();
+                g.closePath();
+
+                g.beginPath();
+                g.fillStyle = settings.colors ? getColorString(this.color) : 'white';
+                g.arc(this.position.x, this.position.y, 2, 0, 2 * Math.PI);
+                g.fill();
+                g.closePath();
+            }
+        },
         FIREWORK: {
             render: function() {
                 g.fillStyle = 'rgba(0, 0, 0, 0.5)';
@@ -130,7 +164,7 @@ var Particle = function() {
                 var velocity = new Vector2(randomInt(200) * Math.sin(angle), randomInt(200) * Math.cos(angle));
                 var acceleration = new Vector2(0, 110);
                 var life = 1500 + randomInt(-200, 200);
-                var shape = Particle.shapes.BIG_RECTANGLE;
+                var shape = i % 2 === 0 ? Particle.shapes.MEDIUM_CIRCLE : Particle.shapes.SMALL_CIRCLE;
                 var color = {
                     h: parent.color.h,
                     s: parent.color.s,
