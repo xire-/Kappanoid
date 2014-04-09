@@ -457,18 +457,6 @@ var World = function() {
 
         this.paddle.update(delta);
 
-        var steps = 10;
-        for (var i = 0; i < steps; i++) {
-            for (var j = this.balls.length - 1; j >= 0; j--) {
-                this.balls[j].update(delta / steps);
-            }
-            for (j = this.lazors.length - 1; j >= 0; j--) {
-                this.lazors[j].update(delta / steps);
-            }
-
-            handleBallBordersCollisions.call(this);
-        }
-
         // bring balls along
         this.balls.forEach(function(ball) {
             ball.center.x = this.paddle.center.x;
