@@ -32,17 +32,18 @@ var GameOverState = function() {
         g.restore();
     };
 
-    var updateDestroyEverything = function( /*delta*/ ) {
-        ///world.update(delta);
-    };
+    var updateDestroyEverything = function( /*delta*/ ) {};
 
     var keyPress = function(e) {
         keyPressToggleSettings(e);
 
         switch (e.keyCode) {
             case 32: // SPACE
-                //world.releaseBalls();
-                // prevent space from scrolling the page
+                states.intro = new IntroState();
+                states.playing = new PlayingState();
+                currState = states.intro;
+
+                world = new World(new Vector2(constants.bordersRelativeThickness, constants.gameInfoRelativeHeight + constants.bordersRelativeThickness), new Vector2(constants.worldRelativeWidth, constants.worldRelativeHeight));
                 return false;
 
             default:
