@@ -5,7 +5,7 @@ var Lazor = function() {
     var render = function() {
         g.save();
         g.translate(this.center.x, this.center.y);
-        g.fillStyle = settings.colors ? '#FF0000' : '#FFFFFF';
+        g.fillStyle = settings.colors ? 'rgba(255, 0, 0, 1)' : 'rgba(255, 255, 255, 1)';
         g.fillRect(-1, 0, 2, 7);
         g.restore();
     };

@@ -6,7 +6,7 @@ var GameOverState = function() {
         g.save();
 
         // clear the previous frame
-        g.fillStyle = '#000000';
+        g.fillStyle = 'rgba(0, 0, 0, 1)';
         g.fillRect(0, 0, constants.canvasRelativeWidth, constants.canvasRelativeHeight);
         // render the game world
         world.render();
@@ -16,17 +16,9 @@ var GameOverState = function() {
         g.textAlign = 'center';
         g.textBaseline = 'middle';
 
-        g.fillStyle = getColorString({
-            r: 255,
-            g: 255,
-            b: 255,
-        });
+        g.fillStyle = 'rgba(255, 255, 255, 1)';
         g.fillText('GAME OVER', constants.worldRelativeWidth / 2, constants.worldRelativeHeight / 2);
-        g.strokeStyle = getColorString({
-            r: 0,
-            g: 0,
-            b: 0,
-        });
+        g.strokeStyle = 'rgb(0, 0, 0)';
         g.strokeText('GAME OVER', constants.worldRelativeWidth / 2, constants.worldRelativeHeight / 2);
 
         g.restore();

@@ -8,7 +8,7 @@ var Particle = function() {
                 //g.globalAlpha = this.life / this._initialLife;
                 g.globalAlpha = easing.easeInQuart(this._initialLife - this.life, 1, -1, this._initialLife);
 
-                g.fillStyle = settings.colors ? getColorString(this.color) : 'white';
+                g.fillStyle = settings.colors ? getColorString(this.color) : 'rgba(255, 255, 255, 1)';
                 g.fillRect(this.position.x - 1, this.position.y - 1, 2, 2);
             }
         },
@@ -20,7 +20,7 @@ var Particle = function() {
                 g.fillStyle = 'rgba(0, 0, 0, 0.5)';
                 g.fillRect(this.position.x - 1, this.position.y - 1, 4, 4);
 
-                g.fillStyle = settings.colors ? getColorString(this.color) : 'white';
+                g.fillStyle = settings.colors ? getColorString(this.color) : 'rgba(255, 255, 255, 1)';
                 g.fillRect(this.position.x - 2, this.position.y - 2, 4, 4);
             }
         },
@@ -32,7 +32,7 @@ var Particle = function() {
                 g.fillStyle = 'rgba(0, 0, 0, 0.5)';
                 g.fillRect(this.position.x - 3, this.position.y - 3, 8, 8);
 
-                g.fillStyle = settings.colors ? getColorString(this.color) : 'white';
+                g.fillStyle = settings.colors ? getColorString(this.color) : 'rgba(255, 255, 255, 1)';
                 g.fillRect(this.position.x - 4, this.position.y - 4, 8, 8);
             }
         },
@@ -47,7 +47,7 @@ var Particle = function() {
                 g.closePath();
 
                 g.beginPath();
-                g.fillStyle = settings.colors ? getColorString(this.color) : 'white';
+                g.fillStyle = settings.colors ? getColorString(this.color) : 'rgba(255, 255, 255, 1)';
                 g.arc(this.position.x, this.position.y, 1, 0, 2 * Math.PI);
                 g.fill();
                 g.closePath();
@@ -64,7 +64,7 @@ var Particle = function() {
                 g.closePath();
 
                 g.beginPath();
-                g.fillStyle = settings.colors ? getColorString(this.color) : 'white';
+                g.fillStyle = settings.colors ? getColorString(this.color) : 'rgba(255, 255, 255, 1)';
                 g.arc(this.position.x, this.position.y, 2, 0, 2 * Math.PI);
                 g.fill();
                 g.closePath();
@@ -75,7 +75,7 @@ var Particle = function() {
                 g.fillStyle = 'rgba(0, 0, 0, 0.5)';
                 g.fillRect(this.position.x - 1, this.position.y - 1, 4, 4);
 
-                g.fillStyle = settings.colors ? getColorString(this.color) : 'white';
+                g.fillStyle = settings.colors ? getColorString(this.color) : 'rgba(255, 255, 255, 1)';
                 g.fillRect(this.position.x - 2, this.position.y - 2, 4, 4);
             }
         },

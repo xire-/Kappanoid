@@ -25,11 +25,7 @@ var Paddle = function() {
         g.shadowOffsetX = 3;
         g.shadowOffsetY = 3;
 
-        g.fillStyle = settings.colors ? getColorString(this.color) : getColorString({
-            r: 255,
-            g: 255,
-            b: 255
-        });
+        g.fillStyle = settings.colors ? getColorString(this.color) : 'rgba(255, 255, 255, 1)';
         g.fillRect(-this.halfSize.x, -this.halfSize.y, this.halfSize.x * 2, this.halfSize.y * 2);
         g.restore();
 

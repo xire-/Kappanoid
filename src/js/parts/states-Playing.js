@@ -6,7 +6,7 @@ var PlayingState = function() {
         g.save();
 
         // clear the previous frame
-        g.fillStyle = '#000000';
+        g.fillStyle = 'rgba(0, 0, 0, 1)';
         g.fillRect(0, 0, constants.canvasRelativeWidth, constants.canvasRelativeHeight);
 
         // render the game world

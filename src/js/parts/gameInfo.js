@@ -32,7 +32,7 @@ var GameInfo = function() {
 
     var drawDebugInfo = function(delta) {
         g.textBaseline = 'top';
-        g.fillStyle = '#FFFFFF';
+        g.fillStyle = 'rgba(255, 255, 255, 1)';
 
         g.fillText('FPS: ' + currentFPS.toFixed(1), 5, 5);
         g.fillText('DELTA: ' + delta.toFixed(1), 5, 15);
@@ -41,23 +41,23 @@ var GameInfo = function() {
         g.fillText('SPEED MULT: ' + world.ballSpeedMult.toFixed(3), 5, 45);
 
 
-        g.fillStyle = settings.colors ? '#00FF00' : '#FF0000';
+        g.fillStyle = settings.colors ? 'rgba(0, 255, 0, 1)' : 'rgba(255, 0, 0, 1)';
         g.fillText('1. COLORS', 120, 10);
-        g.fillStyle = settings.particles ? '#00FF00' : '#FF0000';
+        g.fillStyle = settings.particles ? 'rgba(0, 255, 0, 1)' : 'rgba(255, 0, 0, 1)';
         g.fillText('2. PARTICLES', 120, 20);
-        g.fillStyle = settings.sounds ? '#00FF00' : '#FF0000';
+        g.fillStyle = settings.sounds ? 'rgba(0, 255, 0, 1)' : 'rgba(255, 0, 0, 1)';
         g.fillText('3. SOUNDS', 120, 30);
-        g.fillStyle = settings.music ? '#00FF00' : '#FF0000';
+        g.fillStyle = settings.music ? 'rgba(0, 255, 0, 1)' : 'rgba(255, 0, 0, 1)';
         g.fillText('4. MUSIC', 120, 40);
 
 
-        g.fillStyle = settings.ballTrail ? '#00FF00' : '#FF0000';
+        g.fillStyle = settings.ballTrail ? 'rgba(0, 255, 0, 1)' : 'rgba(255, 0, 0, 1)';
         g.fillText('5. BALL TRAIL', 225, 10);
-        g.fillStyle = settings.lastBrickSlowMo ? '#00FF00' : '#FF0000';
+        g.fillStyle = settings.lastBrickSlowMo ? 'rgba(0, 255, 0, 1)' : 'rgba(255, 0, 0, 1)';
         g.fillText('6. LAST BRICK SLOW MO', 225, 20);
-        g.fillStyle = settings.paddleSpeedDistortion ? '#00FF00' : '#FF0000';
+        g.fillStyle = settings.paddleSpeedDistortion ? 'rgba(0, 255, 0, 1)' : 'rgba(255, 0, 0, 1)';
         g.fillText('7. PADDLE SPEED DISTORTION', 225, 30);
-        g.fillStyle = settings.worldShake ? '#00FF00' : '#FF0000';
+        g.fillStyle = settings.worldShake ? 'rgba(0, 255, 0, 1)' : 'rgba(255, 0, 0, 1)';
         g.fillText('8. WORLD SHAKE', 225, 40);
     };
 
@@ -66,11 +66,7 @@ var GameInfo = function() {
         g.textAlign = 'center';
         g.textBaseline = 'top';
 
-        g.fillStyle = settings.colors ? getColorString(this._text1Color) : getColorString({
-            r: 255,
-            g: 255,
-            b: 255,
-        });
+        g.fillStyle = settings.colors ? getColorString(this._text1Color) : 'rgba(255, 255, 255, 1)';
         g.fillText('HIGH SCORE', 240, 10);
         g.fillText('CURRENT', 575, 10);
 

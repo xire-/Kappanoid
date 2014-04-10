@@ -6,7 +6,7 @@ var IntroState = function() {
         g.save();
 
         // clear the previous frame
-        g.fillStyle = '#000000';
+        g.fillStyle = 'rgb(0, 0, 0)';
         g.fillRect(0, 0, constants.canvasRelativeWidth, constants.canvasRelativeHeight);
 
         if (this._intro) {
@@ -36,7 +36,7 @@ var IntroState = function() {
         g.textAlign = 'center';
         g.textBaseline = 'middle';
         g.font = '15px monospace';
-        g.fillStyle = '#FFFFFF';
+        g.fillStyle = 'rgb(255, 255, 255)';
         for (var i = 0; i < this._selectedLogo.length; i++) {
             g.fillText(this._selectedLogo[i], 0, y);
             y += logoLineHeight;
@@ -46,7 +46,7 @@ var IntroState = function() {
         y += logoToInsertCoinDistance;
         if (this._timePassed % 2000 < 1500) {
             g.font = '10px emulogic';
-            g.fillStyle = '#FFFFFF';
+            g.fillStyle = 'rgb(255, 255, 255)';
             g.fillText('INSERT COIN TO CONTINUE', 0, y);
         }
         y += insertCoinLineHeight;
@@ -93,19 +93,19 @@ var IntroState = function() {
     var drawCredits = function(timePassed, lineHeight, y) {
         var offset = (timePassed / 3) % 500;
         var gradient = g.createLinearGradient(-offset, 0, 1000 - offset, 0);
-        gradient.addColorStop(0 / 12, '#f00');
-        gradient.addColorStop(1 / 12, '#ff0');
-        gradient.addColorStop(2 / 12, '#0f0');
-        gradient.addColorStop(3 / 12, '#0ff');
-        gradient.addColorStop(4 / 12, '#00f');
-        gradient.addColorStop(5 / 12, '#f0f');
-        gradient.addColorStop(6 / 12, '#f00');
-        gradient.addColorStop(7 / 12, '#ff0');
-        gradient.addColorStop(8 / 12, '#0f0');
-        gradient.addColorStop(9 / 12, '#0ff');
-        gradient.addColorStop(10 / 12, '#00f');
-        gradient.addColorStop(11 / 12, '#f0f');
-        gradient.addColorStop(12 / 12, '#f00');
+        gradient.addColorStop(0 / 12, 'rgba(255, 0, 0, 1)');
+        gradient.addColorStop(1 / 12, 'rgba(255, 255, 0, 1)');
+        gradient.addColorStop(2 / 12, 'rgba(0, 255, 0, 1)');
+        gradient.addColorStop(3 / 12, 'rgba(0, 255, 255, 1)');
+        gradient.addColorStop(4 / 12, 'rgba(0, 0, 255, 1)');
+        gradient.addColorStop(5 / 12, 'rgba(255, 0, 255, 1)');
+        gradient.addColorStop(6 / 12, 'rgba(255, 0, 0, 1)');
+        gradient.addColorStop(7 / 12, 'rgba(255, 255, 0, 1)');
+        gradient.addColorStop(8 / 12, 'rgba(0, 255, 0, 1)');
+        gradient.addColorStop(9 / 12, 'rgba(0, 255, 255, 1)');
+        gradient.addColorStop(10 / 12, 'rgba(0, 0, 255, 1)');
+        gradient.addColorStop(11 / 12, 'rgba(255, 0, 255, 1)');
+        gradient.addColorStop(12 / 12, 'rgba(255, 0, 0, 1)');
 
         g.font = '15px monospace';
         g.fillStyle = gradient;

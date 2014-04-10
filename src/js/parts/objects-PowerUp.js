@@ -100,7 +100,7 @@ var PowerUp = function() {
 
         if (settings.colors) {
             g.shadowBlur = 3;
-            g.shadowColor = 'black';
+            g.shadowColor = 'rgb(0, 0, 0)';
             g.shadowOffsetX = 3;
             g.shadowOffsetY = 3;
         }
@@ -138,19 +138,11 @@ var PowerUp = function() {
             g: 255,
             b: 102,
         });
-        g.fillStyle = settings.colors ? charcolor : getColorString({
-            r: 0,
-            g: 0,
-            b: 0,
-        });
+        g.fillStyle = settings.colors ? charcolor : 'rgba(0, 0, 0, 1)';
         g.fillText(this.character, 0, 0);
 
         if (settings.colors) {
-            g.strokeStyle = settings.colors ? charcolor : getColorString({
-                r: 0,
-                g: 0,
-                b: 0,
-            });
+            g.strokeStyle = settings.colors ? charcolor : 'rgba(0, 0, 0, 1)';
             g.strokeText(this.character, 0, 0);
         }
 
