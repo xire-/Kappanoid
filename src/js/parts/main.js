@@ -4,7 +4,7 @@
  */
 
 /*jslint browser: true, devel: true, multistr: true */
-/*global $, Howl*/
+/*global Howl*/
 
 var kappanoid = (function() {
     'use strict';
@@ -141,7 +141,7 @@ var kappanoid = (function() {
         width = width || constants.canvasRelativeWidth;
         height = height || constants.canvasRelativeHeight;
 
-        var canvas = $('#gameCanvas')[0];
+        var canvas = document.getElementById('gameCanvas');
         var scaleFactor = Math.min(width / constants.canvasRelativeWidth, height / constants.canvasRelativeHeight);
 
         canvas.width = constants.canvasRelativeWidth * scaleFactor;
@@ -248,7 +248,8 @@ var kappanoid = (function() {
     };
 }());
 
-$(document).ready(function() {
+
+window.onload = function() {
     'use strict';
     kappanoid.init();
-});
+};
