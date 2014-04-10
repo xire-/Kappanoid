@@ -120,7 +120,7 @@ var GameInfo = function() {
 
     constructor.prototype = {
         set containerOffset(value) {
-            console.assert(value !== undefined && value instanceof Vector2, JSON.stringify(value));
+            console.assert(isInstanceOf(value, Vector2), JSON.stringify(value));
             this._containerOffset = value;
         },
         get containerOffset() {
@@ -128,7 +128,7 @@ var GameInfo = function() {
         },
 
         set containerSize(value) {
-            console.assert(value !== undefined && value instanceof Vector2, JSON.stringify(value));
+            console.assert(isInstanceOf(value, Vector2), JSON.stringify(value));
             this._containerSize = value;
         },
         get containerSize() {
@@ -136,7 +136,7 @@ var GameInfo = function() {
         },
 
         set showDebugInfo(value) {
-            console.assert(value !== undefined && typeof value == 'boolean', JSON.stringify(value));
+            console.assert(isTypeOf(value, 'boolean'), JSON.stringify(value));
             this._showDebugInfo = value;
         },
         get showDebugInfo() {

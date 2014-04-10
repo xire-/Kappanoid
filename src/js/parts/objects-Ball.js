@@ -59,7 +59,7 @@ var Ball = function() {
 
     constructor.prototype = {
         set center(value) {
-            console.assert(value !== undefined && value instanceof Vector2, JSON.stringify(value));
+            console.assert(isInstanceOf(value, Vector2), JSON.stringify(value));
             this._center = value;
         },
         get center() {
@@ -67,7 +67,7 @@ var Ball = function() {
         },
 
         set radius(value) {
-            console.assert(value !== undefined && typeof value == 'number', JSON.stringify(value));
+            console.assert(isTypeOf(value, 'number'), JSON.stringify(value));
             this._radius = value;
         },
         get radius() {
@@ -75,7 +75,7 @@ var Ball = function() {
         },
 
         set speed(value) {
-            console.assert(value !== undefined && typeof value == 'number', JSON.stringify(value));
+            console.assert(isTypeOf(value, 'number'), JSON.stringify(value));
             this._speed = value;
         },
         get speed() {
@@ -83,7 +83,7 @@ var Ball = function() {
         },
 
         set direction(value) {
-            console.assert(value !== undefined && value instanceof Vector2, JSON.stringify(value));
+            console.assert(isInstanceOf(value, Vector2), JSON.stringify(value));
             this._direction = value.normalize();
         },
         get direction() {

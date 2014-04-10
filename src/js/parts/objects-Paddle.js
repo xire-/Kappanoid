@@ -81,7 +81,7 @@ var Paddle = function() {
 
     constructor.prototype = {
         set center(value) {
-            console.assert(value !== undefined && value instanceof Vector2, JSON.stringify(value));
+            console.assert(isInstanceOf(value, Vector2), JSON.stringify(value));
             this._center = value;
         },
         get center() {
@@ -89,7 +89,7 @@ var Paddle = function() {
         },
 
         set halfSize(value) {
-            console.assert(value !== undefined && value instanceof Vector2, JSON.stringify(value));
+            console.assert(isInstanceOf(value, Vector2), JSON.stringify(value));
             this._halfSize = value;
         },
         get halfSize() {
@@ -97,7 +97,7 @@ var Paddle = function() {
         },
 
         set life(value) {
-            console.assert(value !== undefined && typeof value == 'number', JSON.stringify(value));
+            console.assert(isTypeOf(value, 'number'), JSON.stringify(value));
             this._life = Math.min(value, 10);
         },
         get life() {

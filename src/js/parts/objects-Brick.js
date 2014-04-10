@@ -165,7 +165,7 @@ var Brick = function() {
 
     constructor.prototype = {
         set center(value) {
-            console.assert(value !== undefined && value instanceof Vector2, JSON.stringify(value));
+            console.assert(isInstanceOf(value, Vector2), JSON.stringify(value));
             this._center = value;
         },
         get center() {
@@ -173,7 +173,7 @@ var Brick = function() {
         },
 
         set halfSize(value) {
-            console.assert(value !== undefined && value instanceof Vector2, JSON.stringify(value));
+            console.assert(isInstanceOf(value, Vector2), JSON.stringify(value));
             this._halfSize = value;
         },
         get halfSize() {
@@ -181,7 +181,7 @@ var Brick = function() {
         },
 
         set life(value) {
-            console.assert(value !== undefined && typeof value == 'number', JSON.stringify(value));
+            console.assert(isTypeOf(value, 'number'), JSON.stringify(value));
             this._life = value;
         },
         get life() {
@@ -189,7 +189,7 @@ var Brick = function() {
         },
 
         set color(value) {
-            console.assert(value !== undefined && value.r !== undefined && value.g !== undefined && value.b !== undefined, JSON.stringify(value));
+            console.assert(isColor(value), JSON.stringify(value));
             this._color = value;
         },
         get color() {
@@ -197,7 +197,7 @@ var Brick = function() {
         },
 
         set value(v) {
-            console.assert(v !== undefined && typeof v == 'number', JSON.stringify(v));
+            console.assert(isTypeOf(v, 'number'), JSON.stringify(v));
             this._value = v;
         },
         get value() {

@@ -28,7 +28,7 @@ var Lazor = function() {
 
     constructor.prototype = {
         set center(value) {
-            console.assert(value !== undefined && value instanceof Vector2, JSON.stringify(value));
+            console.assert(isInstanceOf(value, Vector2), JSON.stringify(value));
             this._center = value;
         },
         get center() {

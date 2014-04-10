@@ -179,7 +179,7 @@ var PowerUp = function() {
 
     constructor.prototype = {
         set center(value) {
-            console.assert(value !== undefined && value instanceof Vector2, JSON.stringify(value));
+            console.assert(isInstanceOf(value, Vector2), JSON.stringify(value));
             this._center = value;
         },
         get center() {
@@ -187,7 +187,7 @@ var PowerUp = function() {
         },
 
         set halfSize(value) {
-            console.assert(value !== undefined && value instanceof Vector2, JSON.stringify(value));
+            console.assert(isInstanceOf(value, Vector2), JSON.stringify(value));
             this._halfSize = value;
         },
         get halfSize() {

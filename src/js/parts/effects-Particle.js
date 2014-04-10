@@ -253,7 +253,7 @@ var Particle = function() {
 
     constructor.prototype = {
         set position(value) {
-            console.assert(value !== undefined && value instanceof Vector2, JSON.stringify(value));
+            console.assert(isInstanceOf(value, Vector2), JSON.stringify(value));
             this._position = value;
         },
         get position() {
@@ -261,7 +261,7 @@ var Particle = function() {
         },
 
         set velocity(value) {
-            console.assert(value !== undefined && value instanceof Vector2, JSON.stringify(value));
+            console.assert(isInstanceOf(value, Vector2), JSON.stringify(value));
             this._velocity = value;
         },
         get velocity() {
@@ -269,7 +269,7 @@ var Particle = function() {
         },
 
         set acceleration(value) {
-            console.assert(value !== undefined && value instanceof Vector2, JSON.stringify(value));
+            console.assert(isInstanceOf(value, Vector2), JSON.stringify(value));
             this._acceleration = value;
         },
         get acceleration() {
@@ -277,7 +277,7 @@ var Particle = function() {
         },
 
         set life(value) {
-            console.assert(value !== undefined && typeof value == 'number', JSON.stringify(value));
+            console.assert(isTypeOf(value, 'number'), JSON.stringify(value));
             this._life = value;
         },
         get life() {

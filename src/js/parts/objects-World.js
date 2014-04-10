@@ -800,7 +800,7 @@ var World = function() {
 
     constructor.prototype = {
         set containerOffset(value) {
-            console.assert(value !== undefined && value instanceof Vector2, JSON.stringify(value));
+            console.assert(isInstanceOf(value, Vector2), JSON.stringify(value));
             this._containerOffset = value;
         },
         get containerOffset() {
@@ -808,7 +808,7 @@ var World = function() {
         },
 
         set containerSize(value) {
-            console.assert(value !== undefined && value instanceof Vector2, JSON.stringify(value));
+            console.assert(isInstanceOf(value, Vector2), JSON.stringify(value));
             this._containerSize = value;
         },
         get containerSize() {
