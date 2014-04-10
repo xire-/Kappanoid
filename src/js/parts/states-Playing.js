@@ -46,7 +46,7 @@ var PlayingState = function() {
                 break;
 
             case 108: // L
-                Particle.spawnVictoryFireworks(world.particles);
+                if (settings.particles) Particle.spawnVictoryFireworks(world.particles);
                 break;
 
             case 32: // SPACE

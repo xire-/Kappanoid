@@ -1,11 +1,10 @@
 var Particle = function() {
 
-    ///////// public static methods / variables
+    ///////// public static variables / methods
 
     var shapes = {
         SMALL_RECTANGLE: {
             render: function() {
-                //g.globalAlpha = this.life / this._initialLife;
                 g.globalAlpha = easing.easeInQuart(this._initialLife - this.life, 1, -1, this._initialLife);
 
                 g.fillStyle = settings.colors ? getColorString(this.color) : 'rgba(255, 255, 255, 1)';
@@ -14,7 +13,6 @@ var Particle = function() {
         },
         MEDIUM_RECTANGLE: {
             render: function() {
-                //g.globalAlpha = this.life / this._initialLife;
                 g.globalAlpha = easing.easeInQuart(this._initialLife - this.life, 1, -1, this._initialLife);
 
                 g.fillStyle = 'rgba(0, 0, 0, 0.5)';
@@ -26,7 +24,6 @@ var Particle = function() {
         },
         BIG_RECTANGLE: {
             render: function() {
-                //g.globalAlpha = this.life / this._initialLife;
                 g.globalAlpha = easing.easeInQuart(this._initialLife - this.life, 1, -1, this._initialLife);
 
                 g.fillStyle = 'rgba(0, 0, 0, 0.5)';
@@ -83,32 +80,28 @@ var Particle = function() {
 
 
     var spawn = function(container, position, speed, baseAngle, spreadAngle, count, life, shape, color, callback) {
-        if (settings.particles) {
-            var hslColor = rgbToHsl(color);
+        var hslColor = rgbToHsl(color);
 
-            for (var i = 0; i < count; i++) {
-                var angle = randomFloat(baseAngle - spreadAngle / 2, baseAngle + spreadAngle / 2);
-                var particleVelocity = new Vector2(randomFloat(speed.x) * Math.cos(angle), randomFloat(speed.y) * Math.sin(angle));
-                var particleAcceleration = new Vector2(0, 110);
-                var particleLife = life;
-                var particleColor = (i % 2 === 0) ? {
-                    h: hslColor.h,
-                    s: hslColor.s,
-                    l: hslColor.l + 30 * i / count,
-                } : {
-                    h: hslColor.h,
-                    s: hslColor.s,
-                    l: hslColor.l - 30 * i / count,
-                };
-                var particle = new Particle(new Vector2(position.x, position.y), particleVelocity, particleAcceleration, particleLife, shape, particleColor, callback);
-                container.push(particle);
-            }
+        for (var i = 0; i < count; i++) {
+            var angle = randomFloat(baseAngle - spreadAngle / 2, baseAngle + spreadAngle / 2);
+            var particleVelocity = new Vector2(randomFloat(speed.x) * Math.cos(angle), randomFloat(speed.y) * Math.sin(angle));
+            var particleAcceleration = new Vector2(0, 110);
+            var particleLife = life;
+            var particleColor = (i % 2 === 0) ? {
+                h: hslColor.h,
+                s: hslColor.s,
+                l: hslColor.l + 30 * i / count,
+            } : {
+                h: hslColor.h,
+                s: hslColor.s,
+                l: hslColor.l - 30 * i / count,
+            };
+            var particle = new Particle(new Vector2(position.x, position.y), particleVelocity, particleAcceleration, particleLife, shape, particleColor, callback);
+            container.push(particle);
         }
     };
 
     var spawnExplosion = function(container, brick) {
-        if (settings.particles === false) return;
-
         for (var i = 0; i < 50; i++) {
             var rx = randomInt(-brick.halfSize.x, brick.halfSize.x);
             var ry = randomInt(-brick.halfSize.y, brick.halfSize.y);
@@ -135,8 +128,6 @@ var Particle = function() {
     };
 
     var spawnCollisionEffect = function(container, posX, posY, dirX, dirY, color) {
-        if (settings.particles === false) return;
-
         for (var i = 0; i < 10; i++) {
             var position = new Vector2(posX, posY);
             var dir = Math.atan2(dirY, dirX) + randomFloat(-0.3, 0.3);
@@ -155,8 +146,6 @@ var Particle = function() {
     };
 
     var spawnVictoryFireworks = function(container) {
-        if (settings.particles === false) return;
-
         var callback = function(parent) {
             for (var i = 0; i < 50; i++) {
                 var position = parent.position.clone();

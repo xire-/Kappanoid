@@ -2,7 +2,7 @@ var GameOverState = function() {
 
     ///////// public methods
 
-    var renderDestroyEverything = function() {
+    var render = function() {
         g.save();
 
         // clear the previous frame
@@ -24,7 +24,7 @@ var GameOverState = function() {
         g.restore();
     };
 
-    var updateDestroyEverything = function( /*delta*/ ) {};
+    var update = function( /*delta*/ ) {};
 
     var keyPress = function(e) {
         keyPressToggleSettings(e);
@@ -47,8 +47,8 @@ var GameOverState = function() {
 
     var constructor = function GameOverState() {
         // public methods
-        this.render = renderDestroyEverything;
-        this.update = updateDestroyEverything;
+        this.render = render;
+        this.update = update;
         this.keyPress = keyPress;
     };
 

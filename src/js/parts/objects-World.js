@@ -189,7 +189,7 @@ var World = function() {
             this.fallingPowerup = new PowerUp(brick.center.clone(), brick.halfSize.clone(), pType);
         }
 
-        Particle.spawnExplosion(this.particles, brick);
+        if (settings.particles) Particle.spawnExplosion(this.particles, brick);
     };
 
 
@@ -523,7 +523,7 @@ var World = function() {
         if (this._fireworksTime > 500) {
             this._fireworksTime = 0;
 
-            Particle.spawnVictoryFireworks(this.particles);
+            if (settings.particles) Particle.spawnVictoryFireworks(this.particles);
         }
 
         // remove all powerups before changing level
@@ -547,8 +547,8 @@ var World = function() {
         this.lazors.forEach(function(lazor) {
             // check and handle collisions with top border
             if (lazor.center.y < 0) {
-                Particle.spawnCollisionEffect(this.particles, lazor.center.x, 0, 0, -1, this.bordersColor);
                 deadLazors.push(lazor);
+                if (settings.particles) Particle.spawnCollisionEffect(this.particles, lazor.center.x, 0, 0, -1, this.bordersColor);
             }
 
             // check and handle collisions with bricks
@@ -560,7 +560,7 @@ var World = function() {
                     // collision collision collision collision
                     hitBricks.push(brick);
                     deadLazors.push(lazor);
-                    Particle.spawnCollisionEffect(this.particles, lazor.center.x, lazor.center.y, 0, -1, brick.color);
+                    if (settings.particles) Particle.spawnCollisionEffect(this.particles, lazor.center.x, lazor.center.y, 0, -1, brick.color);
                 }
             }, this);
         }, this);
@@ -588,7 +588,7 @@ var World = function() {
                 ball.direction.x *= -1;
 
                 ball.trail.addVertex(ball.center);
-                Particle.spawnCollisionEffect(this.particles, 0, ball.center.y, ball.direction.x, ball.direction.y, this.bordersColor);
+                if (settings.particles) Particle.spawnCollisionEffect(this.particles, 0, ball.center.y, ball.direction.x, ball.direction.y, this.bordersColor);
             }
             if (ball.center.y - ball.radius < 0) {
                 // shake screen before changing direction
@@ -599,7 +599,7 @@ var World = function() {
 
                 ball.trail.addVertex(ball.center);
 
-                Particle.spawnCollisionEffect(this.particles, ball.center.x, 0, ball.direction.x, ball.direction.y, this.bordersColor);
+                if (settings.particles) Particle.spawnCollisionEffect(this.particles, ball.center.x, 0, ball.direction.x, ball.direction.y, this.bordersColor);
             }
             if (ball.center.x + ball.radius >= constants.worldRelativeWidth) {
                 // shake screen before changing direction
@@ -610,7 +610,7 @@ var World = function() {
 
                 ball.trail.addVertex(ball.center);
 
-                Particle.spawnCollisionEffect(this.particles, 800, ball.center.y, ball.direction.x, ball.direction.y, this.bordersColor);
+                if (settings.particles) Particle.spawnCollisionEffect(this.particles, 800, ball.center.y, ball.direction.x, ball.direction.y, this.bordersColor);
             }
         }, this);
     };
@@ -648,10 +648,11 @@ var World = function() {
                             ball.direction.y = -ball.direction.y;
                         }
                     }
-                    Particle.spawnCollisionEffect(this.particles, collisionPoint.x, collisionPoint.y, ball.direction.x, ball.direction.y, brick.color);
                     hitBricks.push(brick);
 
                     ball.trail.addVertex(ball.center);
+
+                    if (settings.particles) Particle.spawnCollisionEffect(this.particles, collisionPoint.x, collisionPoint.y, ball.direction.x, ball.direction.y, brick.color);
                 }
             }, this);
 
@@ -694,7 +695,7 @@ var World = function() {
                         } else {
                             ball.trail.addVertex(ball.center);
 
-                            Particle.spawnCollisionEffect(this.particles, collisionPoint.x, collisionPoint.y, ball.direction.x, ball.direction.y, this.paddle.color);
+                            if (settings.particles) Particle.spawnCollisionEffect(this.particles, collisionPoint.x, collisionPoint.y, ball.direction.x, ball.direction.y, this.paddle.color);
 
                             if (settings.sounds) sounds.release.play();
                         }

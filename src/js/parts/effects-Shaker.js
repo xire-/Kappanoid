@@ -1,6 +1,16 @@
 var Shaker = function() {
 
     ///////// public methods
+    
+    var shake = function(directionX, directionY) {
+        if (this.enabled === false) return;
+
+        this.direction.x = directionX;
+        this.direction.y = directionY;
+
+        this._timePassed = 0;
+    };
+
 
     var update = function(delta) {
         this._timePassed += delta;
@@ -13,21 +23,12 @@ var Shaker = function() {
         }
     };
 
-    var shake = function(directionX, directionY) {
-        if (this.enabled === false) return;
-
-        this.direction.x = directionX;
-        this.direction.y = directionY;
-
-        this._timePassed = 0;
-    };
-
     ///////// constructor
 
     var constructor = function Shaker(target) {
         // public methods
-        this.update = update;
         this.shake = shake;
+        this.update = update;
 
         // init
         this.target = target;

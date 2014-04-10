@@ -10,6 +10,7 @@ var isColor = function(value) {
     return value !== undefined && ((value.r !== undefined && value.g !== undefined && value.b !== undefined) || (value.h !== undefined && value.s !== undefined && value.l !== undefined));
 };
 
+
 /*
  * clamp val to the interval [min, max]
  */
@@ -40,6 +41,7 @@ var randomInt = function(min, max) {
     }
     return Math.floor(Math.random() * (max - min)) + min;
 };
+
 
 /*
  * convert a rgb color to an hsl color
@@ -106,11 +108,16 @@ var getColorString = function(color) {
     }
 };
 
+
 /*
  * common keycode checks needed in all game states
  */
 var keyPressToggleSettings = function(e) {
     switch (e.keyCode) {
+        case 100: // D
+            settings.debug = !settings.debug;
+            break;
+
         case 48: // 0
             settings.colors = true;
             settings.particles = true;
@@ -159,10 +166,6 @@ var keyPressToggleSettings = function(e) {
             world.shaker.enabled = settings.worldShake;
             break;
         case 57: // 9
-            break;
-
-        case 100: // D
-            settings.debug = !settings.debug;
             break;
     }
 };

@@ -1,6 +1,6 @@
 var PruningGrid = function() {
 
-    ///////// public static methods / variables
+    ///////// public static variables / methods
 
     var tmpVector = new Vector2(0, 0);
 

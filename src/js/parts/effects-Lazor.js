@@ -11,7 +11,7 @@ var Lazor = function() {
     };
 
     var update = function(delta) {
-        // move the Lazor up
+        // move the lazor up
         this.center.y = this.center.y - (600 * delta) / 1000;
     };
 

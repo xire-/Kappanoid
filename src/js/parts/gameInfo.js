@@ -26,8 +26,6 @@ var GameInfo = function() {
         g.restore();
     };
 
-    var update = function( /*delta*/ ) {};
-
     ///////// private methods
 
     var drawDebugInfo = function(delta) {
@@ -70,11 +68,7 @@ var GameInfo = function() {
         g.fillText('HIGH SCORE', 240, 10);
         g.fillText('CURRENT', 575, 10);
 
-        g.fillStyle = settings.colors ? getColorString(this._text2Color) : getColorString({
-            r: 255,
-            g: 255,
-            b: 255,
-        });
+        g.fillStyle = settings.colors ? getColorString(this._text2Color) : 'rgba(255, 255, 255, 1)';
         g.fillText(localStorage.highscore, 240, 35);
 
         var minutes = '00';
@@ -95,7 +89,6 @@ var GameInfo = function() {
     var constructor = function GameInfo(containerOffset, containerSize) {
         // public methods
         this.render = render;
-        this.update = update;
 
         // init
         this.containerOffset = containerOffset;

@@ -1,6 +1,6 @@
 var Brick = function() {
 
-    ///////// public static methods / variables
+    ///////// public static variables / methods
 
     var types = {
         WHITE: {

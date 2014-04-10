@@ -1,6 +1,6 @@
 var PowerUp = function() {
 
-    ///////// public static methods / variables
+    ///////// public static variables / methods
 
     var types = {
         LASER: {
