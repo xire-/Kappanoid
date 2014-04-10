@@ -16,7 +16,7 @@ var GameInfo = function() {
         g.fillStyle = getColorString(this._backgroundColor);
         g.fillRect(0, 0, this.containerSize.x, this.containerSize.y);
 
-        if (this.showDebugInfo) {
+        if (settings.debug) {
             drawDebugInfo(delta);
             g.scale(0.6, 0.6);
             g.translate(700, 15);
@@ -100,7 +100,6 @@ var GameInfo = function() {
         // init
         this.containerOffset = containerOffset;
         this.containerSize = containerSize;
-        this.showDebugInfo = false;
         this._backgroundColor = constants.gameInfoBackgroundColor;
         this._text1Color = {
             r: 255,
@@ -130,14 +129,6 @@ var GameInfo = function() {
         get containerSize() {
             return this._containerSize;
         },
-
-        set showDebugInfo(value) {
-            console.assert(isTypeOf(value, 'boolean'), JSON.stringify(value));
-            this._showDebugInfo = value;
-        },
-        get showDebugInfo() {
-            return this._showDebugInfo;
-        }
     };
 
     return constructor;

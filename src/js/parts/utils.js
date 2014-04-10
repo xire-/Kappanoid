@@ -162,7 +162,7 @@ var keyPressToggleSettings = function(e) {
             break;
 
         case 100: // D
-            gameInfo.showDebugInfo = !gameInfo.showDebugInfo;
+            settings.debug = !settings.debug;
             break;
     }
 };
