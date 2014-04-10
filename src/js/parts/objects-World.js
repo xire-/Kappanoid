@@ -152,9 +152,7 @@ var World = function() {
             this.balls.forEach(function(ball) {
                 ball.direction = new Vector2(randomFloat(-1, 1), -1);
                 ball.speed = 300;
-                ball.trail.reset();
-                ball.trail.stoppedMovingDate = null;
-                ball.trail.stoppedMovingPosition = null;
+                ball.trail.reset(true);
 
                 if (settings.sounds) sounds.release.play();
             }, this);
@@ -169,9 +167,7 @@ var World = function() {
         if (this.paddle.ballIsStuck) {
             this.paddle.ballIsStuck = false;
             this.balls[0].speed = 300;
-            this.balls[0].trail.reset();
-            this.balls[0].trail.stoppedMovingDate = null;
-            this.balls[0].trail.stoppedMovingPosition = null;
+            this.balls[0].trail.reset(true);
 
             if (settings.sounds) sounds.release.play();
         }

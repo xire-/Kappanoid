@@ -3,18 +3,23 @@ var Trail = function() {
     ///////// public methods
 
     var addVertex = function(vertex) {
-        this._trailVertexes.push(vertex.clone());
+        this._vertexes.push(vertex.clone());
     };
 
-    var reset = function() {
-        this._trailVertexes = [];
-        this.addVertex(this.parent.center);
+    var reset = function(moving) {
+        this._vertexes = [];
+        this.addVertex(this._parent.center);
+
+        if (moving) {
+            this._stoppedMovingDate = null;
+            this._stoppedMovingPosition = null;
+        }
     };
 
     var fade = function() {
-        if (this.stoppedMovingDate === null && this.stoppedMovingPosition === null) {
-            this.stoppedMovingDate = new Date();
-            this.stoppedMovingPosition = this.parent.center.clone();
+        if (this._stoppedMovingDate === null && this._stoppedMovingPosition === null) {
+            this._stoppedMovingDate = new Date();
+            this._stoppedMovingPosition = this._parent.center.clone();
         }
     };
 
@@ -22,63 +27,57 @@ var Trail = function() {
     var render = function() {
         g.save();
 
-        // draw ball trail
-        if (settings.ballTrail) {
-            var trailMaxLength = 150;
-            var trailVertexes = (this.stoppedMovingDate !== null) ? [this.stoppedMovingPosition] : [this.parent.center];
-            var vertex;
-            var prevVertex = trailVertexes[0];
-            var cumulativeLength = 0;
+        var drawVertexes = (this._stoppedMovingDate !== null) ? [this._stoppedMovingPosition] : [this._parent.center];
+        var vertex;
+        var prevVertex = drawVertexes[0];
+        var cumulativeLength = 0;
 
-            // create an array of vertexes (computed from this._trailVertexes) with a total length of trailMaxLength
-            for (var i = this._trailVertexes.length - 1; i >= 0; i--) {
-                vertex = this._trailVertexes[i];
-                var distanceFromPrevVertex = vertex.distance(prevVertex);
-                cumulativeLength += distanceFromPrevVertex;
+        // create an array of vertexes (computed from this._vertexes) with a total length of this._maxLength
+        for (var i = this._vertexes.length - 1; i >= 0; i--) {
+            vertex = this._vertexes[i];
+            var distanceFromPrevVertex = vertex.distance(prevVertex);
+            cumulativeLength += distanceFromPrevVertex;
 
-                // interpolate from prevVertex to vertex to compute the vertex of the trail
-                var percent = cumulativeLength <= trailMaxLength ? 0 : (cumulativeLength - trailMaxLength) / distanceFromPrevVertex;
-                var midVertex = Vector2.lerp(vertex, prevVertex, percent);
-                trailVertexes.push(midVertex);
+            // interpolate from prevVertex to vertex to compute the vertex of the trail
+            var percent = cumulativeLength <= this._maxLength ? 0 : (cumulativeLength - this._maxLength) / distanceFromPrevVertex;
+            var midVertex = Vector2.lerp(vertex, prevVertex, percent);
+            drawVertexes.push(midVertex);
 
-                if (cumulativeLength > trailMaxLength) {
-                    // all trail vertexes are computed; remove unused vertexes from this._trailVertexes
-                    for (i -= 1; i >= 0; i--) {
-                        this._trailVertexes.splice(i, 1);
-                    }
-                    break;
+            if (cumulativeLength > this._maxLength) {
+                // all trail vertexes are computed; remove unused vertexes from this._vertexes
+                for (i -= 1; i >= 0; i--) {
+                    this._vertexes.splice(i, 1);
                 }
-
-                prevVertex = vertex;
+                break;
             }
 
-            // draw a line constructed using the created array of vertexes with the specified start color and end color
-            var trailStartColor = {
-                r: settings.colors ? this.parent.color.r : 255,
-                g: settings.colors ? this.parent.color.g : 255,
-                b: settings.colors ? this.parent.color.b : 255,
-                a: 1,
-            };
-            var trailEndColor = {
-                r: settings.colors ? this.parent.color.r : 0,
-                g: settings.colors ? this.parent.color.g : 0,
-                b: settings.colors ? this.parent.color.b : 0,
-                a: 0,
-            };
-
-            // winner of best trick contest
-            if (this.stoppedMovingDate !== null) {
-                trailStartColor.a = Math.max(0, 1 - (new Date().getTime() - this.stoppedMovingDate.getTime()) / 1000);
-                trailVertexes[0] = this.stoppedMovingPosition;
-            }
-
-            drawTrail(trailVertexes, trailMaxLength, trailStartColor, trailEndColor, 4);
+            prevVertex = vertex;
         }
+
+        // draw a line constructed using the created array of vertexes with the specified start color and end color
+        var trailStartColor = {
+            r: settings.colors ? this._parent.color.r : 255,
+            g: settings.colors ? this._parent.color.g : 255,
+            b: settings.colors ? this._parent.color.b : 255,
+            a: 1,
+        };
+        var trailEndColor = {
+            r: settings.colors ? this._parent.color.r : 0,
+            g: settings.colors ? this._parent.color.g : 0,
+            b: settings.colors ? this._parent.color.b : 0,
+            a: 0,
+        };
+
+        // winner of best trick contest
+        if (this._stoppedMovingDate !== null) {
+            trailStartColor.a = Math.max(0, 1 - (new Date().getTime() - this._stoppedMovingDate.getTime()) / 1000);
+            drawVertexes[0] = this._stoppedMovingPosition;
+        }
+
+        drawTrail(drawVertexes, this._maxLength, trailStartColor, trailEndColor, 4);
 
         g.restore();
     };
-
-    var update = function( /*delta*/ ) {};
 
     ///////// private methods
 
@@ -129,13 +128,13 @@ var Trail = function() {
         this.reset = reset;
         this.fade = fade;
         this.render = render;
-        this.update = update;
 
         // init
-        this.parent = parent;
-        this._trailVertexes = [];
-        this.stoppedMovingDate = new Date();
-        this.stoppedMovingPosition = this.parent.center.clone();
+        this._parent = parent;
+        this._vertexes = [];
+        this._maxLength = 150;
+        this._stoppedMovingDate = new Date();
+        this._stoppedMovingPosition = this._parent.center.clone();
     };
 
     return constructor;

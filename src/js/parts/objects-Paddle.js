@@ -51,10 +51,7 @@ var Paddle = function() {
             // bring balls along
             world.balls.forEach(function(ball) {
                 ball.center.x += this.center.x - this._oldPosX;
-                if (ball.trail.stoppedMovingDate === null) {
-                    ball.trail.stoppedMovingDate = new Date();
-                    ball.trail.stoppedMovingPosition = ball.center.clone();
-                }
+                ball.trail.fade();
             }, this);
         }
     };
