@@ -11,16 +11,20 @@ var GameInfo = function() {
         g.beginPath();
         g.rect(0, 0, this.containerSize.x, this.containerSize.y);
         g.clip();
+        g.closePath();
 
         // render background
         g.fillStyle = getColorString(this._backgroundColor);
         g.fillRect(0, 0, this.containerSize.x, this.containerSize.y);
 
         if (settings.debug) {
-            drawDebugInfo(delta);
+            // display debug information
+            drawDebugInfo.call(this, delta);
             g.scale(0.6, 0.6);
             g.translate(700, 15);
         }
+
+        // display the high score, the current score and the level time
         drawGameInfo.call(this);
 
         g.restore();
@@ -32,31 +36,31 @@ var GameInfo = function() {
         g.textBaseline = 'top';
         g.fillStyle = 'rgba(255, 255, 255, 1)';
 
-        g.fillText('FPS: ' + currentFPS.toFixed(1), 5, 5);
-        g.fillText('DELTA: ' + delta.toFixed(1), 5, 15);
-        g.fillText('LOOP: ' + loopTime, 5, 25);
-        g.fillText('NUM PARTICLES: ' + world.particles.length, 5, 35);
-        g.fillText('SPEED MULT: ' + world.ballSpeedMult.toFixed(3), 5, 45);
+        g.fillText('FPS: ' + currentFPS.toFixed(1), 5, 10);
+        g.fillText('DELTA: ' + delta.toFixed(1), 5, 20);
+        g.fillText('LOOP: ' + loopTime, 5, 30);
 
+        g.fillText('TIMESCALE: ' + settings.timeScale, 80, 10);
+        g.fillText('SPEED MULT: ' + world.ballSpeedMult.toFixed(3), 80, 20);
+        g.fillText('NUM PARTICLES: ' + world.particles.length, 80, 30);
 
         g.fillStyle = settings.colors ? 'rgba(0, 255, 0, 1)' : 'rgba(255, 0, 0, 1)';
-        g.fillText('1. COLORS', 120, 10);
+        g.fillText('1. COLORS', 200, 10);
         g.fillStyle = settings.particles ? 'rgba(0, 255, 0, 1)' : 'rgba(255, 0, 0, 1)';
-        g.fillText('2. PARTICLES', 120, 20);
+        g.fillText('2. PARTICLES', 200, 20);
         g.fillStyle = settings.sounds ? 'rgba(0, 255, 0, 1)' : 'rgba(255, 0, 0, 1)';
-        g.fillText('3. SOUNDS', 120, 30);
+        g.fillText('3. SOUNDS', 200, 30);
         g.fillStyle = settings.music ? 'rgba(0, 255, 0, 1)' : 'rgba(255, 0, 0, 1)';
-        g.fillText('4. MUSIC', 120, 40);
-
+        g.fillText('4. MUSIC', 200, 40);
 
         g.fillStyle = settings.ballTrail ? 'rgba(0, 255, 0, 1)' : 'rgba(255, 0, 0, 1)';
-        g.fillText('5. BALL TRAIL', 225, 10);
+        g.fillText('5. BALL TRAIL', 300, 10);
         g.fillStyle = settings.lastBrickSlowMo ? 'rgba(0, 255, 0, 1)' : 'rgba(255, 0, 0, 1)';
-        g.fillText('6. LAST BRICK SLOW MO', 225, 20);
+        g.fillText('6. LAST BRICK SLOW MO', 300, 20);
         g.fillStyle = settings.paddleSpeedDistortion ? 'rgba(0, 255, 0, 1)' : 'rgba(255, 0, 0, 1)';
-        g.fillText('7. PADDLE SPEED DISTORTION', 225, 30);
+        g.fillText('7. PADDLE SPEED DISTORTION', 300, 30);
         g.fillStyle = settings.worldShake ? 'rgba(0, 255, 0, 1)' : 'rgba(255, 0, 0, 1)';
-        g.fillText('8. WORLD SHAKE', 225, 40);
+        g.fillText('8. WORLD SHAKE', 300, 40);
     };
 
     var drawGameInfo = function() {
@@ -74,12 +78,11 @@ var GameInfo = function() {
         var minutes = '00';
         var seconds = '00';
         if (world.levelTime !== null) {
-            var levelTime = new Date(new Date().getTime() - world.levelTime.getTime());
+            var levelTime = new Date(Date.now() - world.levelTime.getTime());
             minutes = (levelTime.getMinutes() < 10 ? '0' : '') + levelTime.getMinutes();
             seconds = (levelTime.getSeconds() < 10 ? '0' : '') + levelTime.getSeconds();
         }
         g.fillText(minutes + ':' + seconds, 420, 20);
-
 
         g.fillText(world.score, 575, 35);
     };
@@ -93,12 +96,15 @@ var GameInfo = function() {
         // init
         this.containerOffset = containerOffset;
         this.containerSize = containerSize;
+
         this._backgroundColor = constants.gameInfoBackgroundColor;
+        // used for 'high score' and 'current'
         this._text1Color = {
             r: 255,
             g: 0,
             b: 0,
         };
+        // used for score values and level time
         this._text2Color = {
             r: 255,
             g: 255,
