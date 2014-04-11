@@ -46,7 +46,7 @@ var Vector2 = function() {
         var scale = this.length();
         this.x /= scale;
         this.y /= scale;
-        console.assert(this.length() === 1, this.length());
+        console.assert(floatEquals(this.length(), 1), this.length());
         return this;
     };
 
@@ -112,12 +112,12 @@ function testVector2() {
 
     vector1 = new Vector2(3, 4);
     console.assert(vector1.x === 3 && vector1.y === 4, JSON.stringify(vector1));
-    console.assert(vector1.length() === 5, JSON.stringify(vector1));
-    console.assert(vector1.normalize().length() === 1, JSON.stringify(vector1));
+    console.assert(floatEquals(vector1.length(), 5), JSON.stringify(vector1));
+    console.assert(floatEquals(vector1.normalize().length(), 1), JSON.stringify(vector1));
 
     vector1 = new Vector2(3, 4);
     var vector2 = new Vector2(3, 4);
-    console.assert(vector1.distance(vector2) === 0, JSON.stringify(vector1), JSON.stringify(vector2));
+    console.assert(floatEquals(vector1.distance(vector2), 0), JSON.stringify(vector1), JSON.stringify(vector2));
 
     console.log('testVector2 OK');
 }
