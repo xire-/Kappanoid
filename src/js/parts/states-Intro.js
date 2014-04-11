@@ -1,3 +1,8 @@
+/*
+ * substates:
+ *     - falling animation with text blinking until the user press the space bar;
+ *     - outro animation (rotation and shrink)
+ */
 var IntroState = function() {
 
     ///////// public methods
@@ -6,37 +11,36 @@ var IntroState = function() {
         g.save();
 
         // clear the previous frame
-        g.fillStyle = 'rgb(0, 0, 0)';
+        g.fillStyle = 'rgba(0, 0, 0, 1)';
         g.fillRect(0, 0, constants.canvasRelativeWidth, constants.canvasRelativeHeight);
 
-        if (this._intro) {
-            // falling animation
-            var titlePosX = constants.bordersRelativeThickness + constants.worldRelativeWidth / 2;
-            var titlePosY = easing.easeOutBounce(clamp(0, this._timePassed, 1000), 0, constants.canvasRelativeHeight / 2, 1000);
-            g.translate(titlePosX, titlePosY);
-        } else {
-            // rotating/shrinking animation
-            var titleScale = easing.easeInBack(clamp(0, this._timePassed, 1000), 1, -1, 1000);
-            var titleRotation = easing.easeInBack(clamp(0, this._timePassed, 1000), 0, Math.PI * 2, 1000);
-            g.translate(constants.bordersRelativeThickness + constants.worldRelativeWidth / 2, constants.canvasRelativeHeight / 2);
-            g.scale(titleScale, titleScale);
-            g.rotate(titleRotation);
+
+        var translationX = constants.canvasRelativeWidth / 2;
+        var translationY = easing.easeOutBounce(clamp(0, this._timePassed, 1000), 0, constants.gameInfoRelativeHeight + (constants.bordersRelativeThickness + constants.worldRelativeHeight) / 2, 1000);
+        g.translate(translationX, translationY);
+        if (this._outro) {
+            // rotating and shrinking animation
+            var scale = easing.easeInBack(clamp(0, this._outroTimePassed, 1000), 1, -1, 1000);
+            var rotation = easing.easeInBack(clamp(0, this._outroTimePassed, 1000), 0, Math.PI * 2, 1000);
+            g.scale(scale, scale);
+            g.rotate(rotation);
         }
 
-        var logoLineHeight = 15;
+        var logoLineHeight = 20;
         var insertCoinLineHeight = 20;
         var creditsLineHeight = 20;
         var logoToInsertCoinDistance = 60;
-        var insertCoinToCreditsDistance = 220;
+        var insertCoinToCreditsDistance = 270;
 
-        // calculate starting position
+        // calculate starting position (to center text)
         var y = -((logoLineHeight * this._selectedLogo.length + insertCoinLineHeight + creditsLineHeight * 2) + logoToInsertCoinDistance + insertCoinToCreditsDistance) / 2;
 
-        // draw previously randomly selected logo
         g.textAlign = 'center';
         g.textBaseline = 'middle';
+
+        // draw logo
         g.font = '15px monospace';
-        g.fillStyle = 'rgb(255, 255, 255)';
+        g.fillStyle = 'rgba(255, 255, 255, 1)';
         for (var i = 0; i < this._selectedLogo.length; i++) {
             g.fillText(this._selectedLogo[i], 0, y);
             y += logoLineHeight;
@@ -46,7 +50,7 @@ var IntroState = function() {
         y += logoToInsertCoinDistance;
         if (this._timePassed % 2000 < 1500) {
             g.font = '10px emulogic';
-            g.fillStyle = 'rgb(255, 255, 255)';
+            g.fillStyle = 'rgba(255, 255, 255, 1)';
             g.fillText('INSERT COIN TO CONTINUE', 0, y);
         }
         y += insertCoinLineHeight;
@@ -61,21 +65,26 @@ var IntroState = function() {
     var update = function(delta) {
         this._timePassed += delta;
 
-        if (!this._intro) {
-            if (this._timePassed > 1000) {
+        if (this._outro) {
+            this._outroTimePassed += delta;
+
+            // rotating/shrinking animation
+            // after 1 seconds since outro animation start, change current game state to playing
+            if (this._outroTimePassed > 1000) {
                 currState = states.playing;
             }
         }
     };
 
     var keyPress = function(e) {
+        // manage input for common keys
         keyPressToggleSettings(e);
 
         switch (e.keyCode) {
             case keycodes['space']:
-                if (this._intro) {
-                    this._intro = false;
-                    this._timePassed = 0;
+                // start outro animation
+                if (!this._outro) {
+                    this._outro = true;
 
                     // if the intro music is still playing, fade it out
                     if (settings.music) music.introMusic.fadeOut(0, 1500);
@@ -126,9 +135,12 @@ var IntroState = function() {
         this.keyPress = keyPress;
 
         // init
-        this._intro = true;
         this._timePassed = 0;
-        this.logos = [
+
+        this._outro = false;
+        this._outroTimePassed = 0;
+
+        this._logos = [
             [
                 ' _  __                                   _     _ ',
                 '| |/ /                                  (_)   | |',
@@ -260,7 +272,7 @@ var IntroState = function() {
                 '          |    |                         '
             ]
         ];
-        this._selectedLogo = this.logos[randomInt(this.logos.length)];
+        this._selectedLogo = this._logos[randomInt(this._logos.length)];
 
         if (settings.music) music.introMusic.play();
     };
