@@ -3,7 +3,7 @@
  * Authors: Francesco Cagnin, Marco Gasparini
  */
 
-/*jslint browser: true, devel: true, multistr: true */
+/*jslint browser: true, devel: true, multistr: true, sub: true */
 /*global Howl*/
 
 var kappanoid = (function() {

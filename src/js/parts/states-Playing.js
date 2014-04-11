@@ -23,36 +23,36 @@ var PlayingState = function() {
         keyPressToggleSettings(e);
 
         switch (e.keyCode) {
-            case 117: // U
+            case keycodes['space']:
+                world.action();
+                // prevent space from scrolling the page
+                return false;
+
+            case keycodes['u']:
                 settings.timeScale = 1;
                 break;
-            case 105: // I
+            case keycodes['i']:
                 settings.timeScale = 0.50;
                 break;
-            case 111: // O
+            case keycodes['o']:
                 settings.timeScale = 0.15;
                 break;
-            case 112: // P
+            case keycodes['p']:
                 settings.timeScale = 0;
                 break;
 
-            case 114: // R
+            case keycodes['r']:
                 world.reset(true);
                 break;
 
-            case 110: // N
+            case keycodes['n']:
                 world._currentLevel = (world._currentLevel + 1) % levels.length;
                 world.reset(true);
                 break;
 
-            case 108: // L
+            case keycodes['l']:
                 if (settings.particles) Particle.spawnVictoryFireworks(world.particles);
                 break;
-
-            case 32: // SPACE
-                world.action();
-                // prevent space from scrolling the page
-                return false;
 
             default:
                 break;

@@ -72,7 +72,7 @@ var IntroState = function() {
         keyPressToggleSettings(e);
 
         switch (e.keyCode) {
-            case 32: // SPACE
+            case keycodes['space']:
                 if (this._intro) {
                     this._intro = false;
                     this._timePassed = 0;

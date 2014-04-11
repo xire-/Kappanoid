@@ -109,16 +109,40 @@ var getColorString = function(color) {
 };
 
 
+var keycodes = {
+    'space': 32,
+
+    'd': 100,
+    'i': 105,
+    'l': 108,
+    'n': 110,
+    'o': 111,
+    'p': 112,
+    'r': 114,
+    'u': 117,
+
+    '0': 48,
+    '1': 49,
+    '2': 50,
+    '3': 51,
+    '4': 52,
+    '5': 53,
+    '6': 54,
+    '7': 55,
+    '8': 56,
+    '9': 57,
+};
+
 /*
  * common keycode checks needed in all game states
  */
 var keyPressToggleSettings = function(e) {
     switch (e.keyCode) {
-        case 100: // D
+        case keycodes['d']:
             settings.debug = !settings.debug;
             break;
 
-        case 48: // 0
+        case keycodes['0']:
             settings.colors = true;
             settings.particles = true;
             settings.sounds = true;
@@ -135,19 +159,19 @@ var keyPressToggleSettings = function(e) {
             settings.worldShake = true;
             world.shaker.enabled = settings.worldShake;
             break;
-        case 49: // 1
+        case keycodes['1']:
             settings.colors = !settings.colors;
             break;
-        case 50: // 2
+        case keycodes['2']:
             settings.particles = !settings.particles;
             break;
-        case 51: // 3
+        case keycodes['3']:
             settings.sounds = !settings.sounds;
             break;
-        case 52: // 4
+        case keycodes['4']:
             settings.music = !settings.music;
             break;
-        case 53: // 5
+        case keycodes['5']:
             if (!settings.ballTrail) {
                 world.balls.forEach(function(ball) {
                     ball.trail.reset();
@@ -155,17 +179,17 @@ var keyPressToggleSettings = function(e) {
             }
             settings.ballTrail = !settings.ballTrail;
             break;
-        case 54: // 6
+        case keycodes['6']:
             settings.lastBrickSlowMo = !settings.lastBrickSlowMo;
             break;
-        case 55: // 7
+        case keycodes['7']:
             settings.paddleSpeedDistortion = !settings.paddleSpeedDistortion;
             break;
-        case 56: // 8
+        case keycodes['8']:
             settings.worldShake = !settings.worldShake;
             world.shaker.enabled = settings.worldShake;
             break;
-        case 57: // 9
+        case keycodes['9']:
             break;
     }
 };

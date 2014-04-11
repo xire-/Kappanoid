@@ -30,7 +30,7 @@ var GameOverState = function() {
         keyPressToggleSettings(e);
 
         switch (e.keyCode) {
-            case 32: // SPACE
+            case keycodes['space']:
                 states.intro = new IntroState();
                 states.playing = new PlayingState();
                 currState = states.intro;
