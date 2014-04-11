@@ -168,7 +168,6 @@ var keyPressToggleSettings = function(e) {
             settings.paddleSpeedDistortion = true;
 
             settings.worldShake = true;
-            world.shaker.enabled = settings.worldShake;
             break;
         case keycodes['1']:
             settings.colors = !settings.colors;
@@ -198,7 +197,6 @@ var keyPressToggleSettings = function(e) {
             break;
         case keycodes['8']:
             settings.worldShake = !settings.worldShake;
-            world.shaker.enabled = settings.worldShake;
             break;
         case keycodes['9']:
             break;
