@@ -14,14 +14,13 @@ var IntroState = function() {
         g.fillStyle = 'rgba(0, 0, 0, 1)';
         g.fillRect(0, 0, constants.canvasRelativeWidth, constants.canvasRelativeHeight);
 
-
         var translationX = constants.canvasRelativeWidth / 2;
         var translationY = easing.easeOutBounce(clamp(0, this._timePassed, 1000), 0, constants.gameInfoRelativeHeight + (constants.bordersRelativeThickness + constants.worldRelativeHeight) / 2, 1000);
         g.translate(translationX, translationY);
         if (this._outro) {
             // rotating and shrinking animation
             var scale = easing.easeInBack(clamp(0, this._outroTimePassed, 1000), 1, -1, 1000);
-            var rotation = easing.easeInBack(clamp(0, this._outroTimePassed, 1000), 0, Math.PI * 2, 1000);
+            var rotation = easing.easeInBack(clamp(0, this._outroTimePassed, 1000), 0, 2 * Math.PI, 1000);
             g.scale(scale, scale);
             g.rotate(rotation);
         }
