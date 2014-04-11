@@ -29,29 +29,31 @@ var PlayingState = function() {
                 return false;
 
             case keycodes['u']:
-                settings.timeScale = 1;
+                if (settings.debug) settings.timeScale = 1;
                 break;
             case keycodes['i']:
-                settings.timeScale = 0.50;
+                if (settings.debug) settings.timeScale = 0.50;
                 break;
             case keycodes['o']:
-                settings.timeScale = 0.15;
+                if (settings.debug) settings.timeScale = 0.15;
                 break;
             case keycodes['p']:
                 settings.timeScale = 0;
                 break;
 
             case keycodes['r']:
-                world.reset(true);
+                if (settings.debug) world.reset(true);
                 break;
 
             case keycodes['n']:
-                world._currentLevel = (world._currentLevel + 1) % levels.length;
-                world.reset(true);
+                if (settings.debug) {
+                    world._currentLevel = (world._currentLevel + 1) % levels.length;
+                    world.reset(true);
+                }
                 break;
 
             case keycodes['l']:
-                if (settings.particles) Particle.spawnVictoryFireworks(world.particles);
+                if (settings.debug) Particle.spawnVictoryFireworks(world.particles);
                 break;
 
             default:
