@@ -1,12 +1,16 @@
 var collisionDetection = {
-    // Returns 2 times the signed triangle area. The result is positive if
-    // abc is ccw, negative if abc is cw, zero if abc is degenerate.
+    /*
+     * Returns 2 times the signed triangle area. The result is positive if
+     * abc is ccw, negative if abc is cw, zero if abc is degenerate.
+     */
     signed2DTriArea: function(a, b, c) {
         return (a.x - c.x) * (b.y - c.y) - (a.y - c.y) * (b.x - c.x);
     },
 
-    // Test if segments ab and cd overlap. If they do, compute and return
-    // intersection t value along ab and intersection position p
+    /*
+     * Test if segments ab and cd overlap. If they do, compute and return
+     * intersection t value along ab and intersection position p.
+     */
     test2DSegmentSegment: function(a, b, c, d) {
         // Sign of areas correspond to which side of ab points c and d are
         var a1 = this.signed2DTriArea(a, b, d); // Compute winding of abd (+ or -)
@@ -37,8 +41,10 @@ var collisionDetection = {
         return null;
     },
 
-    // Returns true if sphere s intersects AABB b, false otherwise.
-    // The point p on the AABB closest to the sphere center is also returned
+    /*
+     * Returns true if sphere s intersects AABB b, false otherwise.
+     * The point p on the AABB closest to the sphere center is also returned
+     */
     testSphereAABB: function(s, b) {
         // Find point p on AABB closest to sphere center
         var p = this.closestPtPointAABB(s.center, b);
@@ -52,7 +58,9 @@ var collisionDetection = {
         }
     },
 
-    // Given point p, return the point q on or in AABB b that is closest to p
+    /*
+     * Given point p, return the point q on or in AABB b that is closest to p
+     */
     closestPtPointAABB: function(p, b) {
         // For each coordinate axis, if the point coordinate value is
         // outside box, clamp it to the box, else keep it as is
