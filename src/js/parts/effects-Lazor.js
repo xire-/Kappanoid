@@ -5,8 +5,10 @@ var Lazor = function() {
     var render = function() {
         g.save();
         g.translate(this.center.x, this.center.y);
-        g.fillStyle = settings.colors ? 'rgba(255, 0, 0, 1)' : 'rgba(255, 255, 255, 1)';
+
+        g.fillStyle = settings.colors ? getColorString(this.color) : 'rgba(255, 255, 255, 1)';
         g.fillRect(-1, 0, 2, 7);
+
         g.restore();
     };
 
@@ -24,6 +26,11 @@ var Lazor = function() {
 
         // init
         this.center = center;
+        this.color = {
+            r: 255,
+            g: 0,
+            b: 0,
+        };
     };
 
     constructor.prototype = {
@@ -33,6 +40,14 @@ var Lazor = function() {
         },
         get center() {
             return this._center;
+        },
+
+        set color(value) {
+            console.assert(isColor(value), JSON.stringify(value));
+            this._color = value;
+        },
+        get color() {
+            return this._color;
         },
     };
 
