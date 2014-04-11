@@ -54,45 +54,45 @@ var floatEquals = function(f1, f2) {
 /*
  * convert a rgb color to an hsl color
  */
-    function rgbToHsl(color) {
-        var r = color.r / 255;
-        var g = color.g / 255;
-        var b = color.b / 255;
+var rgbToHsl = function(color) {
+    var r = color.r / 255;
+    var g = color.g / 255;
+    var b = color.b / 255;
 
-        var max = Math.max(r, g, b);
-        var min = Math.min(r, g, b);
-        var h, s, l = (max + min) / 2;
+    var max = Math.max(r, g, b);
+    var min = Math.min(r, g, b);
+    var h, s, l = (max + min) / 2;
 
-        if (max == min) {
-            h = s = 0; // achromatic
-        } else {
-            var d = max - min;
-            s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-            switch (max) {
-                case r:
-                    h = (g - b) / d + (g < b ? 6 : 0);
-                    break;
-                case g:
-                    h = (b - r) / d + 2;
-                    break;
-                case b:
-                    h = (r - g) / d + 4;
-                    break;
-            }
-            h /= 6;
+    if (max == min) {
+        h = s = 0; // achromatic
+    } else {
+        var d = max - min;
+        s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        switch (max) {
+            case r:
+                h = (g - b) / d + (g < b ? 6 : 0);
+                break;
+            case g:
+                h = (b - r) / d + 2;
+                break;
+            case b:
+                h = (r - g) / d + 4;
+                break;
         }
-
-        return {
-            h: Math.floor(h * 360),
-            s: Math.floor(s * 100),
-            l: Math.floor(l * 100),
-        };
+        h /= 6;
     }
 
-    /*
-     * given an object with rgb or hsl properties, returns the corresponding string
-     * an optional alpha value can be added to the object, with name 'a'
-     */
+    return {
+        h: Math.floor(h * 360),
+        s: Math.floor(s * 100),
+        l: Math.floor(l * 100),
+    };
+};
+
+/*
+ * given an object with rgb or hsl properties, returns the corresponding string
+ * an optional alpha value can be added to the object, with name 'a'
+ */
 var getColorString = function(color) {
     console.assert(color !== undefined, 'color is undefined');
 
