@@ -9,7 +9,6 @@ var PlayingState = function() {
         g.fillStyle = 'rgba(0, 0, 0, 1)';
         g.fillRect(0, 0, constants.canvasRelativeWidth, constants.canvasRelativeHeight);
 
-        // render the game world
         world.render();
 
         g.restore();
@@ -20,10 +19,12 @@ var PlayingState = function() {
     };
 
     var keyPress = function(e) {
+        // manage input for common keys
         keyPressToggleSettings(e);
 
         switch (e.keyCode) {
             case keycodes['space']:
+                // do the current binded action
                 world.action();
                 // prevent space from scrolling the page
                 return false;

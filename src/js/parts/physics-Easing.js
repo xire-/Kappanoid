@@ -1,4 +1,6 @@
-// t: current time, b: beginning value, c: change in value, d: duration
+/*
+ * t: current time, b: beginning value, c: change in value, d: duration
+ */
 var easing = {
     easeInQuad: function(t, b, c, d) {
         return c * (t /= d) * t + b;

@@ -109,6 +109,9 @@ var getColorString = function(color) {
 };
 
 
+/*
+ * key names to codes map
+ */
 var keycodes = {
     'space': 32,
 

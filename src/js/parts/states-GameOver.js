@@ -8,14 +8,14 @@ var GameOverState = function() {
         // clear the previous frame
         g.fillStyle = 'rgba(0, 0, 0, 1)';
         g.fillRect(0, 0, constants.canvasRelativeWidth, constants.canvasRelativeHeight);
-        // render the game world
+
         world.render();
 
-        g.lineWidth = 2;
+        // draw game over text
         g.font = '30px emulogic';
         g.textAlign = 'center';
         g.textBaseline = 'middle';
-
+        g.lineWidth = 2;
         g.fillStyle = 'rgba(255, 255, 255, 1)';
         g.fillText('GAME OVER', constants.worldRelativeWidth / 2, constants.worldRelativeHeight / 2);
         g.strokeStyle = 'rgb(0, 0, 0)';
@@ -27,10 +27,12 @@ var GameOverState = function() {
     var update = function( /*delta*/ ) {};
 
     var keyPress = function(e) {
+        // manage input for common keys
         keyPressToggleSettings(e);
 
         switch (e.keyCode) {
             case keycodes['space']:
+                // reset the game
                 states.intro = new IntroState();
                 states.playing = new PlayingState();
                 currState = states.intro;
