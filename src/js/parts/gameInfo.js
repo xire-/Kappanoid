@@ -77,8 +77,8 @@ var GameInfo = function() {
 
         var minutes = '00';
         var seconds = '00';
-        if (world.levelTime !== null) {
-            var levelTime = new Date(Date.now() - world.levelTime.getTime());
+        if (world.levelTime !== 0) {
+            var levelTime = new Date(Date.now() - world.levelTime);
             minutes = (levelTime.getMinutes() < 10 ? '0' : '') + levelTime.getMinutes();
             seconds = (levelTime.getSeconds() < 10 ? '0' : '') + levelTime.getSeconds();
         }

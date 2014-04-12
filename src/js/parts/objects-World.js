@@ -2,21 +2,24 @@ var World = function() {
 
     ///////// public methods
 
+    /*
+     * handles all the actions the user can do by pressing the action key (spacebar)
+     */
     var action = function() {
-        // if the ball can be released, release it
+        // if the ball can be released from the paddle, release it
         releaseBall.call(this);
 
         // if lazors con be shooted, shoot them
         if (this.paddle.lazored) {
-            var lzr1 = new Lazor(new Vector2(this.paddle.center.x - this.paddle.halfSize.x * 0.75, this.paddle.center.y - this.paddle.halfSize.y));
-            var lzr2 = new Lazor(new Vector2(this.paddle.center.x + this.paddle.halfSize.x * 0.75, this.paddle.center.y - this.paddle.halfSize.y));
-            this.lazors.push(lzr1);
-            this.lazors.push(lzr2);
+            var leftLazor = new Lazor(new Vector2(this.paddle.center.x - this.paddle.halfSize.x * 0.75, this.paddle.center.y - this.paddle.halfSize.y));
+            var rightLazor = new Lazor(new Vector2(this.paddle.center.x + this.paddle.halfSize.x * 0.75, this.paddle.center.y - this.paddle.halfSize.y));
+            this._lazors.push(leftLazor);
+            this._lazors.push(rightLazor);
 
             if (settings.sounds) sounds.lazer.play();
         }
 
-        // if victory, load next level
+        // if the level is completed, load next level
         if (this.update === updateLevelCompleted) {
             if (this._currentLevel === levels.length - 1) {
                 // no more levels, grats!
@@ -25,35 +28,46 @@ var World = function() {
 
                 if (settings.music) music.gameOverMusic.play();
             } else {
+                // advance to the next level and reset the world...
                 this._currentLevel++;
-
                 this.reset(false);
 
+                // ...but skip the rotating world intro animation
                 this._timePassed = 1000;
-                this.render = renderIntroFalling;
+                this.render = renderIntroFallingBricks;
                 this.update = updateIntro;
             }
         }
     };
 
-    var changeTemporaryPowerup = function(type) {
-        // remove all temporary powerups
+    var changeTemporaryPowerup = function(powerUpType) {
+        // remove the power-up currently active (if there is one)
         this.paddle.enlarged = false;
         this.paddle.lazored = false;
         this.paddle.sticky = false;
-        if (type !== PowerUp.types.CATCH) {
+
+        // release the ball if it is currently caught by the paddle and the new power-up is not CATCH
+        if (powerUpType !== PowerUp.types.CATCH) {
             releaseBall.call(this);
         }
 
-        // add current powerup
-        if (type === PowerUp.types.ENLARGE) {
-            this.paddle.enlarged = true;
-        } else if (type === PowerUp.types.LASER) {
-            this.paddle.lazored = true;
-        } else if (type === PowerUp.types.CATCH) {
-            this.paddle.sticky = true;
+        // add the new power-up
+        switch (powerUpType) {
+            case PowerUp.types.ENLARGE:
+                this.paddle.enlarged = true;
+                break;
+            case PowerUp.types.LASER:
+                this.paddle.lazored = true;
+                break;
+            case PowerUp.types.CATCH:
+                this.paddle.sticky = true;
+                break;
+
+            default:
+                break;
         }
     };
+
 
     var reset = function(skipIntro) {
         // reset intro animation parameters
@@ -71,7 +85,7 @@ var World = function() {
         this.fallingPowerup = null;
 
         this._backgroundColor = levels[this._currentLevel].backgroundColor;
-        this.bordersColor = levels[this._currentLevel].bordersColor;
+        this._bordersColor = levels[this._currentLevel].bordersColor;
 
         this.balls = [];
         this.balls.push(new Ball(new Vector2(400, 600 - 50 - 7), 7, 0, new Vector2(0, -1), levels[this._currentLevel].ballColor));
@@ -100,53 +114,18 @@ var World = function() {
         this.paddle = new Paddle(new Vector2(800 / 2, 600 + paddleHalfSize.y - 50), paddleHalfSize, oldLifes, levels[this._currentLevel].paddleColor);
 
         this.particles = [];
-        this.lazors = [];
+        this._lazors = [];
 
-        this.levelTime = null;
-        this.shakeAmount.x = 0;
-        this.shakeAmount.y = 0;
+        this.levelTime = 0;
+        this._shakeAmount.x = 0;
+        this._shakeAmount.y = 0;
     };
 
     ///////// private methods
 
-    var drawEmptyWorld = function() {
-        // WARNING don't use save and restore here
-
-        // render borders (as background)
-        g.fillStyle = settings.colors ? getColorString(this.bordersColor) : '#FFFFFF';
-        g.fillRect(0, 60, this.containerSize.x + constants.bordersRelativeThickness * 2, this.containerSize.y + constants.bordersRelativeThickness);
-
-        // translate to render the world area
-        g.translate(this.containerOffset.x + this.shakeAmount.x, this.containerOffset.y + this.shakeAmount.y);
-
-        // clip the region
-        g.beginPath();
-        g.rect(0, 0, this.containerSize.x, this.containerSize.y);
-        g.clip();
-
-        // render background
-        g.fillStyle = settings.colors ? getColorString(this._backgroundColor) : getColorString({
-            r: 0,
-            g: 0,
-            b: 0
-        });
-        g.fillRect(0, 0, this.containerSize.x, this.containerSize.y);
-    };
-
-    var drawPaddleLifes = function() {
-        g.font = '18px emulogic';
-        g.textBaseline = 'top';
-        g.fillStyle = settings.colors ? getColorString(this.paddle.color) : getColorString({
-            r: 255,
-            g: 255,
-            b: 255
-        });
-        for (var i = 0; i < this.paddle.life; i++) {
-            g.fillText('❤', 5 + 20 * i, 578);
-        }
-    };
-
-
+    /*
+     * handles the release of the ball from the paddle
+     */
     var releaseBall = function() {
         if (this._canReleaseBall) {
             this.balls.forEach(function(ball) {
@@ -157,8 +136,8 @@ var World = function() {
                 if (settings.sounds) sounds.release.play();
             }, this);
 
-            if (this.levelTime === null) {
-                this.levelTime = new Date();
+            if (this.levelTime === 0) {
+                this.levelTime = Date.now();
             }
 
             this.update = updatePlaying;
@@ -173,69 +152,125 @@ var World = function() {
         }
     };
 
+    /*
+     * handles all the actions to be performed when a brick is killed by a ball or a lazor
+     */
     var killBrick = function(brick) {
-        // remove brick from all bricks
+        // remove brick from all bricks, breakable bricks and pruning grid
         this.bricks.splice(this.bricks.indexOf(brick), 1);
-        // remove brick from breakable bricks
         this._breakableBricks.splice(this._breakableBricks.indexOf(brick), 1);
-        // remove brick from pruning grid
         this.pruningGrid.removeAABB(brick);
 
         this.score += brick.value;
 
-        // TODO maybe spawn powerup (not silver and 1 in 10 chance)
-        if (this.fallingPowerup === null && this.balls.length === 1 && brick.type !== Brick.types.SILVER && randomFloat(1) < 1) {
-            var pType = PowerUp.types[Object.keys(PowerUp.types)[randomInt(Object.keys(PowerUp.types).length)]];
-            this.fallingPowerup = new PowerUp(brick.center.clone(), brick.halfSize.clone(), pType);
+        // spawn a power-up if: 
+        //     - no power-ups are falling
+        //     - there is only one ball
+        //     - the killed brick is not a silver one
+        if (this.fallingPowerup === null && this.balls.length === 1 && brick.type !== Brick.types.SILVER) {
+            var powerUpType = PowerUp.types[Object.keys(PowerUp.types)[randomInt(Object.keys(PowerUp.types).length)]];
+            this.fallingPowerup = new PowerUp(brick.center.clone(), brick.halfSize.clone(), powerUpType);
         }
 
         if (settings.particles) Particle.spawnExplosion(this.particles, brick);
     };
 
 
+    var drawEmptyWorld = function() {
+        // render borders (as background rect)
+        g.fillStyle = settings.colors ? getColorString(this._bordersColor) : 'rgba(255, 255, 255, 1)';
+        g.fillRect(0, constants.gameInfoRelativeHeight, this.containerSize.x + constants.bordersRelativeThickness * 2, this.containerSize.y + constants.bordersRelativeThickness);
+
+        // translate to the world area
+        g.translate(this.containerOffset.x + this._shakeAmount.x, this.containerOffset.y + this._shakeAmount.y);
+
+        // clip the world region
+        g.beginPath();
+        g.rect(0, 0, this.containerSize.x, this.containerSize.y);
+        g.clip();
+        g.closePath();
+
+        // render world background
+        g.fillStyle = settings.colors ? getColorString(this._backgroundColor) : 'rgba(0, 0, 0, 1)';
+        g.fillRect(0, 0, this.containerSize.x, this.containerSize.y);
+    };
+
+    var drawHearts = function(count) {
+        g.font = '18px emulogic';
+        g.textBaseline = 'top';
+        g.fillStyle = settings.colors ? getColorString(this.paddle.color) : 'rgba(255, 255, 255, 1)';
+        for (var i = 0; i < count; i++) {
+            g.fillText('❤', 5 + 20 * i, 578);
+        }
+    };
+
+    var drawLevelCompleted = function() {
+        g.font = '30px emulogic';
+        g.textAlign = 'center';
+        g.textBaseline = 'middle';
+        g.lineWidth = 2;
+
+        g.fillStyle = 'rgba(255, 255, 255, 1)';
+        g.fillText('LEVEL ' + (this._currentLevel + 1) + ' COMPLETE!', constants.worldRelativeWidth / 2, constants.worldRelativeHeight / 2);
+        g.strokeStyle = 'rgba(0, 0, 0, 1)';
+        g.strokeText('LEVEL ' + (this._currentLevel + 1) + ' COMPLETE!', constants.worldRelativeWidth / 2, constants.worldRelativeHeight / 2);
+    };
+
+
+    /*
+     * updates the status of all particles and removes the dead ones
+     */
     var updateParticles = function(delta) {
-        var deadParticles = [];
+        var deadParticlesIndexes = [];
         this.particles.forEach(function(particle, i) {
             particle.update(delta);
             if (particle.life <= 0) {
-                deadParticles.push(i);
+                deadParticlesIndexes.push(i);
             }
         }, this);
 
-        for (var i = deadParticles.length - 1; i >= 0; i--) {
-            var index = deadParticles[i];
+        for (var i = deadParticlesIndexes.length - 1; i >= 0; i--) {
+            var index = deadParticlesIndexes[i];
             this.particles.splice(index, 1);
         }
     };
 
-    ///// initial state
+    ///// intro state
 
+    /*
+     * render the rotating/zooming world
+     */
     var renderIntro = function() {
         g.save();
 
-        var tx = this.containerSize.x / 2 + this.containerOffset.x;
-        var ty = (this.containerSize.y + this.containerOffset.y) / 2;
-        var animScale = easing.easeOutBack(clamp(0, this._timePassed, 1000), 0, 1, 1000);
-        g.translate(tx, ty);
-        g.scale(animScale, animScale);
-        g.rotate(animScale * Math.PI * 2);
-        g.translate(-tx, -ty);
+        var translationX = this.containerSize.x / 2 + this.containerOffset.x;
+        var translationY = (this.containerSize.y + this.containerOffset.y) / 2;
+        g.translate(translationX, translationY);
+
+        var scale = easing.easeOutBack(clamp(0, this._timePassed, 1000), 0, 1, 1000);
+        g.scale(scale, scale);
+        g.rotate(scale * Math.PI * 2);
+        g.translate(-translationX, -translationY);
 
         drawEmptyWorld.call(this);
 
         g.restore();
     };
 
-    var renderIntroFalling = function() {
+    /*
+     * render the bricks falling from top into their position
+     */
+    var renderIntroFallingBricks = function() {
         g.save();
 
         drawEmptyWorld.call(this);
 
+        // render bricks
         this.bricks.forEach(function(brick, i) {
             g.save();
 
-            var offy = easing.easeOutBack(clamp(0, -this._brickMillisOffset[i] + this._timePassed - 1000, 1000), -1, 1, 1000);
-            g.translate(0, 500 * offy);
+            var translationY = easing.easeOutBack(clamp(0, -this._brickMillisOffset[i] + this._timePassed - 1000, 1000), -1, 1, 1000);
+            g.translate(0, 500 * translationY);
 
             brick.render();
 
@@ -244,7 +279,6 @@ var World = function() {
 
         g.globalAlpha = easing.easeInQuad(clamp(0, this._timePassed - 2300, 700), 0, 1, 700);
 
-        // render balls and paddle
         this.balls.forEach(function(ball) {
             ball.render();
         });
@@ -261,8 +295,9 @@ var World = function() {
             // [0, 1000) zoom in with rotation
         } else if (this._timePassed < 2300) {
             // [1000, 2300) falling bricks
-            this.render = renderIntroFalling;
+            this.render = renderIntroFallingBricks;
 
+            // play the starting level music
             if (settings.music && music.levelStartMusic.pos() === 0) music.levelStartMusic.play();
         } else if (this._timePassed < 3000) {
             // [2300, 3000) paddle and balls fade in
@@ -281,29 +316,31 @@ var World = function() {
         }, this);
     };
 
-    ///// playing state
+    ///// pre-playing/playing state
 
     var renderPlaying = function() {
         g.save();
 
         drawEmptyWorld.call(this);
 
-        // render balls, bricks and paddle
+        // render balls
         this.balls.forEach(function(ball) {
             ball.render();
         });
 
+        // render bricks
         this.bricks.forEach(function(brick) {
             brick.render();
         });
 
+        // render paddle, paddle lifes and lazors
         this.paddle.render();
-        this.lazors.forEach(function(lazor) {
+        drawHearts.call(this, this.paddle.life);
+        this._lazors.forEach(function(lazor) {
             lazor.render();
         });
-        drawPaddleLifes.call(this);
 
-        // render powerup
+        // render falling power-up
         if (this.fallingPowerup !== null) {
             this.fallingPowerup.render();
         }
@@ -318,17 +355,17 @@ var World = function() {
 
     var updatePrePlaying = function(delta) {
         this._canReleaseBall = true;
-        this.shaker.update(delta);
+        this._shaker.update(delta);
 
-        // update single components
-        this.balls.forEach(function(ball) {
-            ball.update(delta);
-        });
+        // update ball
+        this.balls[0].update(delta);
 
+        // update bricks
         this.bricks.forEach(function(brick) {
             brick.update(delta);
         });
 
+        // update paddle
         this.paddle.update(delta);
 
         // bring balls along
@@ -345,7 +382,7 @@ var World = function() {
             return;
         }
 
-        this.shaker.update(delta);
+        this._shaker.update(delta);
 
         this.bricks.forEach(function(brick) {
             brick.update(delta);
@@ -363,8 +400,8 @@ var World = function() {
             for (var j = this.balls.length - 1; j >= 0; j--) {
                 this.balls[j].update(delta / steps);
             }
-            for (j = this.lazors.length - 1; j >= 0; j--) {
-                this.lazors[j].update(delta / steps);
+            for (j = this._lazors.length - 1; j >= 0; j--) {
+                this._lazors[j].update(delta / steps);
             }
 
             handleLazorsCollisions.call(this);
@@ -403,6 +440,9 @@ var World = function() {
             settings.timeScale = 1;
 
             this._timePassed = 0;
+
+            this.changeTemporaryPowerup(null);
+
             this.render = renderLevelCompleted;
             this.update = updateLevelCompleted;
         }
@@ -415,19 +455,21 @@ var World = function() {
 
         drawEmptyWorld.call(this);
 
-        // render balls, bricks and paddle
+        // render ball
         if (clamp(0, this._timePassed - 2000, 2000) % 500 > 250) {
-            this.balls.forEach(function(ball) {
-                ball.render();
-            });
+            this.balls[0].render();
         }
 
+        // render bricks
         this.bricks.forEach(function(brick) {
             brick.render();
         });
 
+        // render paddle and paddle lifes
         this.paddle.render();
-        drawPaddleLifes.call(this);
+        if (clamp(251, this._timePassed - 2000, 2000) % 500 > 250) {
+            drawHearts.call(this, this.paddle.life);
+        }
 
         // render particles
         this.particles.forEach(function(particle) {
@@ -440,28 +482,27 @@ var World = function() {
     var updateRespawn = function(delta) {
         this._timePassed += delta;
 
-        this.shaker.update(delta);
+        // update shaker
+        this._shaker.update(delta);
 
-        // update single components
-        this.balls.forEach(function(ball) {
-            ball.update(delta);
-        });
+        // update ball
+        this.balls[0].update(delta);
 
+        // update bricks
         this.bricks.forEach(function(brick) {
             brick.update(delta);
         });
 
+        // update paddle
         this.paddle.update(delta);
-
-        // bring balls along
-        this.balls.forEach(function(ball) {
-            ball.center.x = this.paddle.center.x;
-        }, this);
+        // stick the ball to the center of the paddle
+        this.balls[0].center.x = this.paddle.center.x;
 
         // update particles
         updateParticles.call(this, delta);
 
         if (this._timePassed > 4000) {
+            // respawn state finished, go back to pre-playing state
             this.update = updatePrePlaying;
             this.render = renderPlaying;
         }
@@ -474,41 +515,27 @@ var World = function() {
 
         drawEmptyWorld.call(this);
 
-        // render balls, bricks and paddle
+        // render balls
         this.balls.forEach(function(ball) {
             ball.render();
         });
 
+        // render unbreakable bricks only
         this._unbreakableBricks.forEach(function(brick) {
             brick.render();
         });
 
+        // render paddle and paddle lifes
         this.paddle.render();
-        drawPaddleLifes.call(this);
+        drawHearts.call(this, this.paddle.life);
 
         // render particles
         this.particles.forEach(function(particle) {
             particle.render();
         });
 
-
-        g.lineWidth = 2;
-        g.font = '30px emulogic';
-        g.textAlign = 'center';
-        g.textBaseline = 'middle';
-
-        g.fillStyle = getColorString({
-            r: 255,
-            g: 255,
-            b: 255,
-        });
-        g.fillText('LEVEL ' + (this._currentLevel + 1) + ' COMPLETE!', constants.worldRelativeWidth / 2, constants.worldRelativeHeight / 2);
-        g.strokeStyle = getColorString({
-            r: 0,
-            g: 0,
-            b: 0,
-        });
-        g.strokeText('LEVEL ' + (this._currentLevel + 1) + ' COMPLETE!', constants.worldRelativeWidth / 2, constants.worldRelativeHeight / 2);
+        // render level completed text
+        drawLevelCompleted.call(this);
 
         g.restore();
     };
@@ -516,39 +543,36 @@ var World = function() {
     var updateLevelCompleted = function(delta) {
         this._timePassed += delta;
 
-        this.shaker.update(delta);
+        // update shaker
+        this._shaker.update(delta);
 
-        // fireworks
-        this._fireworksTime += delta;
-        if (this._fireworksTime > 500) {
-            this._fireworksTime = 0;
-
-            if (settings.particles) Particle.spawnVictoryFireworks(this.particles);
-        }
-
-        // remove all powerups before changing level
-        this.changeTemporaryPowerup(null);
-
-        this.paddle.update(delta);
-
+        // update balls
         this.balls.forEach(function(ball) {
             ball.update(delta);
         });
+
+        // update paddle
+        this.paddle.update(delta);
+
+        // spawn fireworks randomly
+        if (this._timePassed % 500 < 15) {
+            if (settings.particles) Particle.spawnVictoryFireworks(this.particles);
+        }
 
         // update particles
         updateParticles.call(this, delta);
     };
 
-    ///// collisions
+    ///// collision handling
 
     var handleLazorsCollisions = function() {
         var deadLazors = [];
         var hitBricks = [];
-        this.lazors.forEach(function(lazor) {
+        this._lazors.forEach(function(lazor) {
             // check and handle collisions with top border
             if (lazor.center.y < 0) {
                 deadLazors.push(lazor);
-                if (settings.particles) Particle.spawnCollisionEffect(this.particles, lazor.center.x, 0, 0, -1, this.bordersColor);
+                if (settings.particles) Particle.spawnCollisionEffect(this.particles, lazor.center.x, 0, 0, -1, this._bordersColor);
             }
 
             // check and handle collisions with bricks
@@ -566,7 +590,7 @@ var World = function() {
         }, this);
 
         deadLazors.forEach(function(lazor) {
-            this.lazors.splice(this.lazors.indexOf(lazor), 1);
+            this._lazors.splice(this._lazors.indexOf(lazor), 1);
         }, this);
 
         hitBricks.forEach(function(brick) {
@@ -582,35 +606,35 @@ var World = function() {
             // check and handle collisions with borders
             if (ball.center.x - ball.radius < 0) {
                 // shake screen before changing direction
-                if (settings.worldShake) this.shaker.shake(ball.direction);
+                if (settings.worldShake) this._shaker.shake(ball.direction);
 
                 ball.center.x = -ball.center.x + ball.radius * 2;
                 ball.direction.x *= -1;
 
                 ball.trail.addVertex(ball.center);
-                if (settings.particles) Particle.spawnCollisionEffect(this.particles, 0, ball.center.y, ball.direction.x, ball.direction.y, this.bordersColor);
+                if (settings.particles) Particle.spawnCollisionEffect(this.particles, 0, ball.center.y, ball.direction.x, ball.direction.y, this._bordersColor);
             }
             if (ball.center.y - ball.radius < 0) {
                 // shake screen before changing direction
-                if (settings.worldShake) this.shaker.shake(ball.direction);
+                if (settings.worldShake) this._shaker.shake(ball.direction);
 
                 ball.center.y = -ball.center.y + ball.radius * 2;
                 ball.direction.y *= -1;
 
                 ball.trail.addVertex(ball.center);
 
-                if (settings.particles) Particle.spawnCollisionEffect(this.particles, ball.center.x, 0, ball.direction.x, ball.direction.y, this.bordersColor);
+                if (settings.particles) Particle.spawnCollisionEffect(this.particles, ball.center.x, 0, ball.direction.x, ball.direction.y, this._bordersColor);
             }
             if (ball.center.x + ball.radius >= constants.worldRelativeWidth) {
                 // shake screen before changing direction
-                if (settings.worldShake) this.shaker.shake(ball.direction);
+                if (settings.worldShake) this._shaker.shake(ball.direction);
 
                 ball.center.x = constants.worldRelativeWidth - ((ball.center.x + ball.radius) - constants.worldRelativeWidth) - ball.radius;
                 ball.direction.x *= -1;
 
                 ball.trail.addVertex(ball.center);
 
-                if (settings.particles) Particle.spawnCollisionEffect(this.particles, 800, ball.center.y, ball.direction.x, ball.direction.y, this.bordersColor);
+                if (settings.particles) Particle.spawnCollisionEffect(this.particles, 800, ball.center.y, ball.direction.x, ball.direction.y, this._bordersColor);
             }
         }, this);
     };
@@ -628,7 +652,7 @@ var World = function() {
                     var xColl = collisionPoint.x == brick.center.x - brick.halfSize.x || collisionPoint.x == brick.center.x + brick.halfSize.x;
                     var yColl = collisionPoint.y == brick.center.y - brick.halfSize.y || collisionPoint.y == brick.center.y + brick.halfSize.y;
 
-                    if (settings.worldShake) this.shaker.shake(ball.direction);
+                    if (settings.worldShake) this._shaker.shake(ball.direction);
 
                     if (xColl && yColl) {
                         tmpVec.set(brick.center).sub(collisionPoint);
@@ -679,8 +703,8 @@ var World = function() {
                 if (ball.direction.y > 0) {
                     var collisionPoint = collisionDetection.testSphereAABB(ball, this.paddle);
                     if (collisionPoint !== null) {
-                        if (settings.worldShake) this.shaker.shake(ball.direction);
-                        
+                        if (settings.worldShake) this._shaker.shake(ball.direction);
+
                         // determine resultant direction based on collisionPoint
                         var angle = (collisionPoint.x - this.paddle.center.x) / this.paddle.halfSize.x;
                         ball.direction.x = Math.sin(angle);
@@ -729,7 +753,7 @@ var World = function() {
                 this.render = renderRespawn;
                 this.changeTemporaryPowerup(null);
                 this.ballSpeedMult = 1;
-                this.lazors = [];
+                this._lazors = [];
                 this._timePassed = 0;
 
                 if (settings.sounds) {
@@ -781,20 +805,23 @@ var World = function() {
         // init
         this.containerOffset = containerOffset;
         this.containerSize = containerSize;
-        this.shakeAmount = new Vector2(0, 0);
-        this.shaker = new Shaker(this.shakeAmount);
-        this._backgroundColor = constants.worldBackgroundColor;
-        this.bordersColor = undefined;
-        this._canReleaseBall = false;
+        this.score = 0;
+        this.levelTime = 0;
+
         this._timePassed = 0;
+
+        this._backgroundColor = null;
+        this._bordersColor = null;
+
+        this._shakeAmount = new Vector2(0, 0);
+        this._shaker = new Shaker(this._shakeAmount);
+
+        this._canReleaseBall = false;
         this._brickMillisOffset = 0;
         this._currentLevel = 0;
         this._breakableBricks = [];
         this._unbreakableBricks = [];
-        this.lazors = [];
-        this.score = 0;
-        this._fireworksTime = 0;
-        this.levelTime = null;
+        this._lazors = [];
 
         // initialize all game objects
         this.reset();
@@ -815,6 +842,22 @@ var World = function() {
         },
         get containerSize() {
             return this._containerSize;
+        },
+
+        set score(value) {
+            console.assert(isTypeOf(value, 'number'), JSON.stringify(value));
+            this._score = value;
+        },
+        get score() {
+            return this._score;
+        },
+
+        set levelTime(value) {
+            console.assert(isTypeOf(value, 'number'), JSON.stringify(value));
+            this._levelTime = value;
+        },
+        get levelTime() {
+            return this._levelTime;
         },
     };
 
