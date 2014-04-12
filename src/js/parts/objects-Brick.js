@@ -105,33 +105,33 @@ var Brick = function() {
 
     var render = function() {
         g.save();
-
         g.translate(this.center.x, this.center.y);
 
+        // draw brick
         g.save();
-        g.beginPath();
+
         g.shadowBlur = 5;
-        g.shadowColor = getColorString({
-            r: 0,
-            g: 0,
-            b: 0,
-        });
+        g.shadowColor = 'rgba(0, 0, 0, 1)';
         g.shadowOffsetX = 3;
         g.shadowOffsetY = 3;
+
+        g.beginPath();
 
         g.fillStyle = settings.colors ? getColorString(this.color) : 'rgba(255, 255, 255, 1)';
         g.rect(-this.halfSize.x, -this.halfSize.y, this.halfSize.x * 2, this.halfSize.y * 2);
         g.fillRect(-this.halfSize.x, -this.halfSize.y, this.halfSize.x * 2, this.halfSize.y * 2);
+
         g.restore();
+
         g.clip();
 
         // draw blink
-        g.shadowBlur = 0;
-        g.fillStyle = 'rgba(255, 255, 255, 0.5)';
         g.translate(-this.halfSize.x * 2 + (this.halfSize.x * 4 * this._blinkTimer / 500), 0);
-        g.rotate(-1); // rotate one radiant counter-clock wise
-        g.fillRect(-this.halfSize.x, -this.halfSize.y, this.halfSize.x * 2, this.halfSize.y * 2);
+        // rotate one radiant counter-clock wise
+        g.rotate(-1);
 
+        g.fillStyle = 'rgba(255, 255, 255, 0.5)';
+        g.fillRect(-this.halfSize.x, -this.halfSize.y, this.halfSize.x * 2, this.halfSize.y * 2);
 
         g.restore();
     };
@@ -151,10 +151,10 @@ var Brick = function() {
         // init
         this.center = center;
         this.halfSize = halfSize;
+        this.type = type;
         this.life = type.life;
         this.color = type.color;
         this.value = type.value;
-        this.type = type;
 
         this._blinkTimer = 500;
     };
@@ -174,6 +174,14 @@ var Brick = function() {
         },
         get halfSize() {
             return this._halfSize;
+        },
+
+        set type(value) {
+            console.assert(value !== undefined, JSON.stringify(value));
+            this._type = value;
+        },
+        get type() {
+            return this._type;
         },
 
         set life(value) {

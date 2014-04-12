@@ -94,9 +94,9 @@ var Trail = function() {
             cumulativeLength += vertex.distance(prevVertex);
             var colorVertex = lerpColor(startColor, endColor, 1 - (cumulativeLength / maxLength));
 
-            g.beginPath();
             g.lineWidth = lineWidth;
 
+            g.beginPath();
             g.moveTo(prevVertex.x, prevVertex.y);
 
             var gradient = g.createLinearGradient(prevVertex.x, prevVertex.y, vertex.x, vertex.y);

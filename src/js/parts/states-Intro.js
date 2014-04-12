@@ -116,9 +116,11 @@ var IntroState = function() {
         gradient.addColorStop(12 / 12, 'rgba(255, 0, 0, 1)');
 
         g.font = '15px monospace';
+
         g.fillStyle = gradient;
         g.fillText('Francesco Cagnin and Marco Gasparini', 0, y);
         y += lineHeight;
+
         g.fillText('© 2014', 0, y);
         y += lineHeight;
 

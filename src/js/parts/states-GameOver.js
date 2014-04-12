@@ -16,6 +16,7 @@ var GameOverState = function() {
         g.textAlign = 'center';
         g.textBaseline = 'middle';
         g.lineWidth = 2;
+        
         g.fillStyle = 'rgba(255, 255, 255, 1)';
         g.fillText('GAME OVER', constants.worldRelativeWidth / 2, constants.worldRelativeHeight / 2);
         g.strokeStyle = 'rgb(0, 0, 0)';

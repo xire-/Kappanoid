@@ -38,12 +38,12 @@ var kappanoid = (function() {
 
     // store all the configurable settings
     var settings = {
+        timeScale: 1,
+
         colors: false,
         particles: false,
         sounds: false,
         music: true,
-        timeScale: 1,
-
         ballTrail: false,
         lastBrickSlowMo: false,
         paddleSpeedDistortion: false,

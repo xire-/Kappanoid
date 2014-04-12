@@ -4,7 +4,6 @@ var GameInfo = function() {
 
     var render = function(delta) {
         g.save();
-
         g.translate(this.containerOffset.x, this.containerOffset.y);
 
         // clip the region

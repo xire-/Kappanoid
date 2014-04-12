@@ -78,7 +78,7 @@ var PowerUp = function() {
             },
             onActivate: function() {
                 if (world.paddle.life >= 5) {
-                    world.score += 200;
+                    world.score += 1000;
                 } else {
                     world.paddle.life += 1;
                 }
@@ -92,7 +92,6 @@ var PowerUp = function() {
 
     var render = function() {
         g.save();
-
         g.translate(this.center.x, this.center.y);
 
         // draw power-up shape
