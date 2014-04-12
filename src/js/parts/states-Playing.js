@@ -38,9 +38,6 @@ var PlayingState = function() {
             case keycodes['o']:
                 if (settings.debug) settings.timeScale = 0.15;
                 break;
-            case keycodes['p']:
-                settings.timeScale = 0;
-                break;
 
             case keycodes['r']:
                 if (settings.debug) world.reset(true);

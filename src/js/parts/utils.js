@@ -153,6 +153,14 @@ var keyPressToggleSettings = function(e) {
             settings.debug = !settings.debug;
             break;
 
+        case keycodes['p']:
+            if (settings.timeScale === 0) {
+                settings.timeScale = 1;
+            } else {
+                settings.timeScale = 0;
+            }
+            break;
+
         case keycodes['0']:
             settings.colors = true;
             settings.particles = true;
