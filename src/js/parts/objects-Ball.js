@@ -5,22 +5,17 @@ var Ball = function() {
     var render = function() {
         g.save();
 
-        // draw ball trail
-        if (settings.ballTrail) {
-            this.trail.render();
-        }
+        // draw trail
+        if (settings.ballTrail) this.trail.render();
 
         // draw ball
         g.translate(this.center.x, this.center.y);
+        if (world.paddle.ballIsStuck === false) g.rotate(Math.atan2(this.direction.y, this.direction.x));
 
-        if (world.paddle.ballIsStuck === false) {
-            g.rotate(Math.atan2(this.direction.y, this.direction.x));
-        }
-
-        g.shadowOffsetX = 3;
-        g.shadowOffsetY = 3;
         g.shadowBlur = 5;
         g.shadowColor = 'rgba(0, 0, 0, 1)';
+        g.shadowOffsetX = 3;
+        g.shadowOffsetY = 3;
 
         g.fillStyle = settings.colors ? getColorString(this.color) : 'rgba(255, 255, 255, 1)';
         g.fillRect(-this.radius, -this.radius, this.radius * 2, this.radius * 2);
@@ -88,6 +83,14 @@ var Ball = function() {
         },
         get color() {
             return this._color;
+        },
+
+        set trail(value) {
+            console.assert(value !== undefined && value instanceof Trail, JSON.stringify(value));
+            this._trail = value;
+        },
+        get trail() {
+            return this._trail;
         },
     };
 
