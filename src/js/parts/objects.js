@@ -18,5 +18,4 @@ function testObjects() {
     testBall();
     testBrick();
     testPaddle();
-    testPowerUp();
 }

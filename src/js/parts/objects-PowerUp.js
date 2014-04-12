@@ -12,7 +12,7 @@ var PowerUp = function() {
             },
             onActivate: function() {
                 world.changeTemporaryPowerup(PowerUp.types.LASER);
-            }
+            },
         },
         ENLARGE: {
             character: 'E',
@@ -23,8 +23,9 @@ var PowerUp = function() {
             },
             onActivate: function() {
                 world.changeTemporaryPowerup(PowerUp.types.ENLARGE);
+
                 if (settings.sounds) sounds.longship.play();
-            }
+            },
         },
         CATCH: {
             character: 'C',
@@ -35,7 +36,7 @@ var PowerUp = function() {
             },
             onActivate: function() {
                 world.changeTemporaryPowerup(PowerUp.types.CATCH);
-            }
+            },
         },
         SLOW: {
             character: 'S',
@@ -46,7 +47,7 @@ var PowerUp = function() {
             },
             onActivate: function() {
                 world.ballSpeedMult = Math.max(0.5, world.ballSpeedMult - 0.25);
-            }
+            },
         },
         DISRUPTION: {
             character: 'D',
@@ -60,17 +61,13 @@ var PowerUp = function() {
                 world.changeTemporaryPowerup(null);
 
                 var ball = world.balls[0];
-                var rand;
-                rand = randomFloat(-0.1, 0.1);
-                world.balls.push(new Ball(ball.center.clone(), ball.radius, ball.speed, new Vector2(-1 + rand, -1), ball.color));
 
+                world.balls.push(new Ball(ball.center.clone(), ball.radius, ball.speed, new Vector2(-1 + randomFloat(-0.1, 0.1), -1), ball.color));
                 world.balls[1].trail.reset(true);
 
-                rand = randomFloat(-0.1, 0.1);
-                world.balls.push(new Ball(ball.center.clone(), ball.radius, ball.speed, new Vector2(1 + rand, -1), ball.color));
-
+                world.balls.push(new Ball(ball.center.clone(), ball.radius, ball.speed, new Vector2(1 + randomFloat(-0.1, 0.1), -1), ball.color));
                 world.balls[2].trail.reset(true);
-            }
+            },
         },
         PLAYER: {
             character: 'P',
@@ -85,6 +82,7 @@ var PowerUp = function() {
                 } else {
                     world.paddle.life += 1;
                 }
+
                 if (settings.sounds) sounds.life.play();
             }
         },
@@ -94,63 +92,57 @@ var PowerUp = function() {
 
     var render = function() {
         g.save();
+
         g.translate(this.center.x, this.center.y);
 
+        // draw power-up shape
+        // need to save context for shadows
         g.save();
 
         if (settings.colors) {
             g.shadowBlur = 3;
-            g.shadowColor = 'rgb(0, 0, 0)';
+            g.shadowColor = 'rgba(0, 0, 0, 1)';
             g.shadowOffsetX = 3;
             g.shadowOffsetY = 3;
         }
 
-        var rad = 5;
-        g.moveTo(-(this.halfSize.x - rad), -this.halfSize.y);
+        g.beginPath();
+        g.moveTo(-(this.halfSize.x - radius), -this.halfSize.y);
 
-        g.lineTo(+(this.halfSize.x - rad), -this.halfSize.y);
-        g.arcTo(this.halfSize.x, -this.halfSize.y, this.halfSize.x, -(this.halfSize.y - rad), rad);
-        g.lineTo(this.halfSize.x, (this.halfSize.y - rad));
-        g.arcTo(this.halfSize.x, this.halfSize.y, this.halfSize.x - rad, this.halfSize.y, rad);
-        g.lineTo(-(this.halfSize.x - rad), this.halfSize.y);
-        g.arcTo(-this.halfSize.x, this.halfSize.y, -this.halfSize.x, this.halfSize.y - rad, rad);
-        g.lineTo(-this.halfSize.x, -(this.halfSize.y - rad));
-        g.arcTo(-this.halfSize.x, -this.halfSize.y, -(this.halfSize.x - rad), -this.halfSize.y, rad);
+        var radius = 5;
+        g.lineTo(+(this.halfSize.x - radius), -this.halfSize.y);
+        g.arcTo(this.halfSize.x, -this.halfSize.y, this.halfSize.x, -(this.halfSize.y - radius), radius);
+        g.lineTo(this.halfSize.x, (this.halfSize.y - radius));
+        g.arcTo(this.halfSize.x, this.halfSize.y, this.halfSize.x - radius, this.halfSize.y, radius);
+        g.lineTo(-(this.halfSize.x - radius), this.halfSize.y);
+        g.arcTo(-this.halfSize.x, this.halfSize.y, -this.halfSize.x, this.halfSize.y - radius, radius);
+        g.lineTo(-this.halfSize.x, -(this.halfSize.y - radius));
+        g.arcTo(-this.halfSize.x, -this.halfSize.y, -(this.halfSize.x - radius), -this.halfSize.y, radius);
 
-        g.fillStyle = settings.colors ? getColorString(this.color) : getColorString({
-            r: 255,
-            g: 255,
-            b: 255,
-        });
+        g.fillStyle = settings.colors ? getColorString(this._color) : 'rgba(255, 255, 255, 1)';
         g.fill();
+        g.closePath();
 
         g.restore();
 
+        // draw power-up character
         g.font = ((this.halfSize.y - 4) * 2) + 'px emulogic';
         g.textAlign = 'center';
         g.textBaseline = 'middle';
-        var charcolor = this.character === 'P' ? getColorString({
-            r: 102,
-            g: 255,
-            b: 255,
-        }) : getColorString({
-            r: 255,
-            g: 255,
-            b: 102,
-        });
-        g.fillStyle = settings.colors ? charcolor : 'rgba(0, 0, 0, 1)';
-        g.fillText(this.character, 0, 0);
 
+        var characterColor = this._character === 'P' ? 'rgba(102, 255, 255, 1)' : 'rgba(255, 255, 102, 1)';
+        g.fillStyle = settings.colors ? characterColor : 'rgba(0, 0, 0, 1)';
+        g.fillText(this._character, 0, 0);
         if (settings.colors) {
-            g.strokeStyle = settings.colors ? charcolor : 'rgba(0, 0, 0, 1)';
-            g.strokeText(this.character, 0, 0);
+            g.strokeStyle = settings.colors ? characterColor : 'rgba(0, 0, 0, 1)';
+            g.strokeText(this._character, 0, 0);
         }
 
         g.restore();
     };
 
     var update = function(delta) {
-        // move the powerup down
+        // move the power-up down
         this.center.y = this.center.y + (100 * delta) / 1000;
     };
 
@@ -158,15 +150,16 @@ var PowerUp = function() {
 
     var constructor = function PowerUp(center, halfSize, type) {
         // public methods
+        this.onActivate = type.onActivate;
         this.render = render;
         this.update = update;
 
         // init
         this.center = center;
         this.halfSize = halfSize;
-        this.color = type.color;
-        this.character = type.character;
-        this.onActivate = type.onActivate;
+
+        this._color = type.color;
+        this._character = type.character;
     };
 
     constructor.prototype = {
@@ -191,9 +184,3 @@ var PowerUp = function() {
 
     return constructor;
 }();
-
-function testPowerUp() {
-    // TODO
-
-    console.log('testPowerUp OK');
-}
