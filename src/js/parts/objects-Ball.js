@@ -5,12 +5,12 @@ var Ball = function() {
     var render = function() {
         g.save();
 
-        // draw trail
+        // draw trail (before translate context)
         if (settings.ballTrail) this.trail.render();
 
         // draw ball
         g.translate(this.center.x, this.center.y);
-        if (world.paddle.ballIsStuck === false) g.rotate(Math.atan2(this.direction.y, this.direction.x));
+        if (world.paddle.ballCaught === false) g.rotate(Math.atan2(this.direction.y, this.direction.x));
 
         g.shadowBlur = 5;
         g.shadowColor = 'rgba(0, 0, 0, 1)';

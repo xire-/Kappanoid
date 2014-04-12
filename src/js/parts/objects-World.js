@@ -21,6 +21,7 @@ var World = function() {
 
         // if the level is completed, load next level
         if (this.update === updateLevelCompleted) {
+            // is this the last level?
             if (this._currentLevel === levels.length - 1) {
                 // no more levels, grats!
                 currState = states.gameover;
@@ -47,9 +48,7 @@ var World = function() {
         this.paddle.sticky = false;
 
         // release the ball if it is currently caught by the paddle and the new power-up is not CATCH
-        if (powerUpType !== PowerUp.types.CATCH) {
-            releaseBall.call(this);
-        }
+        if (powerUpType !== PowerUp.types.CATCH) releaseBall.call(this);
 
         // add the new power-up
         switch (powerUpType) {
@@ -128,23 +127,27 @@ var World = function() {
      */
     var releaseBall = function() {
         if (this._canReleaseBall) {
-            this.balls.forEach(function(ball) {
-                ball.direction = new Vector2(randomFloat(-1, 1), -1);
-                ball.speed = 300;
-                ball.trail.reset(true);
+            this._canReleaseBall = false;
 
-                if (settings.sounds) sounds.release.play();
-            }, this);
+            // release the ball
+            this.balls[0].direction = new Vector2(randomFloat(-1, 1), -1);
+            this.balls[0].speed = 300;
+            this.balls[0].trail.reset(true);
 
+            if (settings.sounds) sounds.release.play();
+
+            // if it's the first time the ball is released, set the level time
             if (this.levelTime === 0) {
                 this.levelTime = Date.now();
             }
 
             this.update = updatePlaying;
-            this._canReleaseBall = false;
         }
-        if (this.paddle.ballIsStuck) {
-            this.paddle.ballIsStuck = false;
+
+        // if the paddle has the power-up CATCH
+        if (this.paddle.ballCaught) {
+            this.paddle.ballCaught = false;
+
             this.balls[0].speed = 300;
             this.balls[0].trail.reset(true);
 
@@ -277,12 +280,9 @@ var World = function() {
             g.restore();
         }, this);
 
+        // render ball and paddle (fading)
         g.globalAlpha = easing.easeInQuad(clamp(0, this._timePassed - 2300, 700), 0, 1, 700);
-
-        this.balls.forEach(function(ball) {
-            ball.render();
-        });
-
+        this.balls[0].render();
         this.paddle.render();
 
         g.restore();
@@ -307,13 +307,10 @@ var World = function() {
             this.update = updatePrePlaying;
         }
 
-        // update paddle position (clamped)
+        // update paddle
         this.paddle.update(delta);
-
-        // bring balls along
-        this.balls.forEach(function(ball) {
-            ball.center.x = this.paddle.center.x;
-        }, this);
+        // stick the ball to the center of the paddle
+        this.balls[0].center.x = this.paddle.center.x;
     };
 
     ///// pre-playing/playing state
@@ -333,17 +330,15 @@ var World = function() {
             brick.render();
         });
 
+        // render falling power-up
+        if (this.fallingPowerup !== null) this.fallingPowerup.render();
+
         // render paddle, paddle lifes and lazors
         this.paddle.render();
         drawHearts.call(this, this.paddle.life);
         this._lazors.forEach(function(lazor) {
             lazor.render();
         });
-
-        // render falling power-up
-        if (this.fallingPowerup !== null) {
-            this.fallingPowerup.render();
-        }
 
         // render particles
         this.particles.forEach(function(particle) {
@@ -353,8 +348,13 @@ var World = function() {
         g.restore();
     };
 
+    /*
+     * this update is ran after the intro and after every time the ball dies and respawns
+     */
     var updatePrePlaying = function(delta) {
         this._canReleaseBall = true;
+
+        // update shaker
         this._shaker.update(delta);
 
         // update ball
@@ -367,39 +367,39 @@ var World = function() {
 
         // update paddle
         this.paddle.update(delta);
-
-        // bring balls along
-        this.balls.forEach(function(ball) {
-            ball.center.x = this.paddle.center.x;
-        }, this);
+        // stick the ball to the center of the paddle
+        this.balls[0].center.x = this.paddle.center.x;
 
         // update particles
         updateParticles.call(this, delta);
     };
 
     var updatePlaying = function(delta) {
-        if (delta === 0) {
-            return;
-        }
+        // game paused?
+        if (delta === 0) return;
 
+        // update shaker
         this._shaker.update(delta);
 
+        // update bricks
         this.bricks.forEach(function(brick) {
             brick.update(delta);
         });
 
-        // update powerup
-        if (this.fallingPowerup !== null) {
-            this.fallingPowerup.update(delta);
-        }
+        // update falling power-up
+        if (this.fallingPowerup !== null) this.fallingPowerup.update(delta);
 
+        // update paddle
         this.paddle.update(delta);
 
+        // handle collisions
         var steps = 10;
         for (var i = 0; i < steps; i++) {
+            // update balls
             for (var j = this.balls.length - 1; j >= 0; j--) {
                 this.balls[j].update(delta / steps);
             }
+            // update lazors
             for (j = this._lazors.length - 1; j >= 0; j--) {
                 this._lazors[j].update(delta / steps);
             }
@@ -408,36 +408,36 @@ var World = function() {
             handleBallBordersCollisions.call(this);
             handleBallBrickCollisions.call(this);
             handleBallPaddleCollisions.call(this);
-            handlePowerUpPaddleCollisions.call(this);
+            if (this.fallingPowerup !== null) handlePowerUpPaddleCollisions.call(this);
         }
 
         // peggle effect
         if (settings.lastBrickSlowMo) {
             if (this._breakableBricks.length === 1 && this._breakableBricks[0].life === 1) {
                 var lastBrick = this._breakableBricks[0];
-                var distance;
+                var distanceBallLastBrick;
+                // check if a ball is near the last brick
                 var ballNear = this.balls.some(function(ball) {
-                    // check if ball is near the last brick
                     var brickPoint = collisionDetection.closestPtPointAABB(ball.center, lastBrick);
-                    distance = ball.center.distance(brickPoint);
-                    return distance <= 50;
+                    distanceBallLastBrick = ball.center.distance(brickPoint);
+                    return distanceBallLastBrick <= 50;
                 });
 
                 // to slow or not to slow
-                settings.timeScale = ballNear ? clamp(0.15, (distance - 30) / 20, 1) : 1;
+                settings.timeScale = ballNear ? clamp(0.15, (distanceBallLastBrick - 30) / 20, 1) : 1;
             }
         }
 
         // update particles
         updateParticles.call(this, delta);
 
-        // increment ball speed over time
+        // increment balls speed over time (+1 every 120 seconds)
         this.ballSpeedMult = Math.min(3, this.ballSpeedMult + (delta / 120000));
 
-        // level finished?
+        // level completed?
         if (this._breakableBricks.length === 0) {
             // turn off peggle effect
-            settings.timeScale = 1;
+            if (settings.lastBrickSlowMo) settings.timeScale = 1;
 
             this._timePassed = 0;
 
@@ -572,7 +572,7 @@ var World = function() {
             // check and handle collisions with top border
             if (lazor.center.y < 0) {
                 deadLazors.push(lazor);
-                if (settings.particles) Particle.spawnCollisionEffect(this.particles, lazor.center.x, 0, 0, -1, this._bordersColor);
+                if (settings.particles) Particle.spawnCollisionEffect(this.particles, new Vector2(lazor.center.x, 0), new Vector2(0, -1), this._bordersColor);
             }
 
             // check and handle collisions with bricks
@@ -584,7 +584,7 @@ var World = function() {
                     // collision collision collision collision
                     hitBricks.push(brick);
                     deadLazors.push(lazor);
-                    if (settings.particles) Particle.spawnCollisionEffect(this.particles, lazor.center.x, lazor.center.y, 0, -1, brick.color);
+                    if (settings.particles) Particle.spawnCollisionEffect(this.particles, lazor.center, new Vector2(0, -1), brick.color);
                 }
             }, this);
         }, this);
@@ -612,7 +612,8 @@ var World = function() {
                 ball.direction.x *= -1;
 
                 ball.trail.addVertex(ball.center);
-                if (settings.particles) Particle.spawnCollisionEffect(this.particles, 0, ball.center.y, ball.direction.x, ball.direction.y, this._bordersColor);
+
+                if (settings.particles) Particle.spawnCollisionEffect(this.particles, new Vector2(0, ball.center.y), ball.direction, this._bordersColor);
             }
             if (ball.center.y - ball.radius < 0) {
                 // shake screen before changing direction
@@ -623,7 +624,7 @@ var World = function() {
 
                 ball.trail.addVertex(ball.center);
 
-                if (settings.particles) Particle.spawnCollisionEffect(this.particles, ball.center.x, 0, ball.direction.x, ball.direction.y, this._bordersColor);
+                if (settings.particles) Particle.spawnCollisionEffect(this.particles, new Vector2(ball.center.x, 0), ball.direction, this._bordersColor);
             }
             if (ball.center.x + ball.radius >= constants.worldRelativeWidth) {
                 // shake screen before changing direction
@@ -634,7 +635,7 @@ var World = function() {
 
                 ball.trail.addVertex(ball.center);
 
-                if (settings.particles) Particle.spawnCollisionEffect(this.particles, 800, ball.center.y, ball.direction.x, ball.direction.y, this._bordersColor);
+                if (settings.particles) Particle.spawnCollisionEffect(this.particles, new Vector2(constants.worldRelativeWidth, ball.center.y), ball.direction, this._bordersColor);
             }
         }, this);
     };
@@ -649,11 +650,10 @@ var World = function() {
             closerBricks.forEach(function(brick) {
                 var collisionPoint = collisionDetection.testSphereAABB(ball, brick);
                 if (collisionPoint !== null) {
-                    var xColl = collisionPoint.x == brick.center.x - brick.halfSize.x || collisionPoint.x == brick.center.x + brick.halfSize.x;
-                    var yColl = collisionPoint.y == brick.center.y - brick.halfSize.y || collisionPoint.y == brick.center.y + brick.halfSize.y;
-
                     if (settings.worldShake) this._shaker.shake(ball.direction);
 
+                    var xColl = collisionPoint.x == brick.center.x - brick.halfSize.x || collisionPoint.x == brick.center.x + brick.halfSize.x;
+                    var yColl = collisionPoint.y == brick.center.y - brick.halfSize.y || collisionPoint.y == brick.center.y + brick.halfSize.y;
                     if (xColl && yColl) {
                         tmpVec.set(brick.center).sub(collisionPoint);
                         var xDir = ball.direction.x * tmpVec.x > 0;
@@ -676,7 +676,7 @@ var World = function() {
 
                     ball.trail.addVertex(ball.center);
 
-                    if (settings.particles) Particle.spawnCollisionEffect(this.particles, collisionPoint.x, collisionPoint.y, ball.direction.x, ball.direction.y, brick.color);
+                    if (settings.particles) Particle.spawnCollisionEffect(this.particles, collisionPoint, ball.direction, brick.color);
                 }
             }, this);
 
@@ -696,10 +696,10 @@ var World = function() {
 
     var handleBallPaddleCollisions = function() {
         var deadBalls = [];
-        this.balls.forEach(function(ball, i) {
+        this.balls.forEach(function(ball) {
             // check ball vs bottom and paddle
             if (ball.center.y + ball.radius >= this.paddle.center.y - this.paddle.halfSize.y) {
-                // if it's actualy going down
+                // is the ball going down?
                 if (ball.direction.y > 0) {
                     var collisionPoint = collisionDetection.testSphereAABB(ball, this.paddle);
                     if (collisionPoint !== null) {
@@ -714,13 +714,13 @@ var World = function() {
                             ball.center.x = collisionPoint.x;
                             ball.center.y = this.paddle.center.y - this.paddle.halfSize.y - ball.radius;
                             ball.speed = 0;
-                            this.paddle.ballIsStuck = true;
+                            this.paddle.ballCaught = true;
 
                             if (settings.sounds) sounds.collect.play();
                         } else {
                             ball.trail.addVertex(ball.center);
 
-                            if (settings.particles) Particle.spawnCollisionEffect(this.particles, collisionPoint.x, collisionPoint.y, ball.direction.x, ball.direction.y, this.paddle.color);
+                            if (settings.particles) Particle.spawnCollisionEffect(this.particles, collisionPoint, ball.direction, this.paddle.color);
 
                             if (settings.sounds) sounds.release.play();
                         }
@@ -729,32 +729,30 @@ var World = function() {
 
                 // check if ball is dead
                 if (ball.center.y >= this.paddle.center.y + this.paddle.halfSize.y) {
-                    // ball is dead
-                    deadBalls.push(i);
+                    deadBalls.push(ball);
                 }
             }
         }, this);
 
-        for (var i = deadBalls.length - 1; i >= 0; i--) {
-            var index = deadBalls[i];
-            // TODO ball.die();
-            this.balls.splice(index, 1);
-        }
+        deadBalls.forEach(function(ball) {
+            this.balls.splice(this.balls.indexOf(ball), 1);
+        }, this);
         if (this.balls.length === 0) {
             // all balls are dead
-            //add new ball if it has lives remaining
             this.paddle.life -= 1;
-            if (this.paddle.life > 0) {
-                //delete all falling powerup
-                this.fallingPowerup = null;
 
+            // respawn new ball if the paddle has lives remaining
+            if (this.paddle.life > 0) {
                 this.balls.push(new Ball(new Vector2(400, 600 - 50 - 7), 7, 0, new Vector2(0, -1), levels[this._currentLevel].ballColor));
-                this.update = updateRespawn;
-                this.render = renderRespawn;
+
+                this.fallingPowerup = null;
                 this.changeTemporaryPowerup(null);
                 this.ballSpeedMult = 1;
                 this._lazors = [];
+
                 this._timePassed = 0;
+                this.update = updateRespawn;
+                this.render = renderRespawn;
 
                 if (settings.sounds) {
                     if (Math.random() < 0.5) {
@@ -773,8 +771,7 @@ var World = function() {
     };
 
     var handlePowerUpPaddleCollisions = function() {
-        if (this.fallingPowerup === null) return;
-        // check powerUp vs bottom and paddle
+        // check power-up vs bottom and paddle
         if (this.fallingPowerup.center.y + this.fallingPowerup.halfSize.y >= this.paddle.center.y - this.paddle.halfSize.y) {
             // if they are intersecting
             if (Math.abs(this.fallingPowerup.center.x - this.paddle.center.x) < this.fallingPowerup.halfSize.x + this.paddle.halfSize.x) {
@@ -785,8 +782,9 @@ var World = function() {
                 return;
             }
 
+            // check if the power-up is under the paddle
             if (this.fallingPowerup.center.y - this.fallingPowerup.halfSize.y >= this.paddle.center.y + this.paddle.halfSize.y) {
-                // powerUp is under the paddle and can be removed
+                // the power-up can be removed
                 this.fallingPowerup = null;
             }
         }
