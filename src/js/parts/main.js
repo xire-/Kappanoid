@@ -242,7 +242,7 @@ var kappanoid = (function() {
 
 
     return {
-        version: '0.0',
+        version: '1.0',
         init: init,
         resize: initCanvas
     };
