@@ -13,6 +13,5 @@
 
 function testPhysics() {
     testVector2();
-    testCollisionDetection();
     testPruningGrid();
 }
