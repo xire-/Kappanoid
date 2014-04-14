@@ -2,7 +2,20 @@ Kappanoid
 =========
 
 A pure javascript Arkanoid clone inspired by: [Juice it or lose it - a talk by Martin Jonasson & Petri Purho](https://www.youtube.com/watch?v=Fy0aCDmgnxg).  
-Tested in Chrome 34 and Chromium 33.
+Tested in Chrome 34 and Chromium 33.  
+  
+SPACE: advance to next screen / activate power-up  
+0,1,2..8: toggle settings on/off  
+P: toggle pause on/off  
+D: toggle debug mode on/off  
+
+(if debug mode is active)  
+L: spawn debug particles  
+R: restart level  
+N: advance to next level  
+U: set timeScale to 1  
+I: set timeScale to 0.5  
+O: set timeScale to 0.15  
 
 LICENSE
 =======
