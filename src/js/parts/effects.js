@@ -1,3 +1,6 @@
+///////////////// Easing
+// __import__ effects-Easing.js
+
 ///////////////// Particle
 // __import__ effects-Particle.js
 
