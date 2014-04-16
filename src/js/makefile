@@ -1,4 +1,4 @@
-all: debug
+all: production
 
 debug:
 	./assemble.py ./ -o kappanoid.js --debug
