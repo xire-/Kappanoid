@@ -1,11 +1,14 @@
-Kappanoid
-=========
+# Kappanoid
 
-A pure javascript Arkanoid clone inspired by: [Juice it or lose it - a talk by Martin Jonasson & Petri Purho](https://www.youtube.com/watch?v=Fy0aCDmgnxg).  
-Tested in Chrome 34 and Chromium 33.  
-  
-SPACE: advance to next screen / activate power-up  
-0,1,2..8: toggle settings on/off  
+A pure JavaScript Arkanoid clone inspired by: [Juice it or lose it - a talk by Martin Jonasson & Petri Purho](https://www.youtube.com/watch?v=Fy0aCDmgnxg).  
+Tested in Chrome 38, Firefox 33 and Safari 8.  
+
+### Setup
+To facilitate development, the code was splitted into several JavaScript files, collected in the `src/js/parts` folder. To test the game, it is needed to merge these files into a single big file named `kappanoid.js`. This is done automagically by typing from terminal the command `make` in the folder `src/js`. After this step, just play Kappanoid by opening `src/index.html` in your favorite browser. If you don't want to build the code yourself, you can download a working version of the game [here](https://bitbucket.org/xire91/kappanoid/downloads).
+
+### Key bindings
+SPACE: insert coin / release ball from paddle / activate power-up effect / advance to next level (when the current level is complete)  
+Number keys 1 to 8: toggle each setting on/off  
 P: toggle pause on/off  
 D: toggle debug mode on/off  
 
@@ -17,12 +20,12 @@ U: set timeScale to 1
 I: set timeScale to 0.5  
 O: set timeScale to 0.15  
 
-LICENSE
-=======
+
+# License
 
 The MIT License (MIT)
 
-Copyright (c) [2014] [Francesco Cagnin, Marco Gasparini]
+Copyright (c) 2014 Francesco Cagnin and Marco Gasparini
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -42,8 +45,8 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-CREDITS
-=======
+
+# Credits
 
 ### Easing functions ###
 Open source under the BSD License. 
