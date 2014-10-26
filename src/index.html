@@ -7,9 +7,35 @@
         <style>
             body {
                 background-color: #222222;
-                width: 840px;
                 margin: auto;
                 color: white;
+                font-family: emulogic;
+                font-size: 10px;
+            }
+
+            a {
+                color: #FFFFFF;
+            }
+
+            #left_container {
+                width: 50%;
+                float: left;
+                margin-right: -420px; /* minus half of the center container width */
+            }
+            #left {
+                margin-right: 420px; /* half of the center container width */
+                padding-top: 220px;
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+            .key {
+                color: #FF0000;
+            }
+
+            #center {
+                width: 840px; /* size of the fixed width */
+                float: left;
+                text-align: center
             }
 
             #gameCanvas {
@@ -23,7 +49,25 @@
         </style>
     </head>
     <body>
-        <canvas id="gameCanvas"></canvas>
+        <div id="left_container">
+            <div id="left">
+                move the paddle using the <span class="key">MOUSE</span>
+                <p>
+                press <span class="key">SPACEBAR</span> when you don't know which key to press
+                <p>
+                Also: use <span class="key">SPACEBAR</span> to activate the effect of the power-ups "C" and "L"
+                <p>
+                <span class="key">Number keys 1 to 8</span> <br> toggle various effects on/off and <span class="key">Number key 0</span> enables them all
+                <p>
+                use <span class="key">D</span> to check which effects are currently enabled
+                <p> 
+                source code and additional info can be found <a href="https://bitbucket.org/xire91/kappanoid">here</a>
+            </div>
+        </div>
+
+        <div id="center">
+            <canvas id="gameCanvas"></canvas>
+        </div>
 
         <!-- load libraries -->
         <script src="js/lib/howler.min.js"></script>
