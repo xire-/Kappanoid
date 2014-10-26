@@ -31,7 +31,8 @@ var GameOverState = function() {
         // manage input for common keys
         keyPressToggleSettings(e);
 
-        switch (e.keyCode) {
+        var code = e.keyCode || e.charCode;
+        switch (code) {
             case keycodes['space']:
                 // reset the game
                 states.intro = new IntroState();

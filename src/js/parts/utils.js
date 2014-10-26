@@ -148,7 +148,8 @@ var keycodes = {
  * common keycode checks needed in all game states
  */
 var keyPressToggleSettings = function(e) {
-    switch (e.keyCode) {
+    var code = e.keyCode || e.charCode;
+    switch (code) {
         case keycodes['d']:
             settings.debug = !settings.debug;
             break;

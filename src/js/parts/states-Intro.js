@@ -79,7 +79,8 @@ var IntroState = function() {
         // manage input for common keys
         keyPressToggleSettings(e);
 
-        switch (e.keyCode) {
+        var code = e.keyCode || e.charCode;
+        switch (code) {
             case keycodes['space']:
                 // start outro animation
                 if (!this._outro) {
