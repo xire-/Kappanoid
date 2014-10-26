@@ -1,7 +1,7 @@
 # Kappanoid
 
 A pure JavaScript Arkanoid clone inspired by: [Juice it or lose it - a talk by Martin Jonasson & Petri Purho](https://www.youtube.com/watch?v=Fy0aCDmgnxg).  
-Tested in Chrome 38, Firefox 33 and Safari 8.  
+Tested in Chrome 38, Firefox 33 and Safari 8. On Windows, it has been reported that the game plays smoothly only using Internet Explorer (sigh).  
 
 ### Setup
 To facilitate development, the code was splitted into several JavaScript files, collected in the `src/js/parts` folder. To test the game, it is needed to merge these files into a single big file named `kappanoid.js`. This is done automagically by typing from terminal the command `make` in the folder `src/js`. After this step, just play Kappanoid by opening `src/index.html` in your favorite browser. If you don't want to build the code yourself, you can download a working version of the game [here](https://bitbucket.org/xire91/kappanoid/downloads).
