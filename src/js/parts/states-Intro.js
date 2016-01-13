@@ -275,8 +275,6 @@ var IntroState = function() {
             ]
         ];
         this._selectedLogo = this._logos[randomInt(this._logos.length)];
-
-        if (settings.music) music.introMusic.play();
     };
 
     return constructor;

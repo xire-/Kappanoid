@@ -42,8 +42,8 @@ var kappanoid = (function() {
 
         colors: false,
         particles: false,
-        sounds: false,
-        music: true,
+        sounds: null,
+        music: null,
         ballTrail: false,
         lastBrickSlowMo: false,
         paddleSpeedDistortion: false,
@@ -121,11 +121,12 @@ var kappanoid = (function() {
         }
 
         states = {
+            preintro: new PreIntroState(),
             intro: new IntroState(),
             playing: new PlayingState(),
             gameover: new GameOverState(),
         };
-        currState = states.intro;
+        currState = states.preintro;
 
         localStorage.highscore = localStorage.highscore || 0;
 
