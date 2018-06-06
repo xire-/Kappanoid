@@ -1,12 +1,12 @@
 all: production
 
 debug:
-	./assemble.py ./scripts/ -o ./scripts/kappanoid.js --debug
+	./assemble.py --debug
 	@echo Done
 
 production:
-	./assemble.py ./scripts/ -o ./scripts/kappanoid.js
+	./assemble.py
 	@echo Done
 
 clean:
-	rm ./scripts/kappanoid.js
+	rm -f scripts/kappanoid.js
