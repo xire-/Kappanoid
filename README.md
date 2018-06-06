@@ -1,5 +1,5 @@
 # Kappanoid
-A pure JavaScript Arkanoid clone inspired by [Juice it or lose it - a talk by Martin Jonasson & Petri Purho](https://www.youtube.com/watch?v=Fy0aCDmgnxg).
+A pure JavaScript Arkanoid clone inspired by [Juice it or lose it—a talk by Martin Jonasson and Petri Purho](https://www.youtube.com/watch?v=Fy0aCDmgnxg).
 
 ## Setup
 To facilitate development the code was split into multiple JavaScript files, to be merged in a single `kappanoid.js` using the provided `Makefile`. Then, to play the game, open `index.html` in your favorite browser.
