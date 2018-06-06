@@ -1,15 +1,14 @@
 # Kappanoid
 A pure JavaScript Arkanoid clone inspired by: [Juice it or lose it - a talk by Martin Jonasson & Petri Purho](https://www.youtube.com/watch?v=Fy0aCDmgnxg).
-Tested in Chrome 38, Firefox 33 and Safari 8. On Windows, it has been reported that the game plays smoothly only using Internet Explorer (sigh).
 
 ## Setup
 To facilitate development, the code was split into several JavaScript files, collected in the `src/js/parts` folder. To build the game, use the provided `Makefile` to merge these files into `kappanoid.js`; to play the game, open `src/index.html` in your favorite browser.
 
 ## Key Bindings
-|                                   |                               |
+| Key                               | Action                        |
 | --------------------------------- | ----------------------------- |
 | `SPACEBAR`                        | Insert coin / Release ball from paddle / Activate power-up effect / Advance to next level (when the current level is complete) |
-| Number Keys `1` to `8`            | Toggle each setting on/off    |
+| `1` to `8`                        | Toggle each setting on/off    |
 | `P`                               | Toggle pause on/off           |
 | `D`                               | Toggle debug mode on/off      |
 | (If debug mode is active)         |                               |
