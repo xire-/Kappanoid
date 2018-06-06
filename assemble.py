@@ -1,6 +1,4 @@
-#!/usr/bin/python
-from __future__ import with_statement
-
+#!/usr/bin/env python3
 import argparse
 import re
 import sys
@@ -32,7 +30,7 @@ def process_import(text, js_path, debug_flag):
         file_name = m.group(2)
 
         if file_name in importedFiles:
-            print '{} is already imported'.format(file_name)
+            print('{} is already imported'.format(file_name))
             return ''
         importedFiles.add(file_name)
 
