@@ -31,7 +31,7 @@ def process_import(text, js_path, debug):
             return ''
         imported_files.add(file_name)
 
-        with open(js_path + 'parts/' + file_name, 'r') as f:
+        with open(js_path + file_name, 'r') as f:
             file_content = f.read()
 
         res = process_import(file_content, js_path, debug)
@@ -68,7 +68,7 @@ def main():
     parser.add_argument(
         'js_path',
         action='store',
-        help='path to the "js" folder, which must contain a "parts" folder',
+        help='path to the "scripts" folder',
     )
 
     parser.add_argument(
@@ -85,7 +85,7 @@ def main():
     fres = args.outputFile
     debug = args.debug
 
-    with open(js_path + 'parts/main.js', 'r') as fmain:
+    with open(js_path + 'main.js', 'r') as fmain:
         # print timestamp on top
         fres.write('/* Generated: {} */\n\n'.format(datetime.now().strftime('%Y/%m/%d %H:%M:%S')))
         res = process_import(fmain.read(), js_path, debug)

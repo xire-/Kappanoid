@@ -73,42 +73,42 @@ var kappanoid = (function() {
     };
     var sounds = {
         release: new Howl({
-            urls: ['sound/release.mp3']
+            urls: ['sounds/release.mp3']
         }),
         bounce: new Howl({
-            urls: ['sound/bounce.mp3']
+            urls: ['sounds/bounce.mp3']
         }),
         bounceMetal: new Howl({
-            urls: ['sound/bounce-metal.mp3']
+            urls: ['sounds/bounce-metal.mp3']
         }),
         lazer: new Howl({
-            urls: ['sound/lazer.mp3']
+            urls: ['sounds/lazer.mp3']
         }),
         life: new Howl({
-            urls: ['sound/life.mp3']
+            urls: ['sounds/life.mp3']
         }),
         longship: new Howl({
-            urls: ['sound/longship.mp3']
+            urls: ['sounds/longship.mp3']
         }),
         collect: new Howl({
-            urls: ['sound/collect.mp3']
+            urls: ['sounds/collect.mp3']
         }),
         die: new Howl({
-            urls: ['sound/die.mp3']
+            urls: ['sounds/die.mp3']
         }),
         die2: new Howl({
-            urls: ['sound/die2.mp3']
+            urls: ['sounds/die2.mp3']
         }),
     };
     var music = {
         introMusic: new Howl({
-            urls: ['sound/intro-music.mp3']
+            urls: ['sounds/intro-music.mp3']
         }),
         levelStartMusic: new Howl({
-            urls: ['sound/level-start-music.mp3']
+            urls: ['sounds/level-start-music.mp3']
         }),
         gameOverMusic: new Howl({
-            urls: ['sound/game-over-music.mp3']
+            urls: ['sounds/game-over-music.mp3']
         }),
     };
 
