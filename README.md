@@ -2,7 +2,7 @@
 A pure JavaScript Arkanoid clone inspired by: [Juice it or lose it - a talk by Martin Jonasson & Petri Purho](https://www.youtube.com/watch?v=Fy0aCDmgnxg).
 
 ## Setup
-To facilitate development, the code was split into several JavaScript files, collected in the `src/js/parts` folder. To build the game, use the provided `Makefile` to merge these files into `kappanoid.js`; to play the game, open `src/index.html` in your favorite browser.
+To facilitate development, the code was split into multiple JavaScript files, to be merged in a single `kappanoid.js` using the the provided `Makefile`. To play the game, open `src/index.html` in your favorite browser.
 
 ## Key Bindings
 | Key                               | Action                        |

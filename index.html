@@ -1,79 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <title>Kappanoid</title>
 
-        <style>
-            body {
-                background-color: #222222;
-                margin: auto;
-                color: white;
-                font-family: emulogic;
-                font-size: 10px;
-            }
+<head>
+    <meta charset="utf-8">
+    <title>Kappanoid</title>
 
-            a {
-                color: #FF0000;
-            }
+    <style>
+        @font-face {
+            font-family: emulogic;
+            src: url(fonts/emulogic.ttf);
+        }
 
-            #left_container {
-                width: 50%;
-                float: left;
-                margin-right: -420px; /* minus half of the center container width */
-            }
-            #left {
-                margin-right: 420px; /* half of the center container width */
-                padding-top: 210px;
-                padding-left: 20px;
-                padding-right: 20px;
-            }
-            .key {
-                color: #FF0000;
-            }
+        body {
+            background-color: #222222;
+            margin: auto;
+            color: white;
+            font-family: emulogic;
+            font-size: 10px;
+        }
 
-            #center {
-                width: 840px; /* size of the fixed width */
-                float: left;
-                text-align: center
-            }
+        a {
+            color: #FF0000;
+        }
 
-            #gameCanvas {
-                /*cursor: none;*/
-            }
+        #left_container {
+            width: 50%;
+            float: left;
+            margin-right: -420px;
+        }
 
-            @font-face {
-                font-family: emulogic;
-                src: url(fonts/emulogic.ttf);
-            }
-        </style>
-    </head>
-    <body>
-        <div id="left_container">
-            <div id="left">
-                move the paddle using the <span class="key">MOUSE</span>
-                <p>
-                press <span class="key">SPACEBAR</span> when you don't know which key to press
-                <p>
-                Also: use <span class="key">SPACEBAR</span> to activate the effect of the power-ups "C" and "L"
-                <p>
-                <span class="key">Number keys 1 to 8</span> <br> toggle various effects on/off and <span class="key">Number key 0</span> enables them all
-                <p>
-                use <span class="key">D</span> to check which effects are currently enabled
-                <p>
-                finally, press <span class="key">P</span> to pause the game
-                <p>
-                source code and additional info can be found <a href="https://bitbucket.org/xire91/kappanoid">here</a>
-            </div>
+        #left {
+            margin-right: 420px;
+            padding-top: 210px;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        .key {
+            color: #FF0000;
+        }
+
+        #center {
+            width: 840px;
+            float: left;
+            text-align: center
+        }
+    </style>
+</head>
+
+<body>
+    <div id="left_container">
+        <div id="left">
+            <p>
+                move the paddle using the
+                <span class="key">MOUSE</span>
+            </p>
+            <p>
+                press
+                <span class="key">SPACEBAR</span> when you don't know which key to press
+            </p>
+            <p>
+                Also: use
+                <span class="key">SPACEBAR</span> to activate the effect of the power-ups "C" and "L"
+            </p>
+            <p>
+                <span class="key">Number keys 1 to 8</span>
+                <br> toggle various effects on/off and
+                <span class="key">Number key 0</span> enables them all
+            </p>
+            <p>
+                use
+                <span class="key">D</span> to check which effects are currently enabled
+            </p>
+            <p>
+                finally, press
+                <span class="key">P</span> to pause the game
+            </p>
+            <p>
+                source code and additional info can be found
+                <a href="https://bitbucket.org/xire91/kappanoid">here</a>
+            </p>
         </div>
+    </div>
 
-        <div id="center">
-            <canvas id="gameCanvas"></canvas>
-        </div>
+    <div id="center">
+        <canvas id="gameCanvas"></canvas>
+    </div>
 
-        <!-- load libraries -->
-        <script src="third-party/scripts/howler.min.js"></script>
-        <!-- load main script -->
-        <script src="scripts/kappanoid.js"></script>
-    </body>
+    <script src="third-party/scripts/howler.min.js"></script>
+    <script src="scripts/kappanoid.js"></script>
+</body>
+
 </html>
